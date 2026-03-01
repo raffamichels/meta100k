@@ -1,0 +1,129 @@
+"use client";
+
+import { useActionState } from "react";
+import { useEffect, useRef } from "react";
+import { saveExtra } from "@/lib/actions/extras";
+import { useToast } from "@/components/ui/Toast";
+import { todayDate } from "@/lib/utils";
+
+const inputStyle: React.CSSProperties = {
+  width: "100%",
+  background: "rgba(255,255,255,0.04)",
+  border: "1px solid var(--border)",
+  borderRadius: 12,
+  padding: "12px 14px",
+  color: "var(--text)",
+  fontFamily: "var(--font-dm-sans), sans-serif",
+  fontSize: 15,
+  outline: "none",
+  WebkitAppearance: "none",
+};
+
+const labelStyle: React.CSSProperties = {
+  display: "block",
+  fontSize: 12,
+  color: "var(--muted)",
+  textTransform: "uppercase",
+  letterSpacing: "0.8px",
+  marginBottom: 6,
+  fontWeight: 500,
+};
+
+export function ExtraForm() {
+  const { showToast } = useToast();
+  const [state, action, pending] = useActionState(saveExtra, undefined);
+  const formRef = useRef<HTMLFormElement>(null);
+
+  useEffect(() => {
+    if (state?.success) {
+      showToast(state.success);
+      formRef.current?.reset();
+    }
+    if (state?.error) showToast(state.error);
+  }, [state, showToast]);
+
+  return (
+    <div
+      style={{
+        background: "var(--card)",
+        border: "1px solid rgba(200,240,96,0.2)",
+        borderRadius: 20,
+        padding: 20,
+        marginBottom: 16,
+      }}
+    >
+      <div
+        style={{
+          fontFamily: "var(--font-syne), sans-serif",
+          fontSize: 16,
+          fontWeight: 700,
+          marginBottom: 16,
+          display: "flex",
+          alignItems: "center",
+          gap: 8,
+        }}
+      >
+        ⚡ Ganho Avulso
+      </div>
+
+      <form action={action} ref={formRef}>
+        <div style={{ marginBottom: 14 }}>
+          <label style={labelStyle}>Descrição</label>
+          <input
+            type="text"
+            name="desc"
+            placeholder="Ex: Freela, bônus, venda..."
+            required
+            style={inputStyle}
+          />
+        </div>
+
+        <div style={{ marginBottom: 14 }}>
+          <label style={labelStyle}>Valor (R$)</label>
+          <input
+            type="number"
+            name="value"
+            placeholder="Ex: 800"
+            inputMode="decimal"
+            min="0.01"
+            step="0.01"
+            required
+            style={inputStyle}
+          />
+        </div>
+
+        <div style={{ marginBottom: 14 }}>
+          <label style={labelStyle}>Data</label>
+          <input
+            type="date"
+            name="date"
+            defaultValue={todayDate()}
+            required
+            style={inputStyle}
+          />
+        </div>
+
+        <button
+          type="submit"
+          disabled={pending}
+          style={{
+            width: "100%",
+            padding: 14,
+            borderRadius: 14,
+            border: "none",
+            background: "linear-gradient(135deg, var(--accent), var(--accent2))",
+            color: "#0a0a0f",
+            fontFamily: "var(--font-syne), sans-serif",
+            fontSize: 15,
+            fontWeight: 700,
+            cursor: pending ? "not-allowed" : "pointer",
+            opacity: pending ? 0.7 : 1,
+            transition: "all 0.2s",
+          }}
+        >
+          {pending ? "Adicionando..." : "Adicionar Ganho"}
+        </button>
+      </form>
+    </div>
+  );
+}
