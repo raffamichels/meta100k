@@ -7,6 +7,14 @@ const nextConfig: NextConfig = {
       bodySizeLimit: "2mb",
     },
   },
+  serverExternalPackages: ["@prisma/adapter-pg", "pg"],
+  webpack: (config) => {
+    config.node = {
+      ...config.node,
+      __dirname: true,
+    };
+    return config;
+  },
 };
 
 export default nextConfig;
