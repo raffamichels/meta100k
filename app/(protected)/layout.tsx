@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { Header } from "@/components/ui/Header";
 import { BottomNav } from "@/components/ui/BottomNav";
+import { GamificationProvider } from "@/components/gamification/GamificationContext";
 
 export default async function ProtectedLayout({
   children,
@@ -14,23 +15,26 @@ export default async function ProtectedLayout({
 
   const userId = session.user.id as string;
 
-  const months = await prisma.month.findMany({
-    where: { userId },
-    // Inclui savingEntries para calcular o streak diário no Header
-    select: { key: true, savings: true, savingEntries: { select: { date: true, value: true } } },
-  });
+  const [months, user] = await Promise.all([
+    prisma.month.findMany({
+      where: { userId },
+      select: { key: true, savings: true, savingEntries: { select: { date: true, value: true } } },
+    }),
+    prisma.user.findUnique({ where: { id: userId }, select: { xp: true } }),
+  ]);
 
-  // Achata todos os registros individuais de economia para o cálculo diário
   const allSavingEntries = months.flatMap((m) => m.savingEntries);
 
   return (
-    <div style={{ position: "relative", zIndex: 1 }}>
-      <Header savingEntries={allSavingEntries} />
-      {/* className="main-content" → no desktop: margin-left para o sidebar + padding generoso */}
-      <main style={{ padding: "20px 20px 100px" }} className="page-fade main-content">
-        {children}
-      </main>
-      <BottomNav />
-    </div>
+    <GamificationProvider>
+      <div style={{ position: "relative", zIndex: 1 }}>
+        <Header savingEntries={allSavingEntries} xp={user?.xp ?? 0} />
+        {/* className="main-content" → no desktop: margin-left para o sidebar + padding generoso */}
+        <main style={{ padding: "20px 20px 100px" }} className="page-fade main-content">
+          {children}
+        </main>
+        <BottomNav />
+      </div>
+    </GamificationProvider>
   );
 }

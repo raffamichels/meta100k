@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Syne, DM_Sans } from "next/font/google";
 import "./globals.css";
 import { ToastProvider } from "@/components/ui/Toast";
+import { DesktopWarning } from "@/components/ui/DesktopWarning";
 
 const syne = Syne({
   subsets: ["latin"],
@@ -42,6 +43,7 @@ export default function RootLayout({
   return (
     <html lang="pt-BR" className={`${syne.variable} ${dmSans.variable}`} suppressHydrationWarning>
       <body style={{ fontFamily: "var(--font-dm-sans), sans-serif" }}>
+        <DesktopWarning />
         <ToastProvider>{children}</ToastProvider>
       </body>
     </html>

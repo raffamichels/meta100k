@@ -9,15 +9,22 @@ datasource db {
 }
 
 model User {
-  id         String   @id @default(cuid())
-  email      String   @unique
-  name       String?
-  password   String
-  goal       Float    @default(100000)
-  baseAmount Float    @default(0)
-  months     Month[]
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
+  id             String             @id @default(cuid())
+  email          String             @unique
+  name           String?
+  password       String
+  goal           Float              @default(100000)
+  baseAmount     Float              @default(0)
+  months         Month[]
+  // Gamification
+  xp             Int                @default(0)
+  level          Int                @default(1)
+  maxStreak      Int                @default(0)
+  streakShields  Int                @default(0)
+  achievements   UserAchievement[]
+  challenges     Challenge[]
+  createdAt      DateTime           @default(now())
+  updatedAt      DateTime           @updatedAt
 }
 
 model Month {
@@ -60,4 +67,29 @@ model Saving {
   date    String
   monthId String
   month   Month  @relation(fields: [monthId], references: [id], onDelete: Cascade)
+}
+
+model UserAchievement {
+  id         String   @id @default(cuid())
+  userId     String
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  key        String   // identificador da conquista (ex: "streak_7", "save_10k")
+  unlockedAt DateTime @default(now())
+
+  @@unique([userId, key])
+}
+
+model Challenge {
+  id          String    @id @default(cuid())
+  userId      String
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  type        String    // "weekly" | "monthly"
+  key         String    // tipo do desafio (ex: "save_target", "daily_streak")
+  target      Float
+  current     Float     @default(0)
+  xpReward    Int
+  startDate   String
+  endDate     String
+  completed   Boolean   @default(false)
+  completedAt DateTime?
 }

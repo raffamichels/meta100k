@@ -5,9 +5,22 @@ interface HeroCardProps {
   goal: number;
 }
 
+const MILESTONES = [
+  { pct: 10, label: "Iniciado", icon: "🌱" },
+  { pct: 25, label: "Um Quarto", icon: "🏅" },
+  { pct: 50, label: "Metade", icon: "💰" },
+  { pct: 75, label: "Sprint Final", icon: "🚀" },
+  { pct: 90, label: "Quase Lá", icon: "⚡" },
+  { pct: 100, label: "Meta!", icon: "👑" },
+];
+
 export function HeroCard({ totalSaved, goal }: HeroCardProps) {
   const pct = Math.min((totalSaved / goal) * 100, 100);
   const remaining = Math.max(goal - totalSaved, 0);
+
+  // Último marco atingido e próximo marco
+  const lastReached = [...MILESTONES].reverse().find((m) => m.pct <= pct);
+  const nextMilestone = MILESTONES.find((m) => m.pct > pct);
 
   return (
     <div
@@ -66,34 +79,87 @@ export function HeroCard({ totalSaved, goal }: HeroCardProps) {
           : "🎉 Meta atingida! Parabéns!"}
       </div>
 
-      {/* Progress bar */}
-      <div
-        style={{
-          background: "rgba(255,255,255,0.06)",
-          borderRadius: 100,
-          height: 10,
-          overflow: "hidden",
-          marginBottom: 8,
-          position: "relative",
-        }}
-      >
+      {/* Progress bar com marcadores de marco */}
+      <div style={{ position: "relative", marginBottom: 20 }}>
         <div
-          className="progress-fill"
           style={{
-            height: "100%",
+            background: "rgba(255,255,255,0.06)",
             borderRadius: 100,
-            background: "linear-gradient(90deg, var(--accent), var(--accent2))",
-            width: `${pct}%`,
+            height: 12,
             position: "relative",
-            transition: "width 0.8s cubic-bezier(0.34,1.56,0.64,1)",
           }}
-        />
+        >
+          {/* Preenchimento */}
+          <div
+            className="progress-fill"
+            style={{
+              height: "100%",
+              borderRadius: 100,
+              background: "linear-gradient(90deg, var(--accent), var(--accent2))",
+              width: `${pct}%`,
+              transition: "width 0.8s cubic-bezier(0.34,1.56,0.64,1)",
+              boxShadow: "0 0 10px rgba(200,240,96,0.35)",
+            }}
+          />
+
+          {/* Marcadores de marco */}
+          {MILESTONES.map((m) => {
+            const reached = pct >= m.pct;
+            return (
+              <div
+                key={m.pct}
+                title={`${m.icon} ${m.label} — ${m.pct}%`}
+                style={{
+                  position: "absolute",
+                  left: `${m.pct}%`,
+                  top: "50%",
+                  transform: "translate(-50%, -50%)",
+                  width: reached ? 14 : 8,
+                  height: reached ? 14 : 8,
+                  borderRadius: "50%",
+                  background: reached ? "var(--accent)" : "rgba(255,255,255,0.2)",
+                  border: reached ? "2px solid rgba(10,10,15,0.8)" : "2px solid rgba(255,255,255,0.1)",
+                  boxShadow: reached ? "0 0 8px rgba(200,240,96,0.7)" : "none",
+                  transition: "all 0.4s ease",
+                  zIndex: 2,
+                }}
+              />
+            );
+          })}
+        </div>
+
+        {/* Labels dos marcos */}
+        <div style={{ position: "relative", height: 22, marginTop: 6 }}>
+          {MILESTONES.map((m) => {
+            const reached = pct >= m.pct;
+            return (
+              <div
+                key={m.pct}
+                style={{
+                  position: "absolute",
+                  left: `${m.pct}%`,
+                  transform: "translateX(-50%)",
+                  fontSize: 9,
+                  fontWeight: 700,
+                  color: reached ? "var(--accent)" : "rgba(255,255,255,0.2)",
+                  textAlign: "center",
+                  whiteSpace: "nowrap",
+                  transition: "color 0.4s ease",
+                }}
+              >
+                {m.pct}%
+              </div>
+            );
+          })}
+        </div>
       </div>
 
+      {/* Linha de status */}
       <div
         style={{
           display: "flex",
           justifyContent: "space-between",
+          alignItems: "center",
           fontSize: 12,
           color: "var(--muted)",
         }}
@@ -101,8 +167,17 @@ export function HeroCard({ totalSaved, goal }: HeroCardProps) {
         <span>
           <strong style={{ color: "var(--accent)" }}>{pct.toFixed(1)}%</strong>{" "}
           concluído
+          {lastReached && (
+            <span style={{ marginLeft: 6, opacity: 0.65 }}>
+              · {lastReached.icon} {lastReached.label}
+            </span>
+          )}
         </span>
-        <span>{(100 - pct).toFixed(1)}% restante</span>
+        {nextMilestone && (
+          <span style={{ color: "rgba(255,255,255,0.3)", fontSize: 11 }}>
+            próximo: {nextMilestone.icon} {nextMilestone.pct}%
+          </span>
+        )}
       </div>
     </div>
   );

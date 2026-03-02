@@ -3,8 +3,10 @@
 import { revalidatePath } from "next/cache";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { runGamificationCheck, type GamificationResult } from "@/lib/actions/gamification";
+import { XP_LOG_SALARY } from "@/lib/gamification";
 
-type Result = { error?: string; success?: string } | undefined;
+type Result = { error?: string; success?: string; gamification?: GamificationResult } | undefined;
 
 export async function saveSalary(_prevState: Result, formData: FormData): Promise<Result> {
   const session = await auth();
@@ -27,11 +29,17 @@ export async function saveSalary(_prevState: Result, formData: FormData): Promis
     create: { userId: session.user.id, key: month, salary: val },
   });
 
+  // Só ganha XP ao registrar pela primeira vez (não em atualizações)
+  const gamification = !isUpdate
+    ? await runGamificationCheck(session.user.id, XP_LOG_SALARY)
+    : undefined;
+
   revalidatePath("/");
   revalidatePath("/historico");
   revalidatePath("/meta");
+  revalidatePath("/conquistas");
 
-  return { success: isUpdate ? "✏️ Salário atualizado!" : "✅ Salário salvo!" };
+  return { success: isUpdate ? "✏️ Salário atualizado!" : "✅ Salário salvo!", gamification };
 }
 
 export async function deleteSalary(monthKey: string) {

@@ -1,7 +1,7 @@
 import { auth } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
-import { thisMonth, calcDailyStreak } from "@/lib/utils";
+import { thisMonth, calcDailyStreak, hasSavedToday } from "@/lib/utils";
 import {
   calcTotalSaved,
   calcProjection,
@@ -10,6 +10,8 @@ import { HeroCard } from "@/components/dashboard/HeroCard";
 import { StatsRow } from "@/components/dashboard/StatsRow";
 import { ProjectionCard } from "@/components/dashboard/ProjectionCard";
 import { RecentEntries } from "@/components/dashboard/RecentEntries";
+import { XPBar } from "@/components/gamification/XPBar";
+import { ChallengeCard } from "@/components/gamification/ChallengeCard";
 
 export default async function DashboardPage() {
   const session = await auth();
@@ -26,6 +28,19 @@ export default async function DashboardPage() {
       },
     },
   });
+
+  // Busca XP e dados de gamificação para o painel
+  const [userGameData, challenges] = await Promise.all([
+    prisma.user.findUnique({
+      where: { id: userId },
+      select: { xp: true, maxStreak: true, streakShields: true },
+    }),
+    prisma.challenge.findMany({
+      where: { userId },
+      orderBy: { startDate: "desc" },
+      take: 6,
+    }),
+  ]);
 
   if (!user) redirect("/login");
 
@@ -44,6 +59,7 @@ export default async function DashboardPage() {
   // Streak diário — achata todos os registros individuais de economia
   const allSavingEntries = user.months.flatMap((m) => m.savingEntries);
   const streak = calcDailyStreak(allSavingEntries);
+  const savedToday = hasSavedToday(allSavingEntries);
 
   // Recent entries (last 5, expenses + extras combined, sorted by date desc)
   const allEntries: Array<{
@@ -72,6 +88,9 @@ export default async function DashboardPage() {
 
       {/* Coluna esquerda: progresso + stats — maior peso visual */}
       <div className="dashboard-left">
+
+        {/* Barra de XP e nível */}
+        <XPBar xp={userGameData?.xp ?? 0} />
 
         {/* Banner de ofensiva diária — endomarketing para manter o usuário engajado */}
         <div
@@ -113,51 +132,71 @@ export default async function DashboardPage() {
               }}
             >
               {streak > 0
-                ? `${streak} ${streak === 1 ? "dia consecutivo" : "dias consecutivos"}! Continue hoje.`
+                ? savedToday
+                  ? `${streak} ${streak === 1 ? "dia" : "dias"} em chamas! Ofensiva do dia completa. 🎉`
+                  : `${streak} ${streak === 1 ? "dia consecutivo" : "dias consecutivos"}! Continue hoje.`
                 : "Sua ofensiva começa hoje!"}
             </div>
             <div style={{ fontSize: 13, color: "var(--muted)", lineHeight: 1.45 }}>
               {streak > 0
-                ? `Você guardou dinheiro ${streak} ${streak === 1 ? "dia seguido" : "dias seguidos"}. Guarde qualquer valor hoje para não perder sua sequência!`
+                ? savedToday
+                  ? `Você já guardou dinheiro hoje. Continue amanhã para manter sua sequência de ${streak} ${streak === 1 ? "dia" : "dias"}!`
+                  : `Você guardou dinheiro ${streak} ${streak === 1 ? "dia seguido" : "dias seguidos"}. Guarde qualquer valor hoje para não perder sua sequência!`
                 : "Guarde R$ 1,00 ou mais hoje e comece a construir sua sequência diária. Cada dia conta na jornada rumo aos 100K!"}
             </div>
           </div>
 
-          {/* Contador numérico em destaque — só exibe quando há streak ativo */}
+          {/* Contador + escudos + recorde */}
           {streak > 0 && (
-            <div
-              style={{
-                flexShrink: 0,
-                textAlign: "center",
-                background: "rgba(240,140,40,0.15)",
-                border: "1px solid rgba(240,140,40,0.3)",
-                borderRadius: 14,
-                padding: "8px 14px",
-              }}
-            >
+            <div style={{ flexShrink: 0, display: "flex", flexDirection: "column", alignItems: "center", gap: 6 }}>
+              {/* Contador principal */}
               <div
                 style={{
-                  fontFamily: "var(--font-syne), sans-serif",
-                  fontWeight: 900,
-                  fontSize: 26,
-                  color: "#f08c28",
-                  lineHeight: 1,
+                  textAlign: "center",
+                  background: "rgba(240,140,40,0.15)",
+                  border: "1px solid rgba(240,140,40,0.3)",
+                  borderRadius: 14,
+                  padding: "8px 14px",
                 }}
               >
-                {streak}
+                <div
+                  style={{
+                    fontFamily: "var(--font-syne), sans-serif",
+                    fontWeight: 900,
+                    fontSize: 26,
+                    color: "#f08c28",
+                    lineHeight: 1,
+                  }}
+                >
+                  {streak}
+                </div>
+                <div
+                  style={{
+                    fontSize: 10,
+                    fontWeight: 600,
+                    color: "rgba(240,140,40,0.7)",
+                    textTransform: "uppercase",
+                    letterSpacing: "0.6px",
+                    marginTop: 2,
+                  }}
+                >
+                  {streak === 1 ? "dia" : "dias"}
+                </div>
               </div>
-              <div
-                style={{
-                  fontSize: 10,
-                  fontWeight: 600,
-                  color: "rgba(240,140,40,0.7)",
-                  textTransform: "uppercase",
-                  letterSpacing: "0.6px",
-                  marginTop: 2,
-                }}
-              >
-                {streak === 1 ? "dia" : "dias"}
-              </div>
+              {/* Escudos */}
+              {(userGameData?.streakShields ?? 0) > 0 && (
+                <div style={{ display: "flex", gap: 3 }}>
+                  {Array.from({ length: userGameData?.streakShields ?? 0 }).map((_, i) => (
+                    <span
+                      key={i}
+                      title="Escudo de streak"
+                      style={{ fontSize: 14, filter: "drop-shadow(0 0 4px rgba(96,160,240,0.7))" }}
+                    >
+                      🛡️
+                    </span>
+                  ))}
+                </div>
+              )}
             </div>
           )}
         </div>
@@ -171,8 +210,9 @@ export default async function DashboardPage() {
         />
       </div>
 
-      {/* Coluna direita: projeção + entradas recentes — informação complementar */}
+      {/* Coluna direita: desafios + projeção + entradas recentes */}
       <div className="dashboard-right">
+        <ChallengeCard challenges={challenges} />
         <ProjectionCard projection={projection} totalSaved={totalSaved} />
         <RecentEntries entries={recentEntries} />
       </div>

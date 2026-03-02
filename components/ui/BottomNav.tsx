@@ -3,57 +3,16 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
-const navItems = [
-  {
-    href: "/",
-    label: "Início",
-    icon: (
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} width={22} height={22}>
-        <rect x="3" y="3" width="7" height="7" rx="1" />
-        <rect x="14" y="3" width="7" height="7" rx="1" />
-        <rect x="3" y="14" width="7" height="7" rx="1" />
-        <rect x="14" y="14" width="7" height="7" rx="1" />
-      </svg>
-    ),
-  },
-  {
-    href: "/lancamentos",
-    label: "Lançar",
-    icon: (
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} width={22} height={22}>
-        <circle cx="12" cy="12" r="9" />
-        <line x1="12" y1="8" x2="12" y2="16" />
-        <line x1="8" y1="12" x2="16" y2="12" />
-      </svg>
-    ),
-  },
-  {
-    href: "/historico",
-    label: "Histórico",
-    icon: (
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} width={22} height={22}>
-        <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />
-      </svg>
-    ),
-  },
-  {
-    href: "/meta",
-    label: "Meta",
-    icon: (
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} width={22} height={22}>
-        <circle cx="12" cy="12" r="10" />
-        <circle cx="12" cy="12" r="6" />
-        <circle cx="12" cy="12" r="2" />
-      </svg>
-    ),
-  },
-];
+const PROFILE_PATHS = ["/perfil", "/conquistas", "/meta", "/historico"];
 
 export function BottomNav() {
   const pathname = usePathname();
 
+  const homeActive = pathname === "/";
+  const launchActive = pathname === "/lancamentos";
+  const profileActive = PROFILE_PATHS.some((p) => pathname === p || pathname.startsWith(p + "/"));
+
   return (
-    // className="bottom-nav" → no desktop vira sidebar lateral fixo (ver globals.css)
     <nav
       className="bottom-nav"
       style={{
@@ -67,41 +26,125 @@ export function BottomNav() {
         WebkitBackdropFilter: "blur(20px)",
         borderTop: "1px solid var(--border)",
         display: "flex",
+        alignItems: "center",
         height: "calc(64px + max(4px, env(safe-area-inset-bottom)))",
         paddingBottom: "max(4px, env(safe-area-inset-bottom))",
       }}
     >
-      {navItems.map((item) => {
-        const active = pathname === item.href;
-        return (
-          // className="bottom-nav-link" → no desktop: layout em linha (ícone + texto)
-          <Link
-            key={item.href}
-            href={item.href}
-            className="bottom-nav-link"
+      {/* Início */}
+      <Link
+        href="/"
+        className="bottom-nav-link"
+        style={{
+          flex: 1,
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "center",
+          gap: 4,
+          textDecoration: "none",
+          color: homeActive ? "var(--accent)" : "var(--muted)",
+          fontSize: 10,
+          fontWeight: 500,
+          letterSpacing: "0.5px",
+          textTransform: "uppercase",
+          userSelect: "none",
+          WebkitTapHighlightColor: "transparent",
+          transition: "color 0.2s",
+        }}
+      >
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} width={22} height={22}>
+          <path d="M3 12L12 3l9 9" />
+          <path d="M9 21V12h6v9" />
+          <path d="M3 12v9h5v-9" />
+          <path d="M16 21v-9h5V12" />
+        </svg>
+        Início
+      </Link>
+
+      {/* Lançar — botão central em destaque */}
+      <div style={{ flex: 1, display: "flex", justifyContent: "center", alignItems: "center" }}>
+        <Link
+          href="/lancamentos"
+          className="bottom-nav-link"
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "center",
+            gap: 0,
+            textDecoration: "none",
+            userSelect: "none",
+            WebkitTapHighlightColor: "transparent",
+          }}
+        >
+          <div
             style={{
-              flex: 1,
+              width: 52,
+              height: 52,
+              borderRadius: "50%",
+              background: launchActive
+                ? "var(--accent2)"
+                : "linear-gradient(135deg, var(--accent), var(--accent2))",
               display: "flex",
-              flexDirection: "column",
               alignItems: "center",
               justifyContent: "center",
-              gap: 4,
-              textDecoration: "none",
-              color: active ? "var(--accent)" : "var(--muted)",
+              boxShadow: launchActive
+                ? "0 0 20px rgba(200,240,96,0.5)"
+                : "0 4px 16px rgba(96,212,240,0.3)",
+              transition: "all 0.2s",
+              marginTop: -10,
+            }}
+          >
+            <svg viewBox="0 0 24 24" fill="none" stroke="#0a0a0f" strokeWidth={2.5} width={24} height={24}>
+              <line x1="12" y1="5" x2="12" y2="19" />
+              <line x1="5" y1="12" x2="19" y2="12" />
+            </svg>
+          </div>
+          <span
+            style={{
               fontSize: 10,
               fontWeight: 500,
               letterSpacing: "0.5px",
               textTransform: "uppercase",
-              userSelect: "none",
-              WebkitTapHighlightColor: "transparent",
+              color: launchActive ? "var(--accent2)" : "var(--muted)",
+              marginTop: 4,
               transition: "color 0.2s",
             }}
           >
-            {item.icon}
-            {item.label}
-          </Link>
-        );
-      })}
+            Lançar
+          </span>
+        </Link>
+      </div>
+
+      {/* Perfil */}
+      <Link
+        href="/perfil"
+        className="bottom-nav-link"
+        style={{
+          flex: 1,
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "center",
+          gap: 4,
+          textDecoration: "none",
+          color: profileActive ? "var(--accent)" : "var(--muted)",
+          fontSize: 10,
+          fontWeight: 500,
+          letterSpacing: "0.5px",
+          textTransform: "uppercase",
+          userSelect: "none",
+          WebkitTapHighlightColor: "transparent",
+          transition: "color 0.2s",
+        }}
+      >
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} width={22} height={22}>
+          <circle cx="12" cy="8" r="4" />
+          <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7" />
+        </svg>
+        Perfil
+      </Link>
     </nav>
   );
 }

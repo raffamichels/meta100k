@@ -3,8 +3,10 @@
 import { revalidatePath } from "next/cache";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { runGamificationCheck, type GamificationResult } from "@/lib/actions/gamification";
+import { XP_SAVE_ANY, XP_SAVE_100, XP_SAVE_1000 } from "@/lib/gamification";
 
-type Result = { error?: string; success?: string } | undefined;
+type Result = { error?: string; success?: string; gamification?: GamificationResult } | undefined;
 
 export async function saveSavings(_prevState: Result, formData: FormData): Promise<Result> {
   const session = await auth();
@@ -33,7 +35,7 @@ export async function saveSavings(_prevState: Result, formData: FormData): Promi
     data: { desc, value: val, date, monthId: month.id },
   });
 
-  // Recalcula e atualiza o total do mês (campo savings = soma dos registros)
+  // Recalcula e atualiza o total do mês
   const all = await prisma.saving.findMany({ where: { monthId: month.id } });
   const total = all.reduce((a, s) => a + s.value, 0);
 
@@ -42,11 +44,19 @@ export async function saveSavings(_prevState: Result, formData: FormData): Promi
     data: { savings: total },
   });
 
+  // XP bônus por valor guardado
+  const xpAmount = val >= 1000 ? XP_SAVE_ANY + XP_SAVE_1000 :
+                   val >= 100  ? XP_SAVE_ANY + XP_SAVE_100 :
+                   XP_SAVE_ANY;
+
+  const gamification = await runGamificationCheck(session.user.id, xpAmount);
+
   revalidatePath("/");
   revalidatePath("/historico");
   revalidatePath("/meta");
+  revalidatePath("/conquistas");
 
-  return { success: "🏦 Economia registrada!" };
+  return { success: "🏦 Economia registrada!", gamification };
 }
 
 export async function deleteSavings(id: string) {

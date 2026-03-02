@@ -4,6 +4,7 @@ import { useActionState, useState } from "react";
 import { useEffect, useRef } from "react";
 import { saveSavings } from "@/lib/actions/savings";
 import { useToast } from "@/components/ui/Toast";
+import { useGamification } from "@/components/gamification/GamificationContext";
 import { todayDate } from "@/lib/utils";
 
 const inputStyle: React.CSSProperties = {
@@ -31,6 +32,7 @@ const labelStyle: React.CSSProperties = {
 
 export function SavingsForm() {
   const { showToast } = useToast();
+  const { processResult } = useGamification();
   const [state, action, pending] = useActionState(saveSavings, undefined);
   const formRef = useRef<HTMLFormElement>(null);
   // Rastreia o valor digitado para exibir mensagem motivacional em tempo real
@@ -39,12 +41,13 @@ export function SavingsForm() {
   useEffect(() => {
     if (state?.success) {
       showToast(state.success);
+      processResult(state.gamification);
       // Limpa o formulário e o estado do valor após sucesso
       formRef.current?.reset();
       setAmount(null);
     }
     if (state?.error) showToast(state.error);
-  }, [state, showToast]);
+  }, [state, showToast, processResult]);
 
   return (
     <div

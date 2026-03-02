@@ -4,6 +4,7 @@ import { useActionState } from "react";
 import { useEffect } from "react";
 import { saveSalary } from "@/lib/actions/salary";
 import { useToast } from "@/components/ui/Toast";
+import { useGamification } from "@/components/gamification/GamificationContext";
 import { thisMonth } from "@/lib/utils";
 
 const inputStyle: React.CSSProperties = {
@@ -31,12 +32,16 @@ const labelStyle: React.CSSProperties = {
 
 export function SalaryForm() {
   const { showToast } = useToast();
+  const { processResult } = useGamification();
   const [state, action, pending] = useActionState(saveSalary, undefined);
 
   useEffect(() => {
-    if (state?.success) showToast(state.success);
+    if (state?.success) {
+      showToast(state.success);
+      processResult(state.gamification);
+    }
     if (state?.error) showToast(state.error);
-  }, [state, showToast]);
+  }, [state, showToast, processResult]);
 
   return (
     <div

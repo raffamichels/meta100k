@@ -4,6 +4,7 @@ import { useActionState } from "react";
 import { useEffect, useRef } from "react";
 import { saveExtra } from "@/lib/actions/extras";
 import { useToast } from "@/components/ui/Toast";
+import { useGamification } from "@/components/gamification/GamificationContext";
 import { todayDate } from "@/lib/utils";
 
 const inputStyle: React.CSSProperties = {
@@ -31,16 +32,18 @@ const labelStyle: React.CSSProperties = {
 
 export function ExtraForm() {
   const { showToast } = useToast();
+  const { processResult } = useGamification();
   const [state, action, pending] = useActionState(saveExtra, undefined);
   const formRef = useRef<HTMLFormElement>(null);
 
   useEffect(() => {
     if (state?.success) {
       showToast(state.success);
+      processResult(state.gamification);
       formRef.current?.reset();
     }
     if (state?.error) showToast(state.error);
-  }, [state, showToast]);
+  }, [state, showToast, processResult]);
 
   return (
     <div

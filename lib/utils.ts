@@ -22,8 +22,13 @@ export function todayDate(): string {
   return new Date().toISOString().split("T")[0];
 }
 
+/** Retorna "hoje" no fuso GMT-3 (Brasil) como YYYY-MM-DD. */
+function todayBR(): string {
+  return new Date(Date.now() - 3 * 60 * 60 * 1000).toISOString().split("T")[0];
+}
+
 export function thisMonth(): string {
-  return new Date().toISOString().slice(0, 7);
+  return new Date(Date.now() - 3 * 60 * 60 * 1000).toISOString().slice(0, 7);
 }
 
 export function formatDate(s: string): string {
@@ -59,8 +64,15 @@ export const CAT_COLORS = [
   "#f09060","#a060f0","#60a0f0","#f06060","#90f060",
 ];
 
+/** Retorna true se já foi guardado pelo menos R$1,00 hoje (fuso GMT-3). */
+export function hasSavedToday(savingEntries: Array<{ date: string; value: number }>): boolean {
+  const today = todayBR();
+  return savingEntries.some((s) => s.date === today && s.value >= 1);
+}
+
 /** Conta dias consecutivos onde pelo menos R$1,00 foi guardado.
  *  O dia de hoje sem registro não quebra a sequência (permite guardar ainda hoje).
+ *  Usa fuso GMT-3 (Brasil) para determinar o dia atual.
  */
 export function calcDailyStreak(
   savingEntries: Array<{ date: string; value: number }>
@@ -72,11 +84,12 @@ export function calcDailyStreak(
   }
 
   let streak = 0;
-  const now = new Date();
+  // Usa GMT-3 para que "hoje" corresponda ao dia local do usuário
+  const now = new Date(Date.now() - 3 * 60 * 60 * 1000);
 
   for (let i = 0; i < 365; i++) {
     const d = new Date(now);
-    d.setDate(d.getDate() - i);
+    d.setUTCDate(d.getUTCDate() - i);
     const key = d.toISOString().split("T")[0];
     const total = dayMap.get(key) ?? 0;
 

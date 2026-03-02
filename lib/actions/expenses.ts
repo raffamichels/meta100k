@@ -3,8 +3,10 @@
 import { revalidatePath } from "next/cache";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { runGamificationCheck, type GamificationResult } from "@/lib/actions/gamification";
+import { XP_LOG_EXPENSE } from "@/lib/gamification";
 
-type Result = { error?: string; success?: string } | undefined;
+type Result = { error?: string; success?: string; gamification?: GamificationResult } | undefined;
 
 export async function saveExpense(_prevState: Result, formData: FormData): Promise<Result> {
   const session = await auth();
@@ -31,10 +33,13 @@ export async function saveExpense(_prevState: Result, formData: FormData): Promi
     data: { desc, value: val, category, date, monthId: month.id },
   });
 
+  const gamification = await runGamificationCheck(session.user.id, XP_LOG_EXPENSE);
+
   revalidatePath("/");
   revalidatePath("/historico");
+  revalidatePath("/conquistas");
 
-  return { success: "💸 Despesa registrada!" };
+  return { success: "💸 Despesa registrada!", gamification };
 }
 
 export async function deleteExpense(id: string) {

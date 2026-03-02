@@ -3,8 +3,10 @@
 import { revalidatePath } from "next/cache";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { runGamificationCheck, type GamificationResult } from "@/lib/actions/gamification";
+import { XP_LOG_EXTRA } from "@/lib/gamification";
 
-type Result = { error?: string; success?: string } | undefined;
+type Result = { error?: string; success?: string; gamification?: GamificationResult } | undefined;
 
 export async function saveExtra(_prevState: Result, formData: FormData): Promise<Result> {
   const session = await auth();
@@ -30,10 +32,13 @@ export async function saveExtra(_prevState: Result, formData: FormData): Promise
     data: { desc, value: val, date, monthId: month.id },
   });
 
+  const gamification = await runGamificationCheck(session.user.id, XP_LOG_EXTRA);
+
   revalidatePath("/");
   revalidatePath("/historico");
+  revalidatePath("/conquistas");
 
-  return { success: "⚡ Ganho adicionado!" };
+  return { success: "⚡ Ganho adicionado!", gamification };
 }
 
 export async function deleteExtra(id: string) {
