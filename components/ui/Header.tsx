@@ -1,4 +1,5 @@
 import { calcConsecutiveStreak } from "@/lib/utils";
+import { signOut } from "@/lib/auth";
 
 interface HeaderProps {
   months: Array<{ key: string; savings: number }>;
@@ -34,20 +35,44 @@ export function Header({ months }: HeaderProps) {
         meta<span style={{ color: "var(--accent)" }}>100K</span>
       </div>
 
-      <div
-        style={{
-          background: "rgba(200,240,96,0.12)",
-          border: "1px solid rgba(200,240,96,0.3)",
-          color: "var(--accent)",
-          fontSize: 12,
-          fontWeight: 500,
-          padding: "4px 10px",
-          borderRadius: 20,
-        }}
-      >
-        {streak > 0
-          ? `🔥 ${streak} ${streak === 1 ? "mês" : "meses"} consecutivos`
-          : "🎯 Iniciando"}
+      <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+        <div
+          style={{
+            background: "rgba(200,240,96,0.12)",
+            border: "1px solid rgba(200,240,96,0.3)",
+            color: "var(--accent)",
+            fontSize: 12,
+            fontWeight: 500,
+            padding: "4px 10px",
+            borderRadius: 20,
+          }}
+        >
+          {streak > 0
+            ? `🔥 ${streak} ${streak === 1 ? "mês" : "meses"} consecutivos`
+            : "🎯 Iniciando"}
+        </div>
+
+        <form
+          action={async () => {
+            "use server";
+            await signOut({ redirectTo: "/login" });
+          }}
+        >
+          <button
+            type="submit"
+            style={{
+              background: "rgba(255,255,255,0.06)",
+              border: "1px solid var(--border)",
+              borderRadius: 10,
+              padding: "4px 10px",
+              color: "var(--muted)",
+              fontSize: 12,
+              cursor: "pointer",
+            }}
+          >
+            Sair
+          </button>
+        </form>
       </div>
     </header>
   );
