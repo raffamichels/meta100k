@@ -1,12 +1,15 @@
-import NextAuth from "next-auth";
-import { authConfig } from "./lib/auth.config";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
-const { auth } = NextAuth(authConfig);
-
-export default auth((req) => {
-  const isLoggedIn = !!req.auth;
+export function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
+
+  // next-auth v5 usa estes nomes de cookie para o JWT de sessão
+  // "__Secure-" é usado em produção (HTTPS), sem prefixo em dev (HTTP)
+  const token =
+    req.cookies.get("__Secure-authjs.session-token") ??
+    req.cookies.get("authjs.session-token");
+
+  const isLoggedIn = !!token;
 
   const isPublic =
     pathname.startsWith("/login") ||
@@ -22,7 +25,7 @@ export default auth((req) => {
   }
 
   return NextResponse.next();
-});
+}
 
 export const config = {
   matcher: ["/((?!_next/static|_next/image|favicon.ico|icons|manifest).*)"],
