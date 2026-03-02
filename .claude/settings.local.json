@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(du -sh /c/Users/rafmic/Desktop/meta100k/node_modules/@prisma/client/*)",
+      "Bash(npm install)",
+      "Bash(npm run build)"
+    ]
+  }
+}
