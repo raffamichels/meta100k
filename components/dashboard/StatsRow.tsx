@@ -66,7 +66,10 @@ function StatCard({ icon, iconBg, label, value }: StatCardProps) {
 
 export function StatsRow({ salary, expenses, extras, savings }: StatsRowProps) {
   return (
+    // className="stats-grid" → no desktop: 4 colunas em linha única (1x4)
+    // No mobile: mantém o grid 2x2 definido no inline style
     <div
+      className="stats-grid"
       style={{
         display: "grid",
         gridTemplateColumns: "1fr 1fr",

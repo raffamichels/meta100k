@@ -53,7 +53,9 @@ export function BottomNav() {
   const pathname = usePathname();
 
   return (
+    // className="bottom-nav" → no desktop vira sidebar lateral fixo (ver globals.css)
     <nav
+      className="bottom-nav"
       style={{
         position: "fixed",
         bottom: 0,
@@ -72,9 +74,11 @@ export function BottomNav() {
       {navItems.map((item) => {
         const active = pathname === item.href;
         return (
+          // className="bottom-nav-link" → no desktop: layout em linha (ícone + texto)
           <Link
             key={item.href}
             href={item.href}
+            className="bottom-nav-link"
             style={{
               flex: 1,
               display: "flex",

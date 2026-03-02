@@ -12,7 +12,7 @@ export default async function HistoricoPage() {
 
   const months = await prisma.month.findMany({
     where: { userId },
-    include: { expenses: true, extras: true },
+    include: { expenses: true, extras: true, savingEntries: true },
     orderBy: { key: "desc" },
   });
 
@@ -34,6 +34,7 @@ export default async function HistoricoPage() {
           userId,
           expenses: [],
           extras: [],
+          savingEntries: [],
         },
         ...months,
       ];

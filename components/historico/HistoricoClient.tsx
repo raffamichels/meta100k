@@ -23,12 +23,21 @@ interface Extra {
   date: string;
 }
 
+// Novo: registro individual de economia
+interface Saving {
+  id: string;
+  desc: string;
+  value: number;
+  date: string;
+}
+
 interface MonthData {
   key: string;
   salary: number;
-  savings: number;
+  savings: number; // soma total (calculada pelo backend)
   expenses: Expense[];
   extras: Extra[];
+  savingEntries: Saving[]; // registros individuais
 }
 
 interface Props {
@@ -60,6 +69,7 @@ export function HistoricoClient({ months, initialMonth }: Props) {
     savings: 0,
     expenses: [],
     extras: [],
+    savingEntries: [],
   };
 
   const salary = mo.salary;
@@ -75,17 +85,19 @@ export function HistoricoClient({ months, initialMonth }: Props) {
   });
   const sortedCats = Object.entries(catMap).sort((a, b) => b[1] - a[1]);
 
-  // All entries sorted by date desc
+  // Todos os lançamentos ordenados por data desc — incluindo savings individuais
   const entries: Array<{
     id: string;
     desc: string;
     value: number;
     date: string;
-    type: "expense" | "extra";
+    type: "expense" | "extra" | "saving";
     category?: string;
   }> = [
     ...mo.expenses.map((e) => ({ ...e, type: "expense" as const })),
     ...mo.extras.map((e) => ({ id: e.id, desc: e.desc, value: e.value, date: e.date, type: "extra" as const })),
+    // Cada registro de economia aparece individualmente na lista
+    ...mo.savingEntries.map((s) => ({ id: s.id, desc: s.desc, value: s.value, date: s.date, type: "saving" as const })),
   ].sort((a, b) => b.date.localeCompare(a.date));
 
   async function handleDeleteExpense(id: string) {
@@ -103,15 +115,18 @@ export function HistoricoClient({ months, initialMonth }: Props) {
     showToast("🗑️ Salário removido");
   }
 
-  async function handleDeleteSavings() {
-    await deleteSavings(selected);
+  // Agora recebe o ID do registro individual (não mais o monthKey)
+  async function handleDeleteSaving(id: string) {
+    await deleteSavings(id);
     showToast("🗑️ Economia removida");
   }
 
   return (
     <>
-      {/* MONTH TABS */}
+      {/* MONTH TABS — permanece full-width em todas as telas */}
+      {/* className="month-tabs" → no desktop: flex-wrap para evitar scroll horizontal */}
       <div
+        className="month-tabs"
         style={{
           display: "flex",
           gap: 8,
@@ -145,6 +160,13 @@ export function HistoricoClient({ months, initialMonth }: Props) {
         ))}
       </div>
 
+      {/* .historico-grid → no desktop: 2 colunas (resumo+categorias | lançamentos)
+          No mobile: div transparente, conteúdo empilhado normalmente */}
+      <div className="historico-grid">
+
+      {/* COLUNA ESQUERDA: resumo financeiro do mês + breakdown por categoria */}
+      <div className="historico-left">
+
       {/* MONTH SUMMARY */}
       <div
         style={{
@@ -167,11 +189,9 @@ export function HistoricoClient({ months, initialMonth }: Props) {
           </div>
           <div>
             <div style={{ fontSize: 11, color: "var(--muted)", textTransform: "uppercase", letterSpacing: "0.8px" }}>Economizado</div>
-            <div style={{ fontFamily: "var(--font-syne), sans-serif", fontSize: 18, fontWeight: 700, color: "var(--accent)", display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
+            {/* Total de savings: soma de todos os registros do mês. Deleção é por entrada individual na lista abaixo. */}
+            <div style={{ fontFamily: "var(--font-syne), sans-serif", fontSize: 18, fontWeight: 700, color: "var(--accent)" }}>
               {savings > 0 ? fmt(savings) : "—"}
-              {savings > 0 && (
-                <button style={btnDangerStyle} onClick={handleDeleteSavings}>✕</button>
-              )}
             </div>
           </div>
           <div>
@@ -258,6 +278,11 @@ export function HistoricoClient({ months, initialMonth }: Props) {
         )}
       </div>
 
+      </div> {/* fim .historico-left */}
+
+      {/* COLUNA DIREITA: lista completa de lançamentos do mês */}
+      <div className="historico-right">
+
       {/* ENTRIES LIST */}
       <div
         style={{
@@ -299,7 +324,12 @@ export function HistoricoClient({ months, initialMonth }: Props) {
                 width: 42,
                 height: 42,
                 borderRadius: 12,
-                background: item.type === "expense" ? "rgba(240,96,96,0.12)" : "rgba(200,240,96,0.12)",
+                background:
+                  item.type === "expense"
+                    ? "rgba(240,96,96,0.12)"
+                    : item.type === "saving"
+                    ? "rgba(96,212,240,0.12)"
+                    : "rgba(200,240,96,0.12)",
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
@@ -307,7 +337,7 @@ export function HistoricoClient({ months, initialMonth }: Props) {
                 flexShrink: 0,
               }}
             >
-              {item.type === "expense" ? item.category?.split(" ")[0] || "💸" : "⚡"}
+              {item.type === "expense" ? item.category?.split(" ")[0] || "💸" : item.type === "saving" ? "🏦" : "⚡"}
             </div>
 
             <div style={{ flex: 1, minWidth: 0 }}>
@@ -315,7 +345,12 @@ export function HistoricoClient({ months, initialMonth }: Props) {
                 {item.desc}
               </div>
               <div style={{ fontSize: 12, color: "var(--muted)", marginTop: 2 }}>
-                {item.type === "expense" ? item.category : "Ganho avulso"} · {formatDate(item.date)}
+                {item.type === "expense"
+                  ? item.category
+                  : item.type === "saving"
+                  ? "Economia"
+                  : "Ganho avulso"}{" "}
+                · {formatDate(item.date)}
               </div>
             </div>
 
@@ -326,18 +361,23 @@ export function HistoricoClient({ months, initialMonth }: Props) {
                   fontWeight: 700,
                   fontSize: 15,
                   whiteSpace: "nowrap",
-                  color: item.type === "expense" ? "var(--danger)" : "var(--accent)",
+                  color:
+                    item.type === "expense"
+                      ? "var(--danger)"
+                      : item.type === "saving"
+                      ? "var(--accent2)"
+                      : "var(--accent)",
                 }}
               >
                 {item.type === "expense" ? "-" : "+"}{fmt(item.value)}
               </div>
               <button
                 style={btnDangerStyle}
-                onClick={() =>
-                  item.type === "expense"
-                    ? handleDeleteExpense(item.id)
-                    : handleDeleteExtra(item.id)
-                }
+                onClick={() => {
+                  if (item.type === "expense") handleDeleteExpense(item.id);
+                  else if (item.type === "extra") handleDeleteExtra(item.id);
+                  else handleDeleteSaving(item.id);
+                }}
               >
                 ✕
               </button>
@@ -345,6 +385,9 @@ export function HistoricoClient({ months, initialMonth }: Props) {
           </div>
         ))
       )}
+
+      </div> {/* fim .historico-right */}
+      </div> {/* fim .historico-grid */}
     </>
   );
 }

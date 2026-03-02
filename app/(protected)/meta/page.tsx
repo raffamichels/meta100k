@@ -65,7 +65,13 @@ export default async function MetaPage() {
     : "sem projeção";
 
   return (
-    <>
+    // .meta-grid → no desktop: grid 2 colunas (3fr dados | 2fr análise+config)
+    // No mobile: div transparente, tudo empilhado normalmente
+    <div className="meta-grid">
+
+    {/* COLUNA ESQUERDA: visão macro — total guardado, ganhos/gastos, timeline */}
+    <div className="meta-left">
+
       {/* TOTAL SAVED HERO */}
       <div
         style={{
@@ -202,6 +208,11 @@ export default async function MetaPage() {
         )}
       </div>
 
+    </div> {/* fim .meta-left */}
+
+    {/* COLUNA DIREITA: análise financeira + configuração da meta */}
+    <div className="meta-right">
+
       {/* ANALYSIS */}
       <div
         style={{
@@ -309,6 +320,8 @@ export default async function MetaPage() {
         Configurar meta
       </div>
       <GoalConfig currentGoal={user.goal} currentBase={user.baseAmount} />
-    </>
+
+    </div> {/* fim .meta-right */}
+    </div>
   );
 }

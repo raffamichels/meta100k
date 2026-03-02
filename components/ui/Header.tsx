@@ -1,15 +1,18 @@
-import { calcConsecutiveStreak } from "@/lib/utils";
+import { calcDailyStreak } from "@/lib/utils";
 import { signOut } from "@/lib/auth";
 
 interface HeaderProps {
-  months: Array<{ key: string; savings: number }>;
+  savingEntries: Array<{ date: string; value: number }>;
 }
 
-export function Header({ months }: HeaderProps) {
-  const streak = calcConsecutiveStreak(months);
+export function Header({ savingEntries }: HeaderProps) {
+  const streak = calcDailyStreak(savingEntries);
 
   return (
+    // className="app-header" → no desktop adiciona padding-left para
+    // alinhar o conteúdo com o main content (evita sobreposição com sidebar)
     <header
+      className="app-header"
       style={{
         position: "sticky",
         top: 0,
@@ -38,17 +41,17 @@ export function Header({ months }: HeaderProps) {
       <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
         <div
           style={{
-            background: "rgba(200,240,96,0.12)",
-            border: "1px solid rgba(200,240,96,0.3)",
-            color: "var(--accent)",
+            background: streak > 0 ? "rgba(240,140,40,0.15)" : "rgba(200,240,96,0.12)",
+            border: streak > 0 ? "1px solid rgba(240,140,40,0.4)" : "1px solid rgba(200,240,96,0.3)",
+            color: streak > 0 ? "#f08c28" : "var(--accent)",
             fontSize: 12,
-            fontWeight: 500,
+            fontWeight: 600,
             padding: "4px 10px",
             borderRadius: 20,
           }}
         >
           {streak > 0
-            ? `🔥 ${streak} ${streak === 1 ? "mês" : "meses"} consecutivos`
+            ? `🔥 ${streak} ${streak === 1 ? "dia" : "dias"} consecutivos`
             : "🎯 Iniciando"}
         </div>
 

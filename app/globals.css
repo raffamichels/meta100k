@@ -85,3 +85,159 @@ input[type="number"]::-webkit-inner-spin-button { display: none; }
   border-radius: 50%;
   box-shadow: 0 0 10px var(--accent);
 }
+
+/* ============================================================
+   RESPONSIVE DESKTOP (≥ 768px)
+   Apenas propriedades de layout são alteradas aqui.
+   Todos os estilos visuais (cores, fontes, bordas decorativas)
+   permanecem nos inline styles dos componentes.
+   !important é necessário para sobrescrever os inline styles
+   do React em contextos de tela maior.
+   ============================================================ */
+@media (min-width: 768px) {
+
+  /* ============================
+     SIDEBAR NAV (era: bottom nav)
+     ============================ */
+
+  /* Reposiciona o nav de baixo para a esquerda como sidebar fixo.
+     220px é o ponto de referência para todos os offsets do layout. */
+  .bottom-nav {
+    /* posicionamento: de bottom bar para sidebar esquerdo */
+    bottom: auto !important;
+    right: auto !important;
+    top: 0 !important;
+    left: 0 !important;
+
+    /* dimensões do sidebar */
+    width: 220px !important;
+    height: 100vh !important;
+
+    /* layout interno: coluna, items empilhados no topo */
+    flex-direction: column !important;
+    align-items: stretch !important;
+    justify-content: flex-start !important;
+
+    /* padding-top alinhado com altura real do header (54px) + 8px folga */
+    padding-top: 62px !important;
+    padding-bottom: 32px !important;
+
+    /* gap entre os itens do menu */
+    gap: 2px !important;
+
+    /* bordas: remove superior (era do bottom bar), adiciona direita */
+    border-top: none !important;
+    border-right: 1px solid var(--border) !important;
+  }
+
+  /* CORREÇÃO CRÍTICA: flex:1 inline fazia os 4 items se distribuírem
+     pela altura total do sidebar (cada um com ~175px de altura).
+     Com flex:none, os items têm apenas sua altura natural (~44px)
+     e ficam empilhados no topo. */
+  .bottom-nav-link {
+    flex: none !important;                /* CORRIGE a distribuição vertical */
+    flex-direction: row !important;       /* ícone + texto lado a lado */
+    align-items: center !important;
+    justify-content: flex-start !important;
+    padding: 11px 20px !important;        /* padding vertical compacto */
+    gap: 12px !important;
+    font-size: 13px !important;
+    letter-spacing: 0.3px !important;
+    text-transform: none !important;
+    width: auto !important;
+  }
+
+  /* ============================
+     HEADER
+     ============================ */
+
+  /* O header é full-width (sticky). O padding-left alinha o conteúdo
+     com o início do main content, evitando sobreposição com o sidebar. */
+  .app-header {
+    /* left = 220px sidebar + 40px gutter (igual ao padding do main) */
+    padding: 14px 40px 14px calc(220px + 40px) !important;
+  }
+
+  /* ============================
+     MAIN CONTENT
+     ============================ */
+
+  /* Desloca o conteúdo para a direita do sidebar.
+     Sem max-width — usa toda a largura disponível para melhor
+     aproveitamento em qualquer tamanho de tela. */
+  .main-content {
+    margin-left: 220px !important;
+    padding: 36px 40px 60px !important;
+    /* sem max-width: ocupa todo o espaço disponível após o sidebar */
+  }
+
+  /* ============================
+     STATS ROW
+     ============================ */
+
+  /* Lançamentos, Histórico, Meta: 4 colunas em linha única (tela cheia) */
+  .stats-grid {
+    grid-template-columns: repeat(4, 1fr) !important;
+  }
+
+  /* Dashboard: dentro da coluna esquerda (3fr ≈ 50% do content),
+     mantém 2x2 — 4 colunas ficaria estreito demais */
+  .dashboard-left .stats-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+
+  /* ============================
+     DASHBOARD: 2 colunas (3fr | 2fr)
+     Esq: HeroCard + StatsRow
+     Dir: ProjectionCard + RecentEntries
+     ============================ */
+  .dashboard-grid {
+    display: grid !important;
+    grid-template-columns: 3fr 2fr;
+    gap: 28px;
+    align-items: start;
+  }
+
+  /* ============================
+     LANÇAMENTOS: 2x2 grid
+     SalaryForm  | SavingsForm
+     ExtraForm   | ExpenseForm
+     ============================ */
+  .lancamentos-grid {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    align-items: start;
+  }
+
+  /* ============================
+     HISTÓRICO: 2 colunas (1fr | 1fr)
+     Esq: Resumo + Categorias
+     Dir: Lista de lançamentos
+     ============================ */
+  .historico-grid {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr;
+    gap: 28px;
+    align-items: start;
+  }
+
+  /* Month tabs: wrap no desktop em vez de scroll horizontal */
+  .month-tabs {
+    flex-wrap: wrap !important;
+    overflow-x: visible !important;
+  }
+
+  /* ============================
+     META: 2 colunas (3fr | 2fr)
+     Esq: Hero + Painel + Timeline
+     Dir: Análise + Configurar
+     ============================ */
+  .meta-grid {
+    display: grid !important;
+    grid-template-columns: 3fr 2fr;
+    gap: 28px;
+    align-items: start;
+  }
+
+}

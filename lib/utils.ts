@@ -59,35 +59,33 @@ export const CAT_COLORS = [
   "#f09060","#a060f0","#60a0f0","#f06060","#90f060",
 ];
 
-/** Count consecutive months with savings > 0, going back from current month */
-export function calcConsecutiveStreak(
-  months: Array<{ key: string; savings: number }>
+/** Conta dias consecutivos onde pelo menos R$1,00 foi guardado.
+ *  O dia de hoje sem registro não quebra a sequência (permite guardar ainda hoje).
+ */
+export function calcDailyStreak(
+  savingEntries: Array<{ date: string; value: number }>
 ): number {
-  const now = new Date();
+  // Agrupa por data somando os valores do dia
+  const dayMap = new Map<string, number>();
+  for (const s of savingEntries) {
+    dayMap.set(s.date, (dayMap.get(s.date) ?? 0) + s.value);
+  }
+
   let streak = 0;
-  let checkYear = now.getFullYear();
-  let checkMonth = now.getMonth() + 1; // 1-indexed
+  const now = new Date();
 
-  const monthMap = new Map(months.map((m) => [m.key, m.savings]));
+  for (let i = 0; i < 365; i++) {
+    const d = new Date(now);
+    d.setDate(d.getDate() - i);
+    const key = d.toISOString().split("T")[0];
+    const total = dayMap.get(key) ?? 0;
 
-  // Allow the current month to not have savings yet (start checking from previous)
-  // Go back month by month until we find one without savings
-  for (let i = 0; i < 24; i++) {
-    const key = `${checkYear}-${String(checkMonth).padStart(2, "0")}`;
-    const savings = monthMap.get(key) ?? 0;
-
-    if (savings > 0) {
+    if (total >= 1) {
       streak++;
     } else if (i === 0) {
-      // Current month with no savings — start from previous
+      // Hoje sem registro ainda — verifica ontem antes de desistir
     } else {
       break;
-    }
-
-    checkMonth--;
-    if (checkMonth === 0) {
-      checkMonth = 12;
-      checkYear--;
     }
   }
 

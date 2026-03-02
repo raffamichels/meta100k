@@ -16,13 +16,18 @@ export default async function ProtectedLayout({
 
   const months = await prisma.month.findMany({
     where: { userId },
-    select: { key: true, savings: true },
+    // Inclui savingEntries para calcular o streak diário no Header
+    select: { key: true, savings: true, savingEntries: { select: { date: true, value: true } } },
   });
+
+  // Achata todos os registros individuais de economia para o cálculo diário
+  const allSavingEntries = months.flatMap((m) => m.savingEntries);
 
   return (
     <div style={{ position: "relative", zIndex: 1 }}>
-      <Header months={months} />
-      <main style={{ padding: "20px 20px 100px" }} className="page-fade">
+      <Header savingEntries={allSavingEntries} />
+      {/* className="main-content" → no desktop: margin-left para o sidebar + padding generoso */}
+      <main style={{ padding: "20px 20px 100px" }} className="page-fade main-content">
         {children}
       </main>
       <BottomNav />

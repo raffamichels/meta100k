@@ -22,14 +22,15 @@ model User {
 }
 
 model Month {
-  id       String    @id @default(cuid())
-  key      String
-  salary   Float     @default(0)
-  savings  Float     @default(0)
-  userId   String
-  user     User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-  expenses Expense[]
-  extras   Extra[]
+  id            String    @id @default(cuid())
+  key           String
+  salary        Float     @default(0)
+  savings       Float     @default(0) // soma calculada dos registros Saving
+  userId        String
+  user          User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  expenses      Expense[]
+  extras        Extra[]
+  savingEntries Saving[]  // registros individuais de economia
 
   @@unique([userId, key])
 }
@@ -45,6 +46,15 @@ model Expense {
 }
 
 model Extra {
+  id      String @id @default(cuid())
+  desc    String
+  value   Float
+  date    String
+  monthId String
+  month   Month  @relation(fields: [monthId], references: [id], onDelete: Cascade)
+}
+
+model Saving {
   id      String @id @default(cuid())
   desc    String
   value   Float
