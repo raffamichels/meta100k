@@ -1,9 +1,8 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  reactCompiler: true,
-  turbopack: {},
   experimental: {
+    reactCompiler: true,
     serverActions: {
       bodySizeLimit: "2mb",
     },
