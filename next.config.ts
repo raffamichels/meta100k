@@ -6,14 +6,8 @@ const nextConfig: NextConfig = {
       bodySizeLimit: "2mb",
     },
   },
-  // Prisma não deve ser bundlado — o código gerado usa __dirname (Node.js CJS)
-  // que não está disponível em bundles ESM ou no Edge Runtime do Vercel
+  // Prisma não deve ser bundlado — o client usa require() nativo do Node.js
   serverExternalPackages: ["@prisma/client", "prisma", ".prisma/client"],
-  webpack: (config) => {
-    // Garante __dirname em bundles de servidor (necessário para o Prisma localizar o query engine)
-    config.node = { __dirname: true, __filename: true };
-    return config;
-  },
 };
 
 export default nextConfig;

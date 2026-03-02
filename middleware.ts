@@ -25,5 +25,8 @@ export default auth((req) => {
 });
 
 export const config = {
+  // Usa Node.js runtime (estável no Next.js 15.5) em vez do Edge Runtime
+  // O Edge Runtime não tem __dirname, causando ReferenceError no Vercel
+  runtime: "nodejs",
   matcher: ["/((?!_next/static|_next/image|favicon.ico|icons|manifest).*)"],
 };
