@@ -3,13 +3,17 @@ import { NextRequest, NextResponse } from "next/server";
 export function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
 
-  // next-auth v5 usa estes nomes de cookie para o JWT de sessão
-  // "__Secure-" é usado em produção (HTTPS), sem prefixo em dev (HTTP)
+  // DEBUG: confirma que o middleware está rodando sem erros
+  console.log("[MW] pathname:", pathname);
+  console.log("[MW] cookies:", req.cookies.getAll().map((c) => c.name));
+
   const token =
     req.cookies.get("__Secure-authjs.session-token") ??
     req.cookies.get("authjs.session-token");
 
   const isLoggedIn = !!token;
+
+  console.log("[MW] isLoggedIn:", isLoggedIn);
 
   const isPublic =
     pathname.startsWith("/login") ||
@@ -17,13 +21,16 @@ export function middleware(req: NextRequest) {
     pathname.startsWith("/api/auth");
 
   if (!isLoggedIn && !isPublic) {
+    console.log("[MW] redirect -> /login");
     return NextResponse.redirect(new URL("/login", req.url));
   }
 
   if (isLoggedIn && (pathname === "/login" || pathname === "/register")) {
+    console.log("[MW] redirect -> /");
     return NextResponse.redirect(new URL("/", req.url));
   }
 
+  console.log("[MW] next()");
   return NextResponse.next();
 }
 
