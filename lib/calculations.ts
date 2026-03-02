@@ -1,4 +1,4 @@
-import type { Month, Expense, Extra } from "@/generated/prisma";
+import type { Month, Expense, Extra } from "@prisma/client";
 
 type MonthWithRelations = Month & {
   expenses: Expense[];
