@@ -10,6 +10,7 @@ export function BottomNav() {
 
   const homeActive = pathname === "/";
   const launchActive = pathname === "/lancamentos";
+  const desafioActive = pathname.startsWith("/desafio");
   const profileActive = PROFILE_PATHS.some((p) => pathname === p || pathname.startsWith(p + "/"));
 
   return (
@@ -60,6 +61,37 @@ export function BottomNav() {
           <path d="M16 21v-9h5V12" />
         </svg>
         Início
+      </Link>
+
+      {/* Desafios */}
+      <Link
+        href="/desafio/novo"
+        className="bottom-nav-link"
+        style={{
+          flex: 1,
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "center",
+          gap: 4,
+          textDecoration: "none",
+          color: desafioActive ? "var(--accent)" : "var(--muted)",
+          fontSize: 10,
+          fontWeight: 500,
+          letterSpacing: "0.5px",
+          textTransform: "uppercase",
+          userSelect: "none",
+          WebkitTapHighlightColor: "transparent",
+          transition: "color 0.2s",
+        }}
+      >
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} width={22} height={22}>
+          <path d="M14.5 17.5L3 6V3h3l11.5 11.5" />
+          <path d="M13 19l6-6" />
+          <path d="M16 16l3.5 3.5a2.121 2.121 0 003-3L19 13" />
+          <path d="M7.5 8L6 9.5" />
+        </svg>
+        Desafios
       </Link>
 
       {/* Lançar — botão central em destaque */}

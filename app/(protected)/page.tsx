@@ -12,6 +12,7 @@ import { ProjectionCard } from "@/components/dashboard/ProjectionCard";
 import { RecentEntries } from "@/components/dashboard/RecentEntries";
 import { XPBar } from "@/components/gamification/XPBar";
 import { ChallengeCard } from "@/components/gamification/ChallengeCard";
+import Link from "next/link";
 
 export default async function DashboardPage() {
   const session = await auth();
@@ -213,6 +214,60 @@ export default async function DashboardPage() {
       {/* Coluna direita: desafios + projeção + entradas recentes */}
       <div className="dashboard-right">
         <ChallengeCard challenges={challenges} />
+
+        {/* Card de Desafios Sociais */}
+        <Link
+          href="/desafio/novo"
+          style={{
+            display: "block",
+            background: "linear-gradient(135deg, rgba(240,96,160,0.1), rgba(160,96,240,0.07))",
+            border: "1px solid rgba(240,96,160,0.3)",
+            borderRadius: 20,
+            padding: "18px 20px",
+            textDecoration: "none",
+            marginBottom: 16,
+          }}
+        >
+          <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
+            <div
+              style={{
+                fontSize: 32,
+                flexShrink: 0,
+                filter: "drop-shadow(0 0 8px rgba(240,96,160,0.5))",
+              }}
+            >
+              ⚔️
+            </div>
+            <div style={{ flex: 1 }}>
+              <div
+                style={{
+                  fontFamily: "var(--font-syne), sans-serif",
+                  fontWeight: 800,
+                  fontSize: 15,
+                  color: "#f060a0",
+                  marginBottom: 3,
+                }}
+              >
+                Desafie um Amigo
+              </div>
+              <div style={{ fontSize: 12, color: "var(--muted)", lineHeight: 1.4 }}>
+                Corrida para R$100K ou desafio de economia — quem chega primeiro?
+              </div>
+            </div>
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="rgba(240,96,160,0.6)"
+              strokeWidth={2}
+              width={16}
+              height={16}
+              style={{ flexShrink: 0 }}
+            >
+              <path d="M9 18l6-6-6-6" />
+            </svg>
+          </div>
+        </Link>
+
         <ProjectionCard projection={projection} totalSaved={totalSaved} />
         <RecentEntries entries={recentEntries} />
       </div>

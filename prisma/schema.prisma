@@ -23,6 +23,9 @@ model User {
   streakShields  Int                @default(0)
   achievements   UserAchievement[]
   challenges     Challenge[]
+  // Social
+  createdSocialChallenges  SocialChallenge[]              @relation("SocialChallengeCreator")
+  socialParticipations     SocialChallengeParticipant[]   @relation("SocialChallengeParticipant")
   createdAt      DateTime           @default(now())
   updatedAt      DateTime           @updatedAt
 }
@@ -92,4 +95,28 @@ model Challenge {
   endDate     String
   completed   Boolean   @default(false)
   completedAt DateTime?
+}
+
+model SocialChallenge {
+  id           String                     @id @default(cuid())
+  creatorId    String
+  creator      User                       @relation("SocialChallengeCreator", fields: [creatorId], references: [id], onDelete: Cascade)
+  mode         String                     // "hard" | "savings"
+  days         Int?                       // 30, 60, 90 — apenas modo "savings"
+  startDate    String                     // YYYY-MM-DD
+  endDate      String?                    // YYYY-MM-DD — apenas modo "savings"
+  status       String                     @default("pending") // "pending" | "active" | "finished"
+  participants SocialChallengeParticipant[]
+  createdAt    DateTime                   @default(now())
+}
+
+model SocialChallengeParticipant {
+  id          String          @id @default(cuid())
+  challengeId String
+  challenge   SocialChallenge @relation(fields: [challengeId], references: [id], onDelete: Cascade)
+  userId      String
+  user        User            @relation("SocialChallengeParticipant", fields: [userId], references: [id], onDelete: Cascade)
+  joinedAt    DateTime        @default(now())
+
+  @@unique([challengeId, userId])
 }

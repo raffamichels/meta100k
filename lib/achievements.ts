@@ -174,6 +174,23 @@ export const ACHIEVEMENTS: AchievementDef[] = [
     rarity: "rare",
     xpReward: 100,
   },
+  // Social
+  {
+    key: "social_hard",
+    icon: "🏁",
+    title: "Desafiante Hard",
+    description: "Participe de uma corrida ao R$100K com um amigo.",
+    rarity: "epic",
+    xpReward: 200,
+  },
+  {
+    key: "social_savings",
+    icon: "📊",
+    title: "Poupador Social",
+    description: "Participe de um desafio de economia com um amigo.",
+    rarity: "rare",
+    xpReward: 100,
+  },
   // Níveis
   {
     key: "level_5",
