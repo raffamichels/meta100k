@@ -66,6 +66,13 @@ export default async function PerfilPage() {
       label: "Histórico",
       desc: "Ver todos os lançamentos",
     },
+    // Desafios movido para cá (saiu da barra de navegação inferior)
+    {
+      href: "/desafio/novo",
+      icon: "⚔️",
+      label: "Desafios",
+      desc: "Desafios e rankings",
+    },
   ];
 
   return (
