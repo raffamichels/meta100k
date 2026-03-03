@@ -90,6 +90,14 @@ input[type="number"]::-webkit-inner-spin-button { display: none; }
 
 .streak-pulse { animation: streakPulse 2s ease-in-out infinite; }
 
+/* Pulsação de borda para conquistas sazonais disponíveis agora */
+@keyframes seasonalPulse {
+  0%, 100% { box-shadow: 0 0 0 1px rgba(240,192,96,0.35); }
+  50%       { box-shadow: 0 0 0 3px rgba(240,192,96,0.7), 0 0 18px rgba(240,192,96,0.2); }
+}
+
+.seasonal-available { animation: seasonalPulse 2s ease-in-out infinite; }
+
 /* Brilho para level up badge */
 @keyframes levelGlow {
   0%, 100% { box-shadow: 0 0 10px rgba(200,240,96,0.3); }

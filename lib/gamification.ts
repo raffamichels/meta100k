@@ -1,5 +1,11 @@
 import { prisma } from "@/lib/prisma";
-import { ACHIEVEMENT_MAP } from "@/lib/achievements";
+import {
+  ACHIEVEMENT_MAP,
+  generateSeasonalAchievements,
+  isDateInSeasonalWindow,
+  isFriday13,
+} from "@/lib/achievements";
+import type { SeasonalAchievementDef } from "@/lib/achievements";
 import type { Month, Expense, Extra, Saving } from "@prisma/client";
 
 // ─── XP Sources ────────────────────────────────────────────────────────────────
@@ -85,6 +91,7 @@ type CheckContext = {
   xp: number;
   level: number;
   unlockedKeys: Set<string>;
+  today: string; // YYYY-MM-DD
 };
 
 export async function checkAndUnlockAchievements(ctx: CheckContext): Promise<string[]> {
@@ -184,6 +191,257 @@ export async function checkAndUnlockAchievements(ctx: CheckContext): Promise<str
   // Níveis
   if (ctx.level >= 5) await tryUnlock("level_5");
   if (ctx.level >= 8) await tryUnlock("level_8");
+
+  return newKeys;
+}
+
+// ─── Seasonal Achievements ────────────────────────────────────────────────────
+
+function pad2(n: number) { return String(n).padStart(2, "0"); }
+
+function getWindowStartStr(w: SeasonalAchievementDef["window"], year: number): string {
+  const y = year + (w.yearOffset ?? 0);
+  return `${y}-${pad2(w.monthStart)}-${pad2(w.dayStart)}`;
+}
+
+function getWindowEndStr(w: SeasonalAchievementDef["window"], year: number): string {
+  const yBase = year + (w.yearOffset ?? 0);
+  const y = w.crossYear ? yBase + 1 : yBase;
+  return `${y}-${pad2(w.monthEnd)}-${pad2(w.dayEnd)}`;
+}
+
+function evaluateSeasonalCondition(ach: SeasonalAchievementDef, ctx: CheckContext): boolean {
+  const { conditionType, conditionParam = 0, window, year } = ach;
+
+  const wStart = getWindowStartStr(window, year);
+  const wEnd   = getWindowEndStr(window, year);
+
+  // Economies dentro da janela
+  const savingsInWindow = ctx.allSavingEntries.filter(s => s.date >= wStart && s.date <= wEnd);
+  const savingDaysInWindow = new Set(savingsInWindow.map(s => s.date));
+
+  // Todas as despesas e extras do contexto
+  const allExpenses = ctx.months.flatMap(m => m.expenses);
+  const allExtras   = ctx.months.flatMap(m => m.extras);
+
+  const mk = (y: number, m: number) => `${y}-${pad2(m)}`;
+
+  switch (conditionType) {
+
+    case "saving_on_date":
+    case "saving_on_any_date_in_window":
+      return savingsInWindow.length > 0;
+
+    case "saving_days_in_window":
+      return savingDaysInWindow.size >= conditionParam;
+
+    case "saving_entries_in_window":
+      return savingsInWindow.length >= conditionParam;
+
+    case "savings_sum_in_window":
+      return savingsInWindow.reduce((s, e) => s + e.value, 0) >= conditionParam;
+
+    case "savings_sum_month": {
+      const month = ctx.months.find(m => m.key === mk(year, window.monthStart));
+      return (month?.savings ?? 0) >= conditionParam;
+    }
+
+    case "savings_rate_month": {
+      const month = ctx.months.find(m => m.key === mk(year, window.monthStart));
+      if (!month || month.salary <= 0) return false;
+      return month.savings / month.salary >= conditionParam;
+    }
+
+    case "savings_all_days_in_month": {
+      const month = ctx.months.find(m => m.key === mk(year, window.monthStart));
+      if (!month) return false;
+      const [my, mm] = month.key.split("-").map(Number);
+      const daysInMonth = new Date(my, mm, 0).getDate();
+      const daysWithSaving = new Set(
+        month.savingEntries.filter(s => s.value >= 1).map(s => s.date)
+      ).size;
+      return daysWithSaving >= daysInMonth;
+    }
+
+    case "savings_all_days_in_two_months": {
+      // maratona_fim_de_ano: nov + dez do mesmo ano
+      const nov = ctx.months.find(m => m.key === mk(year, 11));
+      const dec = ctx.months.find(m => m.key === mk(year, 12));
+      if (!nov || !dec) return false;
+      const novDays = new Date(year, 11, 0).getDate(); // 30
+      const decDays = new Date(year, 12, 0).getDate(); // 31
+      const novSaving = new Set(nov.savingEntries.filter(s => s.value >= 1).map(s => s.date)).size;
+      const decSaving = new Set(dec.savingEntries.filter(s => s.value >= 1).map(s => s.date)).size;
+      return novSaving >= novDays && decSaving >= decDays;
+    }
+
+    case "savings_sum_in_season": {
+      // Determina os 3 meses da estação a partir da janela
+      let months3: string[];
+      if (window.crossYear) {
+        // verao_de_fogo: dez/year, jan/year+1, fev/year+1
+        months3 = [mk(year, 12), mk(year + 1, 1), mk(year + 1, 2)];
+      } else {
+        months3 = [];
+        for (let m = window.monthStart; m <= window.monthEnd; m++) {
+          months3.push(mk(year, m));
+        }
+      }
+      return months3.every(key => {
+        const month = ctx.months.find(m => m.key === key);
+        return (month?.savings ?? 0) >= conditionParam;
+      });
+    }
+
+    case "expenses_zero_on_date": {
+      // Verifica zero despesas em toda a janela (data exata ou período)
+      const exp = allExpenses.filter(e => e.date >= wStart && e.date <= wEnd);
+      return exp.length === 0;
+    }
+
+    case "expenses_reduced_vs_prev_month": {
+      const currM  = window.monthStart;
+      const prevM  = currM === 1 ? 12 : currM - 1;
+      const prevY  = currM === 1 ? year - 1 : year;
+      const curr   = ctx.months.find(m => m.key === mk(year, currM));
+      const prev   = ctx.months.find(m => m.key === mk(prevY, prevM));
+      if (!curr || !prev) return false;
+      const currExp = curr.expenses.reduce((s, e) => s + e.value, 0);
+      const prevExp = prev.expenses.reduce((s, e) => s + e.value, 0);
+      if (prevExp <= 0) return false;
+      // conditionParam = fração máxima aceita (ex: 0.9 = 90% do mês anterior)
+      return currExp <= prevExp * conditionParam;
+    }
+
+    case "expenses_capped_in_window": {
+      // Soma de despesas na janela ≤ média semanal × conditionParam
+      const expInWindow = allExpenses
+        .filter(e => e.date >= wStart && e.date <= wEnd)
+        .reduce((s, e) => s + e.value, 0);
+      // Média semanal: total de despesas / (meses com despesas × 4,33)
+      const monthsWithExp = ctx.months.filter(m => m.expenses.length > 0);
+      const totalExp = monthsWithExp.flatMap(m => m.expenses).reduce((s, e) => s + e.value, 0);
+      const avgWeekly = monthsWithExp.length > 0 ? totalExp / (monthsWithExp.length * 4.33) : 0;
+      if (avgWeekly <= 0) return false;
+      return expInWindow <= avgWeekly * conditionParam;
+    }
+
+    case "expense_max_in_month": {
+      const month = ctx.months.find(m => m.key === mk(year, window.monthStart));
+      if (!month) return true; // sem despesas = condição satisfeita
+      return month.expenses.every(e => e.value <= conditionParam);
+    }
+
+    case "extra_in_window": {
+      return allExtras.some(e => e.date >= wStart && e.date <= wEnd && e.value >= conditionParam);
+    }
+
+    case "extra_count_in_window": {
+      const count = allExtras.filter(e => e.date >= wStart && e.date <= wEnd).length;
+      return count >= conditionParam;
+    }
+
+    case "streak_in_window":
+      // Verifica se o streak atual atinge o mínimo durante o período
+      return ctx.streak >= conditionParam;
+
+    case "salary_and_saving_in_window": {
+      // Caso especial: inicio_de_trimestre — verifica qualquer início de trimestre do ano
+      if (ach.key.startsWith("inicio_de_trimestre")) {
+        return [1, 4, 7, 10].some(qm => {
+          const qKey = mk(year, qm);
+          const month = ctx.months.find(m => m.key === qKey);
+          if (!month || month.salary <= 0) return false;
+          const qStart = `${year}-${pad2(qm)}-01`;
+          const qEnd   = `${year}-${pad2(qm)}-03`;
+          return ctx.allSavingEntries.some(s => s.date >= qStart && s.date <= qEnd);
+        });
+      }
+      // Caso geral: salário no mês da janela + economia dentro da janela
+      const month = ctx.months.find(m => m.key === mk(year, window.monthStart));
+      if (!month || month.salary <= 0) return false;
+      return savingsInWindow.length > 0;
+    }
+
+    case "months_with_savings_count": {
+      // Conta meses do ano com savings > 0 (usa ctx.months do ano corrente)
+      const yearMonths = ctx.months.filter(m => m.key.startsWith(`${year}-`));
+      const count = yearMonths.filter(m => m.savings > 0).length;
+      return count >= conditionParam;
+    }
+
+    case "all_months_in_quarter": {
+      const quarterMap: Record<number, number[]> = {
+        1: [1, 2, 3], 2: [4, 5, 6], 3: [7, 8, 9], 4: [10, 11, 12],
+      };
+      const qMonths = quarterMap[conditionParam] ?? [];
+      return qMonths.every(m => {
+        const month = ctx.months.find(mo => mo.key === mk(year, m));
+        return (month?.savings ?? 0) > 0;
+      });
+    }
+
+    case "all_months_in_first_half": {
+      // meio_de_ano: jan–jun do mesmo ano
+      return [1, 2, 3, 4, 5, 6].every(m => {
+        const month = ctx.months.find(mo => mo.key === mk(year, m));
+        return (month?.savings ?? 0) > 0;
+      });
+    }
+
+    case "all_months_in_year": {
+      return [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].every(m => {
+        const month = ctx.months.find(mo => mo.key === mk(year, m));
+        return (month?.savings ?? 0) > 0;
+      });
+    }
+
+    case "total_saved_threshold":
+      return ctx.totalSaved >= conditionParam;
+
+    case "saving_on_friday_13":
+      return ctx.allSavingEntries
+        .filter(s => s.date.startsWith(`${year}`))
+        .some(s => isFriday13(s.date));
+
+    case "saving_on_leap_day":
+      return ctx.allSavingEntries.some(s => s.date.endsWith("-02-29"));
+
+    default:
+      return false;
+  }
+}
+
+export async function checkSeasonalAchievements(ctx: CheckContext): Promise<string[]> {
+  const newKeys: string[] = [];
+  const year = Number(ctx.today.split("-")[0]);
+
+  // Verifica conquistas do ano corrente E do ano anterior
+  // (necessário para janelas cross-year como q4_invencivel e reveillon_de_campeao)
+  const toCheck = [
+    ...generateSeasonalAchievements(year),
+    ...generateSeasonalAchievements(year - 1),
+  ];
+
+  for (const ach of toCheck) {
+    if (ctx.unlockedKeys.has(ach.key)) continue;
+    if (!isDateInSeasonalWindow(ctx.today, ach.window, ach.year)) continue;
+    if (!evaluateSeasonalCondition(ach, ctx)) continue;
+
+    try {
+      await prisma.userAchievement.create({ data: { userId: ctx.userId, key: ach.key } });
+      ctx.unlockedKeys.add(ach.key);
+      newKeys.push(ach.key);
+      if (ach.xpReward > 0) {
+        await prisma.user.update({
+          where: { id: ctx.userId },
+          data: { xp: { increment: ach.xpReward } },
+        });
+      }
+    } catch {
+      // unique constraint: conquista já desbloqueada
+    }
+  }
 
   return newKeys;
 }

@@ -4,6 +4,7 @@ import { prisma } from "@/lib/prisma";
 import {
   addXP,
   checkAndUnlockAchievements,
+  checkSeasonalAchievements,
   generateChallengesIfNeeded,
   updateChallengeProgress,
   grantStreakShieldIfEarned,
@@ -49,8 +50,11 @@ export async function runGamificationCheck(
   const freshUser = await prisma.user.findUnique({ where: { id: userId }, select: { xp: true, level: true } });
   const currentLevel = freshUser ? freshUser.level : user.level;
 
-  // Checa e desbloqueia conquistas
-  const newAchievements = await checkAndUnlockAchievements({
+  // Data de hoje (usada nas conquistas sazonais e desafios)
+  const today = new Date().toISOString().split("T")[0];
+
+  // Contexto compartilhado para as verificações de conquistas
+  const checkCtx = {
     userId,
     totalSaved,
     streak,
@@ -59,7 +63,15 @@ export async function runGamificationCheck(
     xp: freshUser?.xp ?? user.xp,
     level: currentLevel,
     unlockedKeys,
-  });
+    today,
+  };
+
+  // Checa e desbloqueia conquistas permanentes
+  const newAchievements = await checkAndUnlockAchievements(checkCtx);
+
+  // Checa e desbloqueia conquistas sazonais
+  const seasonalNewKeys = await checkSeasonalAchievements(checkCtx);
+  newAchievements.push(...seasonalNewKeys);
 
   // Atualiza recorde de streak
   const maxStreak = user.maxStreak ?? 0;
@@ -76,7 +88,6 @@ export async function runGamificationCheck(
   await generateChallengesIfNeeded(userId, avgWeekly, avgMonthly);
 
   // Atualiza progresso dos desafios
-  const today = new Date().toISOString().split("T")[0];
   const monday = (() => {
     const d = new Date();
     d.setDate(d.getDate() - ((d.getDay() + 6) % 7));
