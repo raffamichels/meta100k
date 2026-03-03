@@ -8,6 +8,12 @@ const nextConfig: NextConfig = {
   },
   // Prisma não deve ser bundlado — o client usa require() nativo do Node.js
   serverExternalPackages: ["@prisma/client", "prisma", ".prisma/client"],
+  // Força o Vercel a incluir os engine binaries do Prisma no Lambda bundle.
+  // Sem isso, o file tracing ignora arquivos .node nativos e o Prisma crasha
+  // em runtime antes de responder → Vercel retorna 404 em vez de 500.
+  outputFileTracingIncludes: {
+    "/**": ["./node_modules/.prisma/client/**/*"],
+  },
   webpack: (config, { nextRuntime }) => {
     // O ua-parser-js bundlado dentro do Next.js usa __dirname para localizar assets.
     // No Edge Runtime (Vercel), __dirname não existe → ReferenceError.
