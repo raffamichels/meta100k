@@ -4,7 +4,8 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 // Desafios agora fica dentro do Perfil, então /desafio também acende o ícone de Perfil
-const PROFILE_PATHS = ["/perfil", "/conquistas", "/meta", "/historico", "/desafio"];
+// /cofre também acende o ícone de Perfil, pois o Cofre do Diabo está no menu do perfil
+const PROFILE_PATHS = ["/perfil", "/conquistas", "/meta", "/historico", "/desafio", "/cofre"];
 
 export function BottomNav() {
   const pathname = usePathname();

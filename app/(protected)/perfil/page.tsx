@@ -73,6 +73,12 @@ export default async function PerfilPage() {
       label: "Desafios",
       desc: "Desafios e rankings",
     },
+    {
+      href: "/cofre",
+      icon: "😈",
+      label: "Cofre do Diabo",
+      desc: "Tentações resistidas e valor protegido",
+    },
   ];
 
   return (

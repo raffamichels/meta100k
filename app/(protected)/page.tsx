@@ -10,6 +10,7 @@ import { HeroCard } from "@/components/dashboard/HeroCard";
 import { StatsRow } from "@/components/dashboard/StatsRow";
 import { ProjectionCard } from "@/components/dashboard/ProjectionCard";
 import { RecentEntries } from "@/components/dashboard/RecentEntries";
+import { CofreCard } from "@/components/dashboard/CofreCard";
 import { XPBar } from "@/components/gamification/XPBar";
 import { ChallengeCard } from "@/components/gamification/ChallengeCard";
 import Link from "next/link";
@@ -30,8 +31,8 @@ export default async function DashboardPage() {
     },
   });
 
-  // Busca XP e dados de gamificação para o painel
-  const [userGameData, challenges] = await Promise.all([
+  // Busca XP, gamificação e dados do Cofre do Diabo em paralelo
+  const [userGameData, challenges, cofreTemptations] = await Promise.all([
     prisma.user.findUnique({
       where: { id: userId },
       select: { xp: true, maxStreak: true, streakShields: true },
@@ -40,6 +41,11 @@ export default async function DashboardPage() {
       where: { userId },
       orderBy: { startDate: "desc" },
       take: 6,
+    }),
+    // Dados resumidos do Cofre do Diabo para o card do dashboard
+    prisma.temptation.findMany({
+      where: { userId },
+      orderBy: { date: "desc" },
     }),
   ]);
 
@@ -61,6 +67,19 @@ export default async function DashboardPage() {
   const allSavingEntries = user.months.flatMap((m) => m.savingEntries);
   const streak = calcDailyStreak(allSavingEntries);
   const savedToday = hasSavedToday(allSavingEntries);
+
+  // Resumo do Cofre do Diabo — calculado em runtime a partir das tentações
+  const cofreTotalResistido = cofreTemptations.reduce((s, t) => s + t.value, 0);
+  const cofreCount = cofreTemptations.length;
+  const lastTemptation = cofreTemptations[0] ?? null; // já ordenado por date desc
+  const cofreCatMap = new Map<string, number>();
+  for (const t of cofreTemptations) {
+    cofreCatMap.set(t.category, (cofreCatMap.get(t.category) ?? 0) + t.value);
+  }
+  let cofreTopCat: { name: string; total: number } | null = null;
+  for (const [name, total] of cofreCatMap.entries()) {
+    if (!cofreTopCat || total > cofreTopCat.total) cofreTopCat = { name, total };
+  }
 
   // Recent entries (last 5, expenses + extras combined, sorted by date desc)
   const allEntries: Array<{
@@ -211,9 +230,19 @@ export default async function DashboardPage() {
         />
       </div>
 
-      {/* Coluna direita: desafios + projeção + entradas recentes */}
+      {/* Coluna direita: desafios + cofre + projeção + entradas recentes */}
       <div className="dashboard-right">
         <ChallengeCard challenges={challenges} />
+
+        {/* Card do Cofre do Diabo */}
+        <CofreCard
+          totalResistido={cofreTotalResistido}
+          count={cofreCount}
+          lastDesc={lastTemptation?.desc ?? null}
+          lastValue={lastTemptation?.value ?? null}
+          topCategoryName={cofreTopCat?.name ?? null}
+          topCategoryTotal={cofreTopCat?.total ?? null}
+        />
 
         {/* Card de Desafios Sociais */}
         <Link

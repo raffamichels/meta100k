@@ -23,6 +23,8 @@ model User {
   streakShields  Int                @default(0)
   achievements   UserAchievement[]
   challenges     Challenge[]
+  // Cofre do Diabo
+  temptations    Temptation[]
   // Social
   createdSocialChallenges  SocialChallenge[]              @relation("SocialChallengeCreator")
   socialParticipations     SocialChallengeParticipant[]   @relation("SocialChallengeParticipant")
@@ -95,6 +97,18 @@ model Challenge {
   endDate     String
   completed   Boolean   @default(false)
   completedAt DateTime?
+}
+
+model Temptation {
+  id        String   @id @default(cuid())
+  desc      String                        // "Tênis Nike Air Max"
+  value     Float                         // 350.00
+  category  String                        // "Vestuário"
+  place     String?                       // "Shopping Iguatemi" (opcional)
+  date      String                        // "2026-03-03"
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
 }
 
 model SocialChallenge {

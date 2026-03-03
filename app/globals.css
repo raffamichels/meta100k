@@ -98,6 +98,12 @@ input[type="number"]::-webkit-inner-spin-button { display: none; }
 
 .seasonal-available { animation: seasonalPulse 2s ease-in-out infinite; }
 
+/* Pulso para a fase atual na trilha do Mapa do Tesouro */
+@keyframes mapPulse {
+  0%, 100% { box-shadow: 0 0 0 2px rgba(200,240,96,0.4); }
+  50%       { box-shadow: 0 0 0 5px rgba(200,240,96,0.15), 0 0 14px rgba(200,240,96,0.35); }
+}
+
 /* Brilho para level up badge */
 @keyframes levelGlow {
   0%, 100% { box-shadow: 0 0 10px rgba(200,240,96,0.3); }
@@ -280,6 +286,11 @@ input[type="number"]::-webkit-inner-spin-button { display: none; }
     grid-template-columns: 1fr 1fr;
     gap: 20px;
     align-items: start;
+  }
+
+  /* TemptationForm ocupa as 2 colunas no desktop */
+  .lancamentos-full {
+    grid-column: 1 / -1 !important;
   }
 
   /* ============================

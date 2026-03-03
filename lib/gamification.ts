@@ -7,9 +7,11 @@ import {
 } from "@/lib/achievements";
 import type { SeasonalAchievementDef } from "@/lib/achievements";
 import type { Month, Expense, Extra, Saving } from "@prisma/client";
+import { FASES } from "@/lib/mapa";
 
 // ─── XP Sources ────────────────────────────────────────────────────────────────
 
+export const XP_TEMPTATION_BASE = 15; // XP mínimo por tentação resistida
 export const XP_SAVE_ANY = 10;
 export const XP_SAVE_100 = 25;   // bônus quando economiza R$100+ num dia
 export const XP_SAVE_1000 = 100; // bônus quando economiza R$1000+ num dia
@@ -85,6 +87,7 @@ export async function addXP(userId: string, amount: number): Promise<{ newXp: nu
 type CheckContext = {
   userId: string;
   totalSaved: number;
+  goal: number; // meta do usuário (ex: 100000)
   streak: number;
   allSavingEntries: Array<{ date: string; value: number }>;
   months: Array<Month & { expenses: Expense[]; extras: Extra[]; savingEntries: Saving[] }>;
@@ -136,6 +139,17 @@ export async function checkAndUnlockAchievements(ctx: CheckContext): Promise<str
   if (ctx.totalSaved >= 50000) await tryUnlock("save_50k");
   if (ctx.totalSaved >= 75000) await tryUnlock("save_75k");
   if (ctx.totalSaved >= 100000) await tryUnlock("save_100k");
+
+  // Mapa do Tesouro — desbloqueio de conquistas para cada fase atingida
+  // O XP bônus é concedido via xpReward da conquista ao desbloquear
+  if (ctx.goal > 0) {
+    const pct = Math.min((ctx.totalSaved / ctx.goal) * 100, 100);
+    for (const fase of FASES) {
+      if (fase.achievementKey && pct >= fase.min) {
+        await tryUnlock(fase.achievementKey);
+      }
+    }
+  }
 
   // Grande salto (R$1000+ em um dia)
   const dayMap = new Map<string, number>();
@@ -527,7 +541,159 @@ export const CHALLENGE_TEMPLATES: ChallengeTemplate[] = [
     description: () => "Economize R$200 ou mais em um único dia esta semana.",
     xpReward: 120,
   },
+  // ── Desafios do Cofre do Diabo ─────────────────────────────────────────────
+  {
+    key: "resist_3_temptations",
+    type: "weekly",
+    title: () => "Resistência Tripla",
+    description: () => "Registre 3 tentações resistidas nesta semana.",
+    xpReward: 80,
+  },
+  {
+    key: "resist_big",
+    type: "weekly",
+    title: () => "Grande Resistência",
+    description: () => "Resista a uma tentação acima de R$500 nesta semana.",
+    xpReward: 120,
+  },
+  {
+    key: "resist_daily",
+    type: "weekly",
+    title: () => "5 Dias no Cofre",
+    description: () => "Registre ao menos 1 tentação por 5 dias diferentes nesta semana.",
+    xpReward: 150,
+  },
 ];
+
+/** Calcula XP ganho ao registrar uma tentação, baseado no valor resistido. */
+export function calcTemptationXP(value: number): number {
+  let xp = XP_TEMPTATION_BASE;
+  if (value >= 50)   xp += 5;
+  if (value >= 200)  xp += 15;
+  if (value >= 500)  xp += 30;
+  if (value >= 1000) xp += 50;
+  if (value >= 5000) xp += 75;
+  return xp;
+}
+
+// ─── Devil Achievement Checking ───────────────────────────────────────────────
+
+type TemptationEntry = { id: string; date: string; value: number; category: string };
+
+/**
+ * Verifica e desbloqueia conquistas do Cofre do Diabo.
+ * Deve ser chamado após criar uma tentação.
+ */
+export async function checkDevilAchievements(
+  userId: string,
+  temptations: TemptationEntry[]
+): Promise<string[]> {
+  if (temptations.length === 0) return [];
+
+  const unlockedRaw = await prisma.userAchievement.findMany({
+    where: { userId },
+    select: { key: true },
+  });
+  const unlocked = new Set(unlockedRaw.map((a) => a.key));
+  const newKeys: string[] = [];
+
+  const tryUnlock = async (key: string) => {
+    if (unlocked.has(key)) return;
+    const def = ACHIEVEMENT_MAP.get(key);
+    if (!def) return;
+    try {
+      await prisma.userAchievement.create({ data: { userId, key } });
+      unlocked.add(key);
+      newKeys.push(key);
+      if (def.xpReward > 0) {
+        await prisma.user.update({ where: { id: userId }, data: { xp: { increment: def.xpReward } } });
+      }
+    } catch { /* já existe */ }
+  };
+
+  const count = temptations.length;
+  const totalValue = temptations.reduce((s, t) => s + t.value, 0);
+  const categories = new Set(temptations.map((t) => t.category));
+  const hasBig = temptations.some((t) => t.value >= 5000);
+
+  // Conquistas por quantidade
+  if (count >= 1)   await tryUnlock("devil_first");
+  if (count >= 10)  await tryUnlock("devil_10");
+  if (count >= 50)  await tryUnlock("devil_50");
+  if (count >= 100) await tryUnlock("devil_100");
+
+  // Conquistas por valor acumulado
+  if (totalValue >= 1000)  await tryUnlock("devil_value_1k");
+  if (totalValue >= 10000) await tryUnlock("devil_value_10k");
+  if (totalValue >= 50000) await tryUnlock("devil_value_50k");
+
+  // Tentação grande (R$5.000+)
+  if (hasBig) await tryUnlock("devil_big");
+
+  // 5 categorias diferentes
+  if (categories.size >= 5) await tryUnlock("devil_categories");
+
+  // Semana Blindada: 7 dias consecutivos com ao menos 1 tentação
+  const sortedDates = [...new Set(temptations.map((t) => t.date))].sort();
+  let maxStreak = 1;
+  let curStreak = 1;
+  for (let i = 1; i < sortedDates.length; i++) {
+    const prev = new Date(sortedDates[i - 1]);
+    const curr = new Date(sortedDates[i]);
+    const diff = Math.round((curr.getTime() - prev.getTime()) / 86400000);
+    if (diff === 1) {
+      curStreak++;
+      if (curStreak > maxStreak) maxStreak = curStreak;
+    } else {
+      curStreak = 1;
+    }
+  }
+  if (maxStreak >= 7) await tryUnlock("devil_week");
+
+  return newKeys;
+}
+
+// ─── Devil Challenge Progress ─────────────────────────────────────────────────
+
+/**
+ * Atualiza o progresso dos desafios de tentação da semana atual.
+ */
+export async function updateDevilChallengeProgress(
+  userId: string,
+  weekTemptations: TemptationEntry[]
+): Promise<string[]> {
+  const { start: wStart } = getWeekBounds();
+  const completed: string[] = [];
+
+  const weekCh = await prisma.challenge.findFirst({
+    where: { userId, type: "weekly", startDate: wStart, completed: false },
+  });
+  if (!weekCh) return completed;
+
+  let current = 0;
+
+  if (weekCh.key === "resist_3_temptations") {
+    current = weekTemptations.length; // total de tentações na semana
+  } else if (weekCh.key === "resist_big") {
+    current = weekTemptations.some((t) => t.value >= 500) ? 1 : 0;
+  } else if (weekCh.key === "resist_daily") {
+    current = new Set(weekTemptations.map((t) => t.date)).size; // dias distintos
+  } else {
+    return completed; // desafio não é de tentações
+  }
+
+  const done = current >= weekCh.target;
+  await prisma.challenge.update({
+    where: { id: weekCh.id },
+    data: { current, completed: done, completedAt: done ? new Date() : null },
+  });
+  if (done) {
+    completed.push(weekCh.key);
+    await prisma.user.update({ where: { id: userId }, data: { xp: { increment: weekCh.xpReward } } });
+  }
+
+  return completed;
+}
 
 function getWeekBounds(): { start: string; end: string } {
   const now = new Date();

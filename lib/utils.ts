@@ -59,6 +59,20 @@ export const EXPENSE_CATEGORIES = [
   "❓ Outros",
 ];
 
+// Categorias de tentação — mais voltadas para impulsos de consumo
+export const TEMPTATION_CATEGORIES = [
+  "📱 Tecnologia",
+  "👕 Vestuário",
+  "🍔 Alimentação",
+  "🎉 Lazer",
+  "🏠 Casa & Decoração",
+  "💄 Beleza",
+  "🎮 Games",
+  "✈️ Viagem",
+  "💎 Luxo",
+  "❓ Outros",
+];
+
 export const CAT_COLORS = [
   "#c8f060","#60d4f0","#f060a0","#f0c060","#60f0a0",
   "#f09060","#a060f0","#60a0f0","#f06060","#90f060",

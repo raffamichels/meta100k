@@ -57,6 +57,7 @@ export async function runGamificationCheck(
   const checkCtx = {
     userId,
     totalSaved,
+    goal: user.goal, // necessário para calcular fases do Mapa do Tesouro
     streak,
     allSavingEntries,
     months: user.months,
