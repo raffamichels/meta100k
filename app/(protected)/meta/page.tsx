@@ -317,7 +317,7 @@ export default async function MetaPage() {
           marginTop: 24,
         }}
       >
-        Configurar meta
+        Ajustar economia
       </div>
       <GoalConfig currentGoal={user.goal} currentBase={user.baseAmount} />
 

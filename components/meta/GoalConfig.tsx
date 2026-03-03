@@ -65,20 +65,25 @@ export function GoalConfig({ currentGoal, currentBase }: Props) {
         🎯 Sua Meta
       </div>
 
-      <form action={action}>
-        <div style={{ marginBottom: 14 }}>
-          <label style={labelStyle}>Valor da meta (R$)</label>
-          <input
-            type="number"
-            name="goal"
-            defaultValue={currentGoal}
-            min="1"
-            step="1"
-            required
-            style={inputStyle}
-          />
+      {/* Meta fixa — apenas exibição, não pode ser alterada */}
+      <div style={{ marginBottom: 16 }}>
+        <div style={labelStyle}>Valor da meta (R$)</div>
+        <div
+          style={{
+            ...inputStyle,
+            color: "var(--muted)",
+            cursor: "default",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+          }}
+        >
+          <span>R$ {currentGoal.toLocaleString("pt-BR")}</span>
+          <span style={{ fontSize: 11, letterSpacing: "0.5px", opacity: 0.5 }}>fixo</span>
         </div>
+      </div>
 
+      <form action={action}>
         <div style={{ marginBottom: 14 }}>
           <label style={labelStyle}>Economia já acumulada (R$)</label>
           <input
@@ -109,7 +114,7 @@ export function GoalConfig({ currentGoal, currentBase }: Props) {
             transition: "all 0.2s",
           }}
         >
-          {pending ? "Atualizando..." : "Atualizar Meta"}
+          {pending ? "Atualizando..." : "Atualizar Economia"}
         </button>
       </form>
     </div>
