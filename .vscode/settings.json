@@ -1,0 +1,5 @@
+{
+  // Força a extensão do Prisma a usar o CLI local (5.22.0) como language server,
+  // evitando falsos erros do v6 no schema.prisma
+  "prisma.prismaFmtBinPath": "./node_modules/prisma/build/index.js"
+}
