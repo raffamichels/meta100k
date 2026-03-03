@@ -259,7 +259,7 @@ export function getFathersDayBR(year: number): Date {
 
 /** Última sexta-feira de novembro (Black Friday) */
 export function getBlackFridayDate(year: number): Date {
-  let d = new Date(year, 10, 30);
+  const d = new Date(year, 10, 30);
   while (d.getDay() !== 5) d.setDate(d.getDate() - 1);
   return d;
 }
