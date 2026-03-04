@@ -23,6 +23,11 @@ export const metadata: Metadata = {
   title: "Meta 100K",
   description: "Planejador financeiro para sua meta de R$ 100.000",
   manifest: "/manifest.json",
+  // Ícone do app para navegadores e dispositivos Apple
+  icons: {
+    icon: "/logo.png",
+    apple: "/logo.png",
+  },
   appleWebApp: {
     capable: true,
     statusBarStyle: "black-translucent",
