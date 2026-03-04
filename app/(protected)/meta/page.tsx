@@ -10,8 +10,10 @@ import {
   calcAvgSalary,
   calcSavingsRate,
   calcProjection,
+  calcAvgMonthlyExpenses,
 } from "@/lib/calculations";
 import { GoalConfig } from "@/components/meta/GoalConfig";
+import Simulator from "@/components/meta/Simulator";
 
 export default async function MetaPage() {
   const session = await auth();
@@ -33,6 +35,7 @@ export default async function MetaPage() {
   const totalSpent = calcTotalSpent(data);
   const avgSavings = calcAvgMonthlySavings(data);
   const avgSalary = calcAvgSalary(data);
+  const avgMonthlyExpenses = calcAvgMonthlyExpenses(data);
   const savingsRate = calcSavingsRate(avgSavings, avgSalary);
   const projection = calcProjection(data);
 
@@ -65,8 +68,9 @@ export default async function MetaPage() {
     : "sem projeção";
 
   return (
-    // .meta-grid → no desktop: grid 2 colunas (3fr dados | 2fr análise+config)
-    // No mobile: div transparente, tudo empilhado normalmente
+    // Fragment para envolver meta-grid + Simulador (seção abaixo, largura total)
+    <>
+    {/* .meta-grid → no desktop: grid 2 colunas (3fr dados | 2fr análise+config) */}
     <div className="meta-grid">
 
     {/* COLUNA ESQUERDA: visão macro — total guardado, ganhos/gastos, timeline */}
@@ -322,6 +326,16 @@ export default async function MetaPage() {
       <GoalConfig currentGoal={user.goal} currentBase={user.baseAmount} />
 
     </div> {/* fim .meta-right */}
-    </div>
+    </div> {/* fim .meta-grid */}
+
+    {/* Simulador "E Se?" — seção abaixo, largura total no desktop */}
+    <Simulator
+      totalSaved={totalSaved}
+      goal={user.goal}
+      avgMonthlySavings={avgSavings}
+      avgSalary={avgSalary}
+      avgMonthlyExpenses={avgMonthlyExpenses}
+    />
+    </>
   );
 }

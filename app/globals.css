@@ -323,4 +323,27 @@ input[type="number"]::-webkit-inner-spin-button { display: none; }
     align-items: start;
   }
 
+  /* ============================
+     SIMULADOR "E SE?": 2 colunas
+     Controles à esquerda (3fr)
+     Resultado à direita (2fr)
+     No mobile: empilhado, resultado acima
+     ============================ */
+  .simulator-layout {
+    display: grid !important;
+    grid-template-columns: 3fr 2fr;
+    gap: 24px;
+    align-items: start;
+  }
+
+  /* No desktop, controles ficam na coluna esquerda e resultado na direita
+     (no DOM o resultado vem primeiro para aparecer acima no mobile) */
+  .simulator-controls {
+    order: 1 !important;
+  }
+
+  .simulator-result-panel {
+    order: 2 !important;
+  }
+
 }

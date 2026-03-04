@@ -320,6 +320,31 @@ export const ACHIEVEMENTS: AchievementDef[] = [
     rarity: "rare",
     xpReward: 200,
   },
+  // ── Simulador "E Se?" ─────────────────────────────────────────────────────
+  {
+    key: "simulator_first",
+    icon: "🔮",
+    title: "Visionário",
+    description: "Use o Simulador \"E Se?\" pela primeira vez.",
+    rarity: "common",
+    xpReward: 20,
+  },
+  {
+    key: "simulator_10",
+    icon: "🎯",
+    title: "Estrategista",
+    description: "Explore 10 cenários diferentes no simulador.",
+    rarity: "rare",
+    xpReward: 80,
+  },
+  {
+    key: "simulator_achieved",
+    icon: "✨",
+    title: "Profecia Cumprida",
+    description: "A data real de conclusão ficou dentro de 2 meses da projeção simulada.",
+    rarity: "legendary",
+    xpReward: 500,
+  },
   // Social
   {
     key: "social_hard",

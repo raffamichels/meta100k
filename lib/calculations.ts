@@ -69,3 +69,14 @@ export function calcSavingsRate(avgSavings: number, avgSalary: number): number {
   if (avgSalary <= 0) return 0;
   return (avgSavings / avgSalary) * 100;
 }
+
+// Gasto médio mensal — média dos meses que têm ao menos uma despesa
+export function calcAvgMonthlyExpenses(data: UserGoalData): number {
+  const monthsWithExpenses = data.months.filter((mo) => mo.expenses.length > 0);
+  if (monthsWithExpenses.length === 0) return 0;
+  const total = monthsWithExpenses.reduce(
+    (a, mo) => a + mo.expenses.reduce((s, e) => s + e.value, 0),
+    0
+  );
+  return total / monthsWithExpenses.length;
+}
