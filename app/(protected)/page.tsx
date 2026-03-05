@@ -1,7 +1,7 @@
 import { auth } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
-import { thisMonth, calcDailyStreak, hasSavedToday } from "@/lib/utils";
+import { thisMonth, calcDailyStreak, hasSavedToday, isWeeklyReportWindow, getLastWeekBoundsBR } from "@/lib/utils";
 import {
   calcTotalSaved,
   calcProjection,
@@ -10,11 +10,17 @@ import { HeroCard } from "@/components/dashboard/HeroCard";
 import { StatsRow } from "@/components/dashboard/StatsRow";
 import { ProjectionCard } from "@/components/dashboard/ProjectionCard";
 import { RecentEntries } from "@/components/dashboard/RecentEntries";
+import { WeeklyReport } from "@/components/dashboard/WeeklyReport";
 import { XPBar } from "@/components/gamification/XPBar";
 import { ChallengeCard } from "@/components/gamification/ChallengeCard";
 import Link from "next/link";
 
-export default async function DashboardPage() {
+export default async function DashboardPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ weeklyPreview?: string }>;
+}) {
+  const params = await searchParams;
   const session = await auth();
   if (!session?.user?.id) redirect("/login");
 
@@ -44,6 +50,9 @@ export default async function DashboardPage() {
   ]);
 
   if (!user) redirect("/login");
+
+  const showWeeklyReport = isWeeklyReportWindow() || params.weeklyPreview === "1";
+  const { start: weekStart, end: weekEnd } = getLastWeekBoundsBR();
 
   const data = { goal: user.goal, baseAmount: user.baseAmount, months: user.months };
   const totalSaved = calcTotalSaved(data);
@@ -92,6 +101,18 @@ export default async function DashboardPage() {
 
         {/* Barra de XP e nível */}
         <XPBar xp={userGameData?.xp ?? 0} />
+
+        {/* Resumo semanal IA — aparece logo abaixo do card de nível */}
+        {showWeeklyReport && (
+          <WeeklyReport
+            totalSaved={totalSaved}
+            goal={user.goal}
+            streak={streak}
+            userName={user.name ?? null}
+            weekStart={weekStart}
+            weekEnd={weekEnd}
+          />
+        )}
 
         {/* Banner de ofensiva diária — endomarketing para manter o usuário engajado */}
         <div

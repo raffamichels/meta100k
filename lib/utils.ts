@@ -73,6 +73,29 @@ export const TEMPTATION_CATEGORIES = [
   "❓ Outros",
 ];
 
+/** Retorna as datas de início e fim da semana ANTERIOR (Seg–Dom) em GMT-3. */
+export function getLastWeekBoundsBR(): { start: string; end: string } {
+  const nowBR = new Date(Date.now() - 3 * 60 * 60 * 1000);
+  const dayOffset = (nowBR.getUTCDay() + 6) % 7; // 0=Seg
+  const monday = new Date(nowBR);
+  monday.setUTCDate(nowBR.getUTCDate() - dayOffset - 7);
+  const sunday = new Date(monday);
+  sunday.setUTCDate(monday.getUTCDate() + 6);
+  return {
+    start: monday.toISOString().split("T")[0],
+    end: sunday.toISOString().split("T")[0],
+  };
+}
+
+/** Retorna true se estamos na janela de exibição do relatório semanal:
+ *  Segunda-feira entre 06:00 e 23:59 no fuso GMT-3 (Brasil). */
+export function isWeeklyReportWindow(): boolean {
+  const nowBR = new Date(Date.now() - 3 * 60 * 60 * 1000);
+  const day = nowBR.getUTCDay();   // 0=Dom, 1=Seg
+  const hour = nowBR.getUTCHours();
+  return day === 1 && hour >= 6;
+}
+
 export const CAT_COLORS = [
   "#c8f060","#60d4f0","#f060a0","#f0c060","#60f0a0",
   "#f09060","#a060f0","#60a0f0","#f06060","#90f060",

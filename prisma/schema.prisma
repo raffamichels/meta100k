@@ -27,6 +27,8 @@ model User {
   temptations    Temptation[]
   // Orçamento Mensal
   budgets        Budget[]
+  // Relatório Semanal IA
+  weeklyReports  WeeklyReport[]
   // Social
   createdSocialChallenges  SocialChallenge[]              @relation("SocialChallengeCreator")
   socialParticipations     SocialChallengeParticipant[]   @relation("SocialChallengeParticipant")
@@ -125,6 +127,17 @@ model Budget {
   updatedAt DateTime @updatedAt
 
   @@unique([userId, category, monthKey])
+}
+
+model WeeklyReport {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  weekKey   String   // "2026-03-02" (segunda-feira da semana anterior)
+  content   String   // texto narrativo gerado pelo Claude
+  createdAt DateTime @default(now())
+
+  @@unique([userId, weekKey])
 }
 
 model SocialChallenge {
