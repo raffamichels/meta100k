@@ -41,6 +41,17 @@ export function ExpenseForm() {
       showToast(state.success);
       processResult(state.gamification);
       formRef.current?.reset();
+
+      // Alerta de orçamento: toast secundário após o de confirmação
+      if (state.budgetAlert) {
+        const alert = state.budgetAlert;
+        const catName = alert.category.replace(/^\S+\s/, ""); // remove emoji do prefixo
+        const msg = alert.over
+          ? `🔴 Você ultrapassou seu orçamento de ${catName} em R$ ${alert.overAmount?.toLocaleString("pt-BR", { minimumFractionDigits: 0 })}.`
+          : `⚠️ Você usou ${alert.percentage}% do seu orçamento de ${catName} este mês.`;
+        // Exibe o alerta após o toast de confirmação
+        setTimeout(() => showToast(msg), 2800);
+      }
     }
     if (state?.error) showToast(state.error);
   }, [state, showToast, processResult]);

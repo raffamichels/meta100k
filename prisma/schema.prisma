@@ -25,6 +25,8 @@ model User {
   challenges     Challenge[]
   // Cofre do Diabo
   temptations    Temptation[]
+  // Orçamento Mensal
+  budgets        Budget[]
   // Social
   createdSocialChallenges  SocialChallenge[]              @relation("SocialChallengeCreator")
   socialParticipations     SocialChallengeParticipant[]   @relation("SocialChallengeParticipant")
@@ -109,6 +111,20 @@ model Temptation {
   userId    String
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   createdAt DateTime @default(now())
+}
+
+model Budget {
+  id        String   @id @default(cuid())
+  category  String                       // "🍔 Alimentação", "🎉 Lazer", etc.
+  limit     Float                        // 800.00
+  monthKey  String?                      // null = recorrente | "2026-12" = específico
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([userId, category, monthKey])
 }
 
 model SocialChallenge {

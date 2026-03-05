@@ -79,6 +79,13 @@ export default async function PerfilPage() {
       label: "Cofre do Diabo",
       desc: "Tentações resistidas e valor protegido",
     },
+    // Orçamento: acesso exclusivo pelo Perfil (não aparece na BottomNav)
+    {
+      href: "/orcamento",
+      icon: "📊",
+      label: "Orçamento Mensal",
+      desc: "Defina limites de gasto por categoria",
+    },
   ];
 
   return (

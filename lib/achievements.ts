@@ -362,6 +362,47 @@ export const ACHIEVEMENTS: AchievementDef[] = [
     rarity: "rare",
     xpReward: 100,
   },
+  // ── Orçamento Mensal ──────────────────────────────────────────────────────────
+  {
+    key: "budget_first",
+    icon: "📋",
+    title: "Planejador",
+    description: "Defina seu primeiro limite de orçamento.",
+    rarity: "common",
+    xpReward: 25,
+  },
+  {
+    key: "budget_perfect_month",
+    icon: "✅",
+    title: "Mês Controlado",
+    description: "Encerre um mês inteiro dentro de todos os limites de orçamento.",
+    rarity: "rare",
+    xpReward: 150,
+  },
+  {
+    key: "budget_perfect_3",
+    icon: "🏅",
+    title: "Disciplina Financeira",
+    description: "Três meses consecutivos dentro de todos os limites de orçamento.",
+    rarity: "epic",
+    xpReward: 400,
+  },
+  {
+    key: "budget_five_categories",
+    icon: "🗂️",
+    title: "Arquiteto do Orçamento",
+    description: "Defina limites em 5 categorias diferentes.",
+    rarity: "common",
+    xpReward: 75,
+  },
+  {
+    key: "budget_under_50",
+    icon: "🌿",
+    title: "Frugal",
+    description: "Use menos de 50% do orçamento em uma categoria num mês.",
+    rarity: "common",
+    xpReward: 50,
+  },
   // Níveis
   {
     key: "level_5",

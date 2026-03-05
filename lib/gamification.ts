@@ -541,6 +541,21 @@ export const CHALLENGE_TEMPLATES: ChallengeTemplate[] = [
     description: () => "Economize R$200 ou mais em um único dia esta semana.",
     xpReward: 120,
   },
+  // ── Desafios de Orçamento ─────────────────────────────────────────────────
+  {
+    key: "budget_week_control",
+    type: "weekly",
+    title: () => "Semana no Orçamento",
+    description: () => "Não ultrapasse nenhum limite de orçamento durante esta semana.",
+    xpReward: 100,
+  },
+  {
+    key: "budget_stay_green",
+    type: "weekly",
+    title: () => "Categorias no Verde",
+    description: () => "Mantenha todas as categorias com orçamento abaixo de 80% ao final da semana.",
+    xpReward: 80,
+  },
   // ── Desafios do Cofre do Diabo ─────────────────────────────────────────────
   {
     key: "resist_3_temptations",
