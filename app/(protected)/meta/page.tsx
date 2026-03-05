@@ -31,6 +31,8 @@ export default async function MetaPage() {
   const data = { goal: user.goal, baseAmount: user.baseAmount, months: user.months };
 
   const totalSaved = calcTotalSaved(data);
+  // Economias lançadas nos meses (exclui baseAmount, que é poupança anterior ao controle)
+  const savingsFromMonths = user.months.reduce((a, mo) => a + (mo.savings || 0), 0);
   const totalEarned = calcTotalEarned(data);
   const totalSpent = calcTotalSpent(data);
   const avgSavings = calcAvgMonthlySavings(data);
@@ -143,8 +145,9 @@ export default async function MetaPage() {
           </div>
         </div>
         <div style={{ background: "rgba(96,212,240,0.06)", border: "1px solid rgba(96,212,240,0.15)", borderRadius: 14, padding: 14 }}>
-          <div style={{ fontSize: 11, color: "var(--muted)", textTransform: "uppercase", letterSpacing: "0.8px" }}>Saldo histórico (ganho − gasto)</div>
-          <div style={{ fontFamily: "var(--font-syne), sans-serif", fontSize: 24, fontWeight: 800, color: "var(--accent2)", marginTop: 4 }}>{fmt(totalEarned - totalSpent)}</div>
+          <div style={{ fontSize: 11, color: "var(--muted)", textTransform: "uppercase", letterSpacing: "0.8px" }}>Saldo histórico (ganho − gasto − economizado)</div>
+          {/* Desconta apenas economias lançadas nos meses; baseAmount é poupança anterior ao controle */}
+          <div style={{ fontFamily: "var(--font-syne), sans-serif", fontSize: 24, fontWeight: 800, color: "var(--accent2)", marginTop: 4 }}>{fmt(totalEarned - totalSpent - savingsFromMonths)}</div>
         </div>
       </div>
 
