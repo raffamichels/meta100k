@@ -93,8 +93,9 @@ export default async function DashboardPage() {
         {/* Barra de XP e nível */}
         <XPBar xp={userGameData?.xp ?? 0} />
 
-        {/* Banner de ofensiva diária — endomarketing para manter o usuário engajado */}
+        {/* Banner de ofensiva diária — oculto no mobile via globals.css (info já aparece no header) */}
         <div
+          className="streak-banner-mobile"
           style={{
             background: streak > 0
               ? "linear-gradient(135deg, rgba(240,140,40,0.13) 0%, rgba(200,240,96,0.08) 100%)"
@@ -215,9 +216,10 @@ export default async function DashboardPage() {
       <div className="dashboard-right">
         <ChallengeCard challenges={challenges} />
 
-        {/* Card de Desafios Sociais */}
+        {/* Card de Desafios Sociais — redesenhado para o estilo fintech no mobile */}
         <Link
           href="/desafio/novo"
+          className="social-challenge-link"
           style={{
             display: "block",
             background: "linear-gradient(135deg, rgba(240,96,160,0.1), rgba(160,96,240,0.07))",
@@ -267,7 +269,6 @@ export default async function DashboardPage() {
             </svg>
           </div>
         </Link>
-
         <ProjectionCard projection={projection} totalSaved={totalSaved} />
         <RecentEntries entries={recentEntries} />
       </div>

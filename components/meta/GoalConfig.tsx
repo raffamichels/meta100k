@@ -43,30 +43,10 @@ export function GoalConfig({ currentGoal, currentBase }: Props) {
   }, [state, showToast]);
 
   return (
-    <div
-      style={{
-        background: "var(--card)",
-        border: "1px solid var(--border)",
-        borderRadius: 20,
-        padding: 20,
-      }}
-    >
-      <div
-        style={{
-          fontFamily: "var(--font-syne), sans-serif",
-          fontSize: 16,
-          fontWeight: 700,
-          marginBottom: 16,
-          display: "flex",
-          alignItems: "center",
-          gap: 8,
-        }}
-      >
-        🎯 Sua Meta
-      </div>
-
+    // Sem card wrapper — segue o padrão flat da página Meta
+    <div>
       {/* Meta fixa — apenas exibição, não pode ser alterada */}
-      <div style={{ marginBottom: 16 }}>
+      <div style={{ marginBottom: 14 }}>
         <div style={labelStyle}>Valor da meta (R$)</div>
         <div
           style={{

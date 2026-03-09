@@ -57,7 +57,9 @@ export function ExpenseForm() {
   }, [state, showToast, processResult]);
 
   return (
+    // className="form-card expense-form-card" → mobile: botão coral (semântica de gasto)
     <div
+      className="form-card expense-form-card"
       style={{
         background: "var(--card)",
         border: "1px solid rgba(240,96,96,0.25)",

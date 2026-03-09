@@ -50,7 +50,9 @@ export function SavingsForm() {
   }, [state, showToast, processResult]);
 
   return (
+    // className="form-card savings-form-card" → mobile: visual unificado, botão verde
     <div
+      className="form-card savings-form-card"
       style={{
         background: "var(--card)",
         border: "1px solid rgba(96,212,240,0.3)",
@@ -105,7 +107,9 @@ export function SavingsForm() {
           />
           {/* Mensagem motivacional baseada no valor — aparece assim que o usuário digita */}
           {amount !== null && amount > 0 && (
+            // className="motivation-hint" → mobile: sem fundo laranja, só borda lateral verde
             <div
+              className="motivation-hint"
               style={{
                 marginTop: 8,
                 padding: "8px 12px",

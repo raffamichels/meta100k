@@ -46,7 +46,9 @@ export function ExtraForm() {
   }, [state, showToast, processResult]);
 
   return (
+    // className="form-card" → mobile: visual unificado, botão verde sólido
     <div
+      className="form-card"
       style={{
         background: "var(--card)",
         border: "1px solid rgba(200,240,96,0.2)",

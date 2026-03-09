@@ -16,7 +16,9 @@ interface StatCardProps {
 
 function StatCard({ icon, iconBg, label, value }: StatCardProps) {
   return (
+    // className="stat-card" → no mobile: sem borda visível, fundo elevado sutil
     <div
+      className="stat-card"
       style={{
         background: "var(--card)",
         border: "1px solid var(--border)",
@@ -24,7 +26,9 @@ function StatCard({ icon, iconBg, label, value }: StatCardProps) {
         padding: 16,
       }}
     >
+      {/* className="stat-icon-box" → no mobile remove o fundo colorido */}
       <div
+        className="stat-icon-box"
         style={{
           width: 36,
           height: 36,
@@ -39,7 +43,9 @@ function StatCard({ icon, iconBg, label, value }: StatCardProps) {
       >
         {icon}
       </div>
+      {/* className="stat-label" → no mobile remove uppercase e letter-spacing */}
       <div
+        className="stat-label"
         style={{
           fontSize: 11,
           color: "var(--muted)",

@@ -16,7 +16,9 @@ interface RecentEntriesProps {
 export function RecentEntries({ entries }: RecentEntriesProps) {
   return (
     <div>
+      {/* className="recent-entries-title" → no mobile: sem uppercase, mais natural */}
       <div
+        className="recent-entries-title"
         style={{
           fontFamily: "var(--font-syne), sans-serif",
           fontSize: 13,
@@ -47,6 +49,7 @@ export function RecentEntries({ entries }: RecentEntriesProps) {
         entries.map((item) => (
           <div
             key={item.id}
+            className="entry-row"
             style={{
               background: "var(--card)",
               border: "1px solid var(--border)",
@@ -59,6 +62,7 @@ export function RecentEntries({ entries }: RecentEntriesProps) {
             }}
           >
             <div
+              className="entry-icon"
               style={{
                 width: 42,
                 height: 42,

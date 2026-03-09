@@ -20,7 +20,9 @@ export function ProjectionCard({ projection, totalSaved }: ProjectionCardProps) 
   }
 
   return (
+    // className="projection-card-wrapper" → no mobile: borda verde mais marcada
     <div
+      className="projection-card-wrapper"
       style={{
         background: "linear-gradient(135deg, rgba(200,240,96,0.12), rgba(96,212,240,0.08))",
         border: "1px solid rgba(200,240,96,0.25)",
@@ -29,7 +31,9 @@ export function ProjectionCard({ projection, totalSaved }: ProjectionCardProps) 
         marginBottom: 20,
       }}
     >
+      {/* className="projection-label" → no mobile: mais compacto */}
       <div
+        className="projection-label"
         style={{
           fontSize: 11,
           textTransform: "uppercase",
@@ -39,7 +43,9 @@ export function ProjectionCard({ projection, totalSaved }: ProjectionCardProps) 
       >
         📅 Projeção para atingir R$ 100.000
       </div>
+      {/* className="projection-date" → no mobile: display size agressivo */}
       <div
+        className="projection-date"
         style={{
           fontFamily: "var(--font-syne), sans-serif",
           fontSize: 28,

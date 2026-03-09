@@ -109,8 +109,9 @@ export default async function PerfilPage() {
         </div>
       </div>
 
-      {/* Card de progresso da meta */}
+      {/* Card de progresso — className="perfil-progress-card": mobile sem gradiente azul, verde */}
       <div
+        className="perfil-progress-card"
         style={{
           background: "linear-gradient(135deg, rgba(96,212,240,0.1), rgba(200,240,96,0.07))",
           border: "1px solid rgba(96,212,240,0.25)",
@@ -175,8 +176,9 @@ export default async function PerfilPage() {
         </div>
       </div>
 
-      {/* Stats compactos: nível, streak, conquistas */}
+      {/* Stats compactos — className="perfil-stats-grid": mobile remove bordas coloridas */}
       <div
+        className="perfil-stats-grid"
         style={{
           display: "grid",
           gridTemplateColumns: "1fr 1fr 1fr",
@@ -184,8 +186,9 @@ export default async function PerfilPage() {
           marginBottom: 20,
         }}
       >
-        {/* Nível */}
+        {/* Nível — className="perfil-stat-card": sem borda colorida no mobile */}
         <div
+          className="perfil-stat-card"
           style={{
             background: "var(--card)",
             border: "1px solid rgba(200,240,96,0.2)",
@@ -236,8 +239,9 @@ export default async function PerfilPage() {
           )}
         </div>
 
-        {/* Streak */}
+        {/* Streak — className="perfil-stat-card" */}
         <div
+          className="perfil-stat-card"
           style={{
             background: "var(--card)",
             border: streak > 0 ? "1px solid rgba(240,140,40,0.3)" : "1px solid var(--border)",
@@ -274,8 +278,9 @@ export default async function PerfilPage() {
           </div>
         </div>
 
-        {/* Conquistas */}
+        {/* Conquistas — className="perfil-stat-card" */}
         <div
+          className="perfil-stat-card"
           style={{
             background: "var(--card)",
             border: "1px solid rgba(96,212,240,0.2)",
@@ -320,8 +325,9 @@ export default async function PerfilPage() {
         </div>
       </div>
 
-      {/* Navegação */}
+      {/* Navegação — className="perfil-nav-card": mobile mais clean */}
       <div
+        className="perfil-nav-card"
         style={{
           background: "var(--card)",
           border: "1px solid var(--border)",

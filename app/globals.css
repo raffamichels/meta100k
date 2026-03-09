@@ -131,6 +131,424 @@ input[type="number"]::-webkit-inner-spin-button { display: none; }
 }
 
 /* ============================================================
+   MOBILE REDESIGN — TELA INICIAL (max-width: 767px)
+   Remove elementos típicos de "AI dashboard" no mobile.
+   O header já exibe streak + nível, evitando redundância.
+   !important é necessário para sobrescrever os inline styles do React.
+   ============================================================ */
+@media (max-width: 767px) {
+
+  /* XP Bar: oculta no mobile — LevelBadge no header já cumpre o papel */
+  .xp-bar-wrapper {
+    display: none !important;
+  }
+
+  /* Streak banner: oculto no mobile — o pill de streak no header já informa */
+  .streak-banner-mobile {
+    display: none !important;
+  }
+
+  /* ChallengeCard e link "Desafie um Amigo": ocultos no mobile.
+     Simplifica o foco: progresso + stats + projeção + registros. */
+  .challenges-mobile-hidden {
+    display: none !important;
+  }
+
+  /* HeroCard: remove glow decoration do canto — puramente decorativo */
+  .hero-glow-decor {
+    display: none !important;
+  }
+
+  /* HeroCard: label "Progresso da meta" — sem uppercase robótico */
+  .hero-progress-label {
+    text-transform: none !important;
+    letter-spacing: 0.2px !important;
+    font-size: 12px !important;
+  }
+
+  /* HeroCard: labels de porcentagem nos marcos (10%, 25%…) — oculta no mobile */
+  .hero-milestone-labels {
+    display: none !important;
+  }
+
+  /* StatsCard: ícone sem caixa colorida — mais clean, menos "dashboard de AI" */
+  .stat-icon-box {
+    background: transparent !important;
+    border-radius: 0 !important;
+    width: 20px !important;
+    height: 20px !important;
+    font-size: 15px !important;
+    margin-bottom: 6px !important;
+  }
+
+  /* StatsCard: label sem uppercase nem letter-spacing excessivo */
+  .stat-label {
+    text-transform: none !important;
+    letter-spacing: 0 !important;
+  }
+
+  /* ============================
+     HEROCARD: container + tipografia de display
+     ============================ */
+
+  /* Container do HeroCard: fundo mais escuro, sem borda visível */
+  .hero-card-wrapper {
+    background: var(--surface) !important;
+    border-color: transparent !important;
+    border-radius: 20px !important;
+    padding: 20px !important;
+    margin-bottom: 16px !important;
+  }
+
+  /* Valor principal: display size agressivo estilo fintech — número domina */
+  .hero-value-amount {
+    font-size: 54px !important;
+    letter-spacing: -3px !important;
+    line-height: 1 !important;
+    margin-bottom: 2px !important;
+  }
+
+  /* "/100K": ajustar tamanho relativo ao display maior */
+  .hero-value-amount small {
+    font-size: 26px !important;
+  }
+
+  /* "Faltam R$X": mais compacto, sem peso visual desnecessário */
+  .hero-remaining {
+    font-size: 12px !important;
+    margin-bottom: 16px !important;
+  }
+
+  /* Barra de progresso: linha fina estilo fintech (~4px) */
+  .hero-progress-track {
+    height: 4px !important;
+  }
+
+  /* Dot .progress-fill::after: esconder no mobile (muito grande para barra de 4px) */
+  .hero-progress-track .progress-fill::after {
+    display: none !important;
+  }
+
+  /* Status line: porcentagem + ver jornada — compactar */
+  .hero-status-line {
+    font-size: 11px !important;
+    margin-top: 10px !important;
+  }
+
+  /* ============================
+     STATS CARDS: grid compacto
+     ============================ */
+
+  /* Card individual: sem borda visível — separação por espaçamento */
+  .stat-card {
+    border-color: transparent !important;
+    background: var(--surface) !important;
+    border-radius: 14px !important;
+    padding: 14px 12px !important;
+  }
+
+  /* Valor do stat: levemente maior */
+  .stat-card > div:last-child {
+    font-size: 18px !important;
+  }
+
+  /* ============================
+     PROJECTION CARD: destaque máximo
+     ============================ */
+
+  /* Container: borda verde mais marcada para hierarquia visual */
+  .projection-card-wrapper {
+    background: rgba(200,240,96,0.06) !important;
+    border-color: rgba(200,240,96,0.5) !important;
+    border-width: 1px !important;
+  }
+
+  /* Label: sem emoji, sem uppercase excessivo */
+  .projection-label {
+    font-size: 11px !important;
+    letter-spacing: 0.5px !important;
+    text-transform: none !important;
+  }
+
+  /* Data de projeção: display size — elemento mais impactante do card */
+  .projection-date {
+    font-size: 36px !important;
+    letter-spacing: -2px !important;
+    margin: 4px 0 2px !important;
+  }
+
+  /* ============================
+     RECENT ENTRIES: lista flat
+     ============================ */
+
+  /* Título da seção: sem uppercase */
+  .recent-entries-title {
+    text-transform: none !important;
+    letter-spacing: 0.2px !important;
+    font-size: 12px !important;
+    margin-top: 16px !important;
+  }
+
+  /* Linha de entrada: sem card individual — flat com separador sutil */
+  .entry-row {
+    background: transparent !important;
+    border: none !important;
+    border-bottom: 1px solid rgba(255,255,255,0.05) !important;
+    border-radius: 0 !important;
+    padding: 12px 0 !important;
+    margin-bottom: 0 !important;
+  }
+
+  /* Ícone da entrada: sem fundo colorido */
+  .entry-icon {
+    background: transparent !important;
+    width: 28px !important;
+    height: 28px !important;
+    border-radius: 0 !important;
+    font-size: 18px !important;
+  }
+
+  /* ============================
+     CHALLENGE CARD: estilo fintech
+     ============================ */
+
+  /* Container: borda verde sutil, fundo surface */
+  .challenge-card-section {
+    background: var(--surface) !important;
+    border: 1px solid rgba(200,240,96,0.2) !important;
+    border-radius: 16px !important;
+    padding: 16px !important;
+    margin-bottom: 12px !important;
+  }
+
+  /* Título "Desafios": sem emoji? Manter, mas ajustar tamanho */
+  .challenge-card-title {
+    font-size: 12px !important;
+    margin-bottom: 10px !important;
+    color: var(--muted) !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.8px !important;
+    font-weight: 600 !important;
+  }
+
+  /* Item de desafio: fundo ainda mais escuro, sem borda */
+  .challenge-item {
+    background: transparent !important;
+    border: none !important;
+    border-bottom: 1px solid rgba(255,255,255,0.05) !important;
+    border-radius: 0 !important;
+    padding: 10px 0 !important;
+  }
+
+  /* Tipo de desafio (Semanal/Mensal): sempre verde no mobile */
+  .challenge-type-badge {
+    color: var(--accent) !important;
+  }
+
+  /* ============================
+     LINK "DESAFIE UM AMIGO": flat
+     ============================ */
+
+  /* Remove gradiente rosa — fundo surface, borda sutil */
+  .social-challenge-link {
+    background: var(--surface) !important;
+    border: 1px solid rgba(255,255,255,0.07) !important;
+    border-radius: 14px !important;
+    padding: 14px 16px !important;
+    margin-bottom: 12px !important;
+  }
+
+  /* Título interno "Desafie um Amigo": branco em vez de rosa */
+  .social-challenge-link div[style*="color: #f060a0"],
+  .social-challenge-link div[style*="color:#f060a0"] {
+    color: var(--text) !important;
+  }
+
+  /* Ícone ⚔️: remover glow pink */
+  .social-challenge-link div[style*="drop-shadow"] {
+    filter: none !important;
+  }
+
+  /* Chevron: cor neutra */
+  .social-challenge-link svg {
+    stroke: rgba(255,255,255,0.25) !important;
+  }
+
+  /* ============================
+     PERFIL: card de progresso
+     ============================ */
+
+  /* Card de progresso: surface + borda verde, sem gradiente azul */
+  .perfil-progress-card {
+    background: var(--surface) !important;
+    border-color: rgba(200,240,96,0.3) !important;
+  }
+
+  /* Barra de progresso no card: verde sólido, sem glow azul */
+  .perfil-progress-card div[style*="gradient(90deg"] {
+    background: var(--accent) !important;
+    box-shadow: none !important;
+  }
+
+  /* Stats grid: gap menor */
+  .perfil-stats-grid {
+    gap: 8px !important;
+    margin-bottom: 14px !important;
+  }
+
+  /* Cada stat card: surface, sem borda colorida */
+  .perfil-stat-card {
+    background: var(--surface) !important;
+    border-color: rgba(255,255,255,0.06) !important;
+    border-radius: 14px !important;
+    padding: 12px 8px !important;
+  }
+
+  /* Ícone de emoji nos stats: sem glow excessivo */
+  .perfil-stat-card > div:first-child {
+    filter: none !important;
+    font-size: 22px !important;
+    margin-bottom: 2px !important;
+  }
+
+  /* Nav card: surface, borda sutil */
+  .perfil-nav-card {
+    background: var(--surface) !important;
+    border-color: rgba(255,255,255,0.06) !important;
+    border-radius: 14px !important;
+    margin-bottom: 12px !important;
+  }
+
+  /* ============================
+     COFRE DO DIABO: limpeza
+     ============================ */
+
+  /* Header: sem gradiente roxo */
+  .cofre-header {
+    background: var(--surface) !important;
+    border-color: rgba(180,60,240,0.2) !important;
+    padding: 18px 16px !important;
+    margin-bottom: 14px !important;
+  }
+
+  /* Emoji 😈 do header: sem glow gigante */
+  .cofre-header > div:first-child {
+    font-size: 32px !important;
+    filter: none !important;
+    margin-bottom: 4px !important;
+  }
+
+  /* Stats: sem bordas roxas */
+  .cofre-stat-card {
+    background: var(--surface) !important;
+    border-color: rgba(255,255,255,0.06) !important;
+  }
+
+  /* Labels uppercase dos stats: texto natural */
+  .cofre-stat-card > div:last-child {
+    text-transform: none !important;
+    letter-spacing: 0 !important;
+  }
+
+  /* Título "Histórico": sem uppercase */
+  .cofre-section-title {
+    text-transform: none !important;
+    letter-spacing: 0 !important;
+    font-size: 12px !important;
+    margin-bottom: 6px !important;
+  }
+
+  /* Item da lista: flat, sem borda roxa */
+  .cofre-list-item {
+    background: transparent !important;
+    border: none !important;
+    border-bottom: 1px solid rgba(255,255,255,0.05) !important;
+    border-radius: 0 !important;
+    padding: 11px 0 !important;
+  }
+
+  /* ============================
+     TELA LANÇAR: formulários fintech
+     ============================ */
+
+  /* Container unificado: todos os forms com o mesmo fundo, sem bordas coloridas */
+  .form-card {
+    background: var(--surface) !important;
+    border-color: rgba(255,255,255,0.06) !important;
+    border-radius: 16px !important;
+    padding: 18px !important;
+    margin-bottom: 10px !important;
+  }
+
+  /* Título do form: tamanho compacto */
+  .form-card > div:first-child {
+    font-size: 13px !important;
+    margin-bottom: 14px !important;
+    color: var(--muted) !important;
+    font-weight: 600 !important;
+  }
+
+  /* Subtítulo do TemptationForm: mantém cor mas sem espaçamento excessivo */
+  .temptation-form-card > div:nth-child(2) {
+    margin-bottom: 12px !important;
+    font-size: 12px !important;
+  }
+
+  /* Labels: sem uppercase, sem letter-spacing — texto natural */
+  .form-card label {
+    text-transform: none !important;
+    letter-spacing: 0 !important;
+    font-size: 11px !important;
+    margin-bottom: 5px !important;
+    color: var(--muted) !important;
+  }
+
+  /* Inputs e selects: borda sutil, fundo bem escuro */
+  .form-card input,
+  .form-card select {
+    background: rgba(255,255,255,0.04) !important;
+    border: 1px solid rgba(255,255,255,0.09) !important;
+    border-radius: 10px !important;
+    padding: 11px 13px !important;
+    font-size: 15px !important;
+  }
+
+  /* Botão de submit padrão: verde sólido — ação positiva */
+  .form-card button[type="submit"] {
+    border-radius: 12px !important;
+    padding: 13px !important;
+    font-size: 14px !important;
+    background: var(--accent) !important;
+    color: #0a0a0f !important;
+    box-shadow: none !important;
+  }
+
+  /* Despesa: botão coral — semântica de saída de dinheiro preservada */
+  .expense-form-card button[type="submit"] {
+    background: var(--danger) !important;
+    color: white !important;
+  }
+
+  /* Cofre do Diabo: botão roxo sólido sem gradiente */
+  .temptation-form-card button[type="submit"] {
+    background: rgba(160,60,230,0.9) !important;
+    color: white !important;
+  }
+
+  /* Mensagem motivacional (SavingsForm): borda esquerda verde, sem fundo laranja */
+  .motivation-hint {
+    background: transparent !important;
+    border: none !important;
+    border-left: 2px solid var(--accent) !important;
+    border-radius: 0 !important;
+    padding: 5px 10px !important;
+    color: var(--muted) !important;
+    font-size: 12px !important;
+  }
+
+}
+
+/* ============================================================
    DESKTOP WARNING OVERLAY
    Aparece apenas em telas ≥ 768px, bloqueando o conteúdo.
    ============================================================ */

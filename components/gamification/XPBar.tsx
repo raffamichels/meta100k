@@ -8,7 +8,9 @@ export function XPBar({ xp }: XPBarProps) {
   const { current, next, progress } = xpToNextLevel(xp);
 
   return (
+    // className="xp-bar-wrapper" → oculto no mobile via globals.css (redundante com LevelBadge no header)
     <div
+      className="xp-bar-wrapper"
       style={{
         background: "var(--card)",
         border: "1px solid var(--border)",

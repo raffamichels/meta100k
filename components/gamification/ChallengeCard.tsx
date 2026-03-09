@@ -26,7 +26,9 @@ export function ChallengeCard({ challenges }: ChallengeCardProps) {
   if (active.length === 0 && recentDone.length === 0) return null;
 
   return (
+    // className="challenge-card-section" → no mobile: borda verde, fundo surface
     <div
+      className="challenge-card-section"
       style={{
         background: "var(--card)",
         border: "1px solid rgba(96,212,240,0.2)",
@@ -35,7 +37,9 @@ export function ChallengeCard({ challenges }: ChallengeCardProps) {
         marginBottom: 16,
       }}
     >
+      {/* className="challenge-card-title" → no mobile: compacto */}
       <div
+        className="challenge-card-title"
         style={{
           fontFamily: "var(--font-syne), sans-serif",
           fontWeight: 700,
@@ -57,8 +61,10 @@ export function ChallengeCard({ challenges }: ChallengeCardProps) {
           const typeColor = ch.type === "weekly" ? "var(--accent2)" : "var(--accent)";
 
           return (
+            // className="challenge-item" → no mobile: flat, fundo mais escuro
             <div
               key={ch.id}
+              className="challenge-item"
               style={{
                 background: "rgba(255,255,255,0.03)",
                 border: "1px solid rgba(255,255,255,0.08)",
@@ -68,7 +74,9 @@ export function ChallengeCard({ challenges }: ChallengeCardProps) {
             >
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 8 }}>
                 <div>
+                  {/* className="challenge-type-badge" → no mobile: sempre verde */}
                   <div
+                    className="challenge-type-badge"
                     style={{
                       fontSize: 9,
                       fontWeight: 700,

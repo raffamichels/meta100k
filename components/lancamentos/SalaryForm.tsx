@@ -44,7 +44,9 @@ export function SalaryForm() {
   }, [state, showToast, processResult]);
 
   return (
+    // className="form-card" → mobile: visual unificado, superfície escura
     <div
+      className="form-card"
       style={{
         background: "var(--card)",
         border: "1px solid var(--border)",

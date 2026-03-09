@@ -46,7 +46,9 @@ export function TemptationForm() {
   }, [state, showToast, processResult]);
 
   return (
+    // className="form-card temptation-form-card" → mobile: mantém identidade roxa sem gradiente
     <div
+      className="form-card temptation-form-card"
       style={{
         background: "var(--card)",
         // Borda com cor temática do Cofre do Diabo (roxo avermelhado)

@@ -1,7 +1,7 @@
 import { auth } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
-import { fmt, fmtFull, formatMonth } from "@/lib/utils";
+import { fmt, fmtFull, formatMonth, MONTH_NAMES } from "@/lib/utils";
 import {
   calcTotalSaved,
   calcTotalEarned,
@@ -14,6 +14,15 @@ import {
 } from "@/lib/calculations";
 import { GoalConfig } from "@/components/meta/GoalConfig";
 import Simulator from "@/components/meta/Simulator";
+
+const MILESTONES = [
+  { pct: 10, icon: "🌱" },
+  { pct: 25, icon: "🏅" },
+  { pct: 50, icon: "💰" },
+  { pct: 75, icon: "🚀" },
+  { pct: 90, icon: "⚡" },
+  { pct: 100, icon: "👑" },
+];
 
 export default async function MetaPage() {
   const session = await auth();
@@ -31,7 +40,6 @@ export default async function MetaPage() {
   const data = { goal: user.goal, baseAmount: user.baseAmount, months: user.months };
 
   const totalSaved = calcTotalSaved(data);
-  // Economias lançadas nos meses (exclui baseAmount, que é poupança anterior ao controle)
   const savingsFromMonths = user.months.reduce((a, mo) => a + (mo.savings || 0), 0);
   const totalEarned = calcTotalEarned(data);
   const totalSpent = calcTotalSpent(data);
@@ -41,7 +49,11 @@ export default async function MetaPage() {
   const savingsRate = calcSavingsRate(avgSavings, avgSalary);
   const projection = calcProjection(data);
 
-  // Savings timeline sorted oldest→newest for cumulative, then reversed for display
+  const pct = Math.min((totalSaved / user.goal) * 100, 100);
+  const remaining = Math.max(user.goal - totalSaved, 0);
+  const lastReached = [...MILESTONES].reverse().find((m) => m.pct <= pct);
+  const nextMilestone = MILESTONES.find((m) => m.pct > pct);
+
   const savMonths = user.months
     .filter((mo) => mo.savings > 0)
     .sort((a, b) => a.key.localeCompare(b.key));
@@ -49,287 +61,385 @@ export default async function MetaPage() {
   let cumulative = user.baseAmount || 0;
   const timelineRows = savMonths.map((mo) => {
     cumulative += mo.savings;
-    const pct = Math.min((cumulative / user.goal) * 100, 100);
-    return { key: mo.key, savings: mo.savings, cumulative, pct };
+    const rowPct = Math.min((cumulative / user.goal) * 100, 100);
+    return { key: mo.key, savings: mo.savings, cumulative, pct: rowPct };
   });
-  timelineRows.reverse(); // show newest first
+  timelineRows.reverse();
 
-  // Analysis colors
+  // Avaliação da taxa de poupança
   let rateColor = "var(--danger)";
-  let rateMsg = "Abaixo do ideal";
-  if (savingsRate >= 30) { rateColor = "var(--success)"; rateMsg = "Excelente!"; }
-  else if (savingsRate >= 20) { rateColor = "var(--accent)"; rateMsg = "Muito bom"; }
-  else if (savingsRate >= 10) { rateColor = "var(--gold)"; rateMsg = "Regular"; }
+  let rateLabel = "Abaixo do ideal";
+  if (savingsRate >= 30) { rateColor = "#60f0a0"; rateLabel = "Excelente"; }
+  else if (savingsRate >= 20) { rateColor = "var(--accent)"; rateLabel = "Muito bom"; }
+  else if (savingsRate >= 10) { rateColor = "var(--gold)"; rateLabel = "Regular"; }
 
   const hasData = user.months.some((m) => m.salary > 0) || savMonths.length > 0;
 
-  const projectionText = projection.done
-    ? "Meta atingida! 🎉"
-    : projection.months
-    ? `em ~${projection.months} meses`
-    : "sem projeção";
+  // Projeção
+  let projDateText = "—";
+  let projDetailText = "Registre economia para ver a projeção";
+  if (projection.done) {
+    projDateText = "🎉 Meta atingida!";
+    projDetailText = `Você já acumulou ${fmt(totalSaved)}`;
+  } else if (projection.months) {
+    const d = projection.date;
+    projDateText = `${MONTH_NAMES[d.getMonth()]} ${d.getFullYear()}`;
+    projDetailText = `em ~${projection.months} meses guardando ${fmt(projection.avg)}/mês`;
+  }
+
+  const saldo = totalEarned - totalSpent - savingsFromMonths;
 
   return (
-    // Fragment para envolver meta-grid + Simulador (seção abaixo, largura total)
     <>
-    {/* .meta-grid → no desktop: grid 2 colunas (3fr dados | 2fr análise+config) */}
     <div className="meta-grid">
 
-    {/* COLUNA ESQUERDA: visão macro — total guardado, ganhos/gastos, timeline */}
+    {/* ── COLUNA ESQUERDA ── */}
     <div className="meta-left">
 
-      {/* TOTAL SAVED HERO */}
-      <div
-        style={{
-          background: "linear-gradient(135deg, rgba(96,212,240,0.12), rgba(200,240,96,0.08))",
-          border: "1px solid rgba(96,212,240,0.25)",
-          borderRadius: 20,
-          padding: 20,
-          marginBottom: 20,
-        }}
-      >
-        <div style={{ fontSize: 11, textTransform: "uppercase", letterSpacing: "1.5px", color: "var(--muted)" }}>
-          💰 Total economizado
+      {/* HERO DE PROGRESSO — tipográfico, sem card */}
+      <div style={{ marginBottom: 36 }}>
+
+        <div style={{
+          fontSize: 11,
+          textTransform: "uppercase",
+          letterSpacing: "2px",
+          color: "var(--muted)",
+          marginBottom: 14,
+        }}>
+          Rumo aos R$ 100.000
         </div>
-        <div
-          style={{
-            fontFamily: "var(--font-syne), sans-serif",
-            fontSize: 48,
-            fontWeight: 800,
-            letterSpacing: "-2px",
-            color: "var(--accent2)",
-            margin: "8px 0",
-          }}
-        >
+
+        {/* Número principal — display size, domina a página */}
+        <div style={{
+          fontFamily: "var(--font-syne), sans-serif",
+          fontSize: 62,
+          fontWeight: 900,
+          letterSpacing: "-3px",
+          lineHeight: 1,
+          color: "var(--text)",
+          marginBottom: 8,
+        }}>
           {fmt(totalSaved)}
         </div>
-        <div style={{ fontSize: 13, color: "var(--muted)" }}>
-          Meta: <strong style={{ color: "var(--accent)" }}>R$ {user.goal.toLocaleString("pt-BR")}</strong>
+
+        <div style={{ fontSize: 14, color: "var(--muted)", marginBottom: 28 }}>
+          {remaining > 0
+            ? `Faltam ${fmt(remaining)} para a meta`
+            : "Meta atingida! Parabéns."}
+        </div>
+
+        {/* Barra de progresso — fina e limpa */}
+        <div style={{ background: "rgba(255,255,255,0.06)", borderRadius: 100, height: 5, position: "relative" }}>
+          <div style={{
+            height: "100%",
+            borderRadius: 100,
+            background: "var(--accent)",
+            width: `${pct}%`,
+            transition: "width 0.8s ease",
+          }}/>
+          {/* Ponto da posição atual */}
+          {pct > 0 && pct < 100 && (
+            <div style={{
+              position: "absolute",
+              left: `${pct}%`,
+              top: "50%",
+              transform: "translate(-50%, -50%)",
+              width: 12,
+              height: 12,
+              borderRadius: "50%",
+              background: "var(--accent)",
+              border: "2px solid var(--bg)",
+              boxShadow: "0 0 8px rgba(200,240,96,0.6)",
+            }}/>
+          )}
+        </div>
+
+        {/* Legenda da barra */}
+        <div style={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          marginTop: 10,
+          fontSize: 12,
+          color: "var(--muted)",
+        }}>
+          <span>
+            <strong style={{ color: "var(--accent)", fontFamily: "var(--font-syne)" }}>{pct.toFixed(1)}%</strong>
+            {lastReached && (
+              <span style={{ marginLeft: 8, opacity: 0.55 }}>{lastReached.icon}</span>
+            )}
+          </span>
+          {nextMilestone && (
+            <span style={{ opacity: 0.4, fontSize: 11 }}>
+              próximo {nextMilestone.icon} {nextMilestone.pct}%
+            </span>
+          )}
         </div>
       </div>
 
-      {/* CONSOLIDATED EARNINGS */}
-      <div
-        style={{
-          fontFamily: "var(--font-syne), sans-serif",
-          fontSize: 13,
-          fontWeight: 700,
-          textTransform: "uppercase",
-          letterSpacing: "1.5px",
-          color: "var(--muted)",
-          marginBottom: 14,
-          marginTop: 24,
-        }}
-      >
-        Painel consolidado de ganhos
-      </div>
-      <div
-        style={{
-          background: "var(--card)",
-          border: "1px solid var(--border)",
-          borderRadius: 20,
-          padding: 20,
-          marginBottom: 16,
-        }}
-      >
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12, marginBottom: 12 }}>
-          <div style={{ background: "rgba(200,240,96,0.06)", border: "1px solid rgba(200,240,96,0.15)", borderRadius: 14, padding: 14 }}>
-            <div style={{ fontSize: 11, color: "var(--muted)", textTransform: "uppercase", letterSpacing: "0.8px" }}>Total ganho</div>
-            <div style={{ fontFamily: "var(--font-syne), sans-serif", fontSize: 20, fontWeight: 800, color: "var(--accent)", marginTop: 4 }}>{fmt(totalEarned)}</div>
-            <div style={{ fontSize: 11, color: "var(--muted)", marginTop: 4 }}>salário + extras</div>
+      {/* DIVISOR */}
+      <div style={{ height: 1, background: "var(--border)", marginBottom: 32 }}/>
+
+      {/* 3 NÚMEROS EM LINHA — sem cards individuais, separados por divisores verticais */}
+      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", marginBottom: 36 }}>
+        {[
+          { label: "Total ganho", value: fmt(totalEarned), sub: "salário + extras", color: "var(--accent)" },
+          { label: "Total gasto", value: fmt(totalSpent), sub: "despesas", color: "var(--danger)" },
+          { label: "Saldo livre", value: fmt(saldo), sub: "ganho − gasto", color: saldo >= 0 ? "var(--accent2)" : "var(--danger)" },
+        ].map((stat, i) => (
+          <div
+            key={stat.label}
+            style={{
+              paddingLeft: i === 0 ? 0 : 20,
+              paddingRight: 20,
+              borderLeft: i === 0 ? "none" : "1px solid var(--border)",
+            }}
+          >
+            <div style={{ fontSize: 11, color: "var(--muted)", marginBottom: 8 }}>{stat.label}</div>
+            <div style={{
+              fontFamily: "var(--font-syne), sans-serif",
+              fontSize: 18,
+              fontWeight: 800,
+              letterSpacing: "-0.5px",
+              color: stat.color,
+              marginBottom: 4,
+            }}>
+              {stat.value}
+            </div>
+            <div style={{ fontSize: 11, color: "var(--muted)", opacity: 0.7 }}>{stat.sub}</div>
           </div>
-          <div style={{ background: "rgba(240,96,96,0.06)", border: "1px solid rgba(240,96,96,0.15)", borderRadius: 14, padding: 14 }}>
-            <div style={{ fontSize: 11, color: "var(--muted)", textTransform: "uppercase", letterSpacing: "0.8px" }}>Total gasto</div>
-            <div style={{ fontFamily: "var(--font-syne), sans-serif", fontSize: 20, fontWeight: 800, color: "var(--danger)", marginTop: 4 }}>{fmt(totalSpent)}</div>
-            <div style={{ fontSize: 11, color: "var(--muted)", marginTop: 4 }}>todas as despesas</div>
-          </div>
-        </div>
-        <div style={{ background: "rgba(96,212,240,0.06)", border: "1px solid rgba(96,212,240,0.15)", borderRadius: 14, padding: 14 }}>
-          <div style={{ fontSize: 11, color: "var(--muted)", textTransform: "uppercase", letterSpacing: "0.8px" }}>Saldo histórico (ganho − gasto − economizado)</div>
-          {/* Desconta apenas economias lançadas nos meses; baseAmount é poupança anterior ao controle */}
-          <div style={{ fontFamily: "var(--font-syne), sans-serif", fontSize: 24, fontWeight: 800, color: "var(--accent2)", marginTop: 4 }}>{fmt(totalEarned - totalSpent - savingsFromMonths)}</div>
-        </div>
+        ))}
       </div>
 
-      {/* SAVINGS TIMELINE */}
-      <div
-        style={{
-          fontFamily: "var(--font-syne), sans-serif",
-          fontSize: 13,
-          fontWeight: 700,
-          textTransform: "uppercase",
-          letterSpacing: "1.5px",
-          color: "var(--muted)",
-          marginBottom: 14,
-          marginTop: 24,
-        }}
-      >
+      {/* DIVISOR */}
+      <div style={{ height: 1, background: "var(--border)", marginBottom: 28 }}/>
+
+      {/* HISTÓRICO DE ECONOMIA — lista limpa, estilo extrato */}
+      <div style={{
+        fontSize: 11,
+        textTransform: "uppercase",
+        letterSpacing: "1.5px",
+        color: "var(--muted)",
+        marginBottom: 20,
+      }}>
         Histórico de economia
       </div>
-      <div
-        style={{
-          background: "var(--card)",
-          border: "1px solid var(--border)",
-          borderRadius: 20,
-          padding: 20,
-          marginBottom: 16,
-        }}
-      >
-        {timelineRows.length === 0 ? (
-          <div style={{ textAlign: "center", padding: "20px 0", color: "var(--muted)", fontSize: 14 }}>
-            <div style={{ fontSize: 32, marginBottom: 8 }}>🏦</div>
-            Nenhuma economia registrada ainda
-          </div>
-        ) : (
-          timelineRows.map((row) => (
+
+      {timelineRows.length === 0 ? (
+        <div style={{
+          padding: "32px 0",
+          textAlign: "center",
+          color: "var(--muted)",
+          fontSize: 14,
+          opacity: 0.6,
+        }}>
+          Nenhuma economia registrada ainda
+        </div>
+      ) : (
+        <div>
+          {timelineRows.map((row, i) => (
             <div
               key={row.key}
               style={{
                 display: "flex",
-                gap: 14,
-                padding: "12px 0",
-                borderBottom: "1px solid rgba(255,255,255,0.04)",
+                alignItems: "center",
+                gap: 16,
+                padding: "14px 0",
+                borderBottom: i < timelineRows.length - 1
+                  ? "1px solid rgba(255,255,255,0.04)"
+                  : "none",
               }}
             >
-              <div
-                style={{
-                  width: 10,
-                  height: 10,
-                  borderRadius: "50%",
-                  background: "var(--accent)",
-                  flexShrink: 0,
-                  marginTop: 5,
-                }}
-              />
-              <div style={{ flex: 1 }}>
-                <div style={{ fontSize: 14, fontWeight: 500 }}>
-                  {formatMonth(row.key)}{" "}
-                  <span style={{ color: "var(--accent)" }}>+{fmt(row.savings)}</span>
+              {/* Dot — mais opaco para o mês mais recente */}
+              <div style={{
+                width: 7,
+                height: 7,
+                borderRadius: "50%",
+                background: "var(--accent)",
+                flexShrink: 0,
+                opacity: i === 0 ? 1 : 0.4,
+              }}/>
+
+              <div style={{ flex: 1, minWidth: 0 }}>
+                <div style={{ fontSize: 13, color: i === 0 ? "var(--text)" : "var(--muted)" }}>
+                  {formatMonth(row.key)}
                 </div>
-                <div style={{ fontSize: 12, color: "var(--muted)", marginTop: 2 }}>
-                  Acumulado: {fmt(row.cumulative)} · {row.pct.toFixed(1)}% da meta
+                {/* Mini barra do acumulado */}
+                <div style={{ marginTop: 5, background: "rgba(255,255,255,0.04)", borderRadius: 100, height: 3 }}>
+                  <div style={{
+                    height: "100%",
+                    borderRadius: 100,
+                    background: "var(--accent)",
+                    width: `${row.pct}%`,
+                    opacity: 0.5,
+                  }}/>
+                </div>
+                <div style={{ fontSize: 11, color: "var(--muted)", marginTop: 4, opacity: 0.55 }}>
+                  {fmt(row.cumulative)} acumulado · {row.pct.toFixed(1)}%
                 </div>
               </div>
+
+              {/* Valor — destaque à direita */}
+              <div style={{
+                fontFamily: "var(--font-syne), sans-serif",
+                fontSize: 15,
+                fontWeight: 700,
+                color: "var(--accent)",
+                flexShrink: 0,
+              }}>
+                +{fmt(row.savings)}
+              </div>
             </div>
-          ))
-        )}
-      </div>
+          ))}
+        </div>
+      )}
 
-    </div> {/* fim .meta-left */}
+    </div>
 
-    {/* COLUNA DIREITA: análise financeira + configuração da meta */}
+    {/* ── COLUNA DIREITA ── */}
     <div className="meta-right">
 
-      {/* ANALYSIS */}
-      <div
-        style={{
-          fontFamily: "var(--font-syne), sans-serif",
-          fontSize: 13,
-          fontWeight: 700,
+      {/* TAXA DE POUPANÇA — tipográfica, sem card */}
+      <div style={{ marginBottom: 32 }}>
+        <div style={{
+          fontSize: 11,
           textTransform: "uppercase",
-          letterSpacing: "1.5px",
+          letterSpacing: "2px",
           color: "var(--muted)",
           marginBottom: 14,
-          marginTop: 24,
-        }}
-      >
-        Análise financeira
-      </div>
-      <div
-        style={{
-          background: "var(--card)",
-          border: "1px solid var(--border)",
-          borderRadius: 20,
-          padding: 20,
-          marginBottom: 16,
-        }}
-      >
-        {!hasData ? (
-          <div style={{ textAlign: "center", padding: "20px 0", color: "var(--muted)", fontSize: 14 }}>
-            <div style={{ fontSize: 32, marginBottom: 8 }}>🔍</div>
-            Registre dados para ver análise
-          </div>
-        ) : (
+        }}>
+          Taxa de poupança
+        </div>
+
+        {hasData ? (
           <>
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 16 }}>
-              <div>
-                <div style={{ fontSize: 11, color: "var(--muted)", textTransform: "uppercase", letterSpacing: "0.8px" }}>Taxa de poupança</div>
-                <div style={{ fontFamily: "var(--font-syne), sans-serif", fontSize: 28, fontWeight: 800, color: rateColor }}>{savingsRate.toFixed(1)}%</div>
+            <div style={{ display: "flex", alignItems: "baseline", gap: 14, marginBottom: 8 }}>
+              {/* Número da taxa — mesmo peso do hero de progresso */}
+              <div style={{
+                fontFamily: "var(--font-syne), sans-serif",
+                fontSize: 58,
+                fontWeight: 900,
+                letterSpacing: "-3px",
+                lineHeight: 1,
+                color: rateColor,
+              }}>
+                {savingsRate.toFixed(1)}%
               </div>
-              <div
-                style={{
-                  background: `rgba(${savingsRate >= 30 ? "96,240,160" : savingsRate >= 20 ? "200,240,96" : savingsRate >= 10 ? "240,192,96" : "240,96,96"},0.15)`,
-                  color: rateColor,
-                  fontSize: 12,
-                  fontWeight: 600,
-                  padding: "6px 12px",
-                  borderRadius: 20,
-                  display: "inline-block",
-                }}
-              >
-                {rateMsg}
+              {/* Badge de avaliação */}
+              <div style={{
+                fontSize: 11,
+                fontWeight: 600,
+                color: rateColor,
+                background: `color-mix(in srgb, ${rateColor} 12%, transparent)`,
+                padding: "4px 10px",
+                borderRadius: 100,
+                border: `1px solid color-mix(in srgb, ${rateColor} 25%, transparent)`,
+                flexShrink: 0,
+                alignSelf: "center",
+              }}>
+                {rateLabel}
               </div>
             </div>
-
-            <div style={{ height: 1, background: "var(--border)", margin: "16px 0" }} />
-
-            {[
-              { dot: "var(--accent2)", title: "Salário médio", value: `${fmtFull(avgSalary)}/mês` },
-              { dot: "var(--accent)", title: "Economia média", value: `${fmtFull(avgSavings)}/mês` },
-              {
-                dot: "var(--gold)",
-                title: "Faltam para a meta",
-                value: `${fmt(Math.max(user.goal - totalSaved, 0))} · ${projectionText}`,
-              },
-            ].map((item) => (
-              <div
-                key={item.title}
-                style={{
-                  display: "flex",
-                  gap: 14,
-                  padding: "8px 0",
-                  borderBottom: "1px solid rgba(255,255,255,0.04)",
-                }}
-              >
-                <div
-                  style={{
-                    width: 10,
-                    height: 10,
-                    borderRadius: "50%",
-                    background: item.dot,
-                    flexShrink: 0,
-                    marginTop: 5,
-                  }}
-                />
-                <div>
-                  <div style={{ fontSize: 14, fontWeight: 500 }}>{item.title}</div>
-                  <div style={{ fontSize: 12, color: "var(--muted)", marginTop: 2 }}>{item.value}</div>
-                </div>
-              </div>
-            ))}
+            <div style={{ fontSize: 13, color: "var(--muted)" }}>da renda média mensal</div>
           </>
+        ) : (
+          <div style={{ fontSize: 14, color: "var(--muted)", paddingTop: 8, opacity: 0.6 }}>
+            Registre dados para ver análise
+          </div>
         )}
       </div>
 
-      {/* GOAL CONFIG */}
-      <div
-        style={{
-          fontFamily: "var(--font-syne), sans-serif",
-          fontSize: 13,
-          fontWeight: 700,
+      {/* DIVISOR */}
+      <div style={{ height: 1, background: "var(--border)", marginBottom: 28 }}/>
+
+      {/* MÉTRICAS — lista flat, sem cards individuais */}
+      {hasData && (
+        <div style={{ marginBottom: 32 }}>
+          {[
+            {
+              label: "Salário médio",
+              value: `${fmtFull(avgSalary)}/mês`,
+              color: "var(--text)",
+            },
+            {
+              label: "Economia média",
+              value: `${fmtFull(avgSavings)}/mês`,
+              color: "var(--accent)",
+            },
+            {
+              label: "Falta para a meta",
+              value: fmt(Math.max(user.goal - totalSaved, 0)),
+              color: "var(--gold)",
+            },
+          ].map((item, i) => (
+            <div
+              key={item.label}
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                padding: "13px 0",
+                borderBottom: i < 2 ? "1px solid rgba(255,255,255,0.04)" : "none",
+              }}
+            >
+              <div style={{ fontSize: 13, color: "var(--muted)" }}>{item.label}</div>
+              <div style={{
+                fontFamily: "var(--font-syne), sans-serif",
+                fontSize: 15,
+                fontWeight: 700,
+                color: item.color,
+              }}>
+                {item.value}
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {/* DIVISOR (só aparece se hasData) */}
+      {hasData && <div style={{ height: 1, background: "var(--border)", marginBottom: 28 }}/>}
+
+      {/* PROJEÇÃO — flat, sem card */}
+      <div style={{ marginBottom: 32 }}>
+        <div style={{
+          fontSize: 11,
           textTransform: "uppercase",
           letterSpacing: "1.5px",
           color: "var(--muted)",
-          marginBottom: 14,
-          marginTop: 24,
-        }}
-      >
+          marginBottom: 12,
+        }}>
+          Projeção
+        </div>
+        <div style={{
+          fontFamily: "var(--font-syne), sans-serif",
+          fontSize: 26,
+          fontWeight: 800,
+          letterSpacing: "-1px",
+          color: "var(--accent)",
+          marginBottom: 6,
+        }}>
+          {projDateText}
+        </div>
+        <div style={{ fontSize: 13, color: "var(--muted)" }}>{projDetailText}</div>
+      </div>
+
+      {/* DIVISOR */}
+      <div style={{ height: 1, background: "var(--border)", marginBottom: 24 }}/>
+
+      {/* GOAL CONFIG */}
+      <div style={{
+        fontSize: 11,
+        textTransform: "uppercase",
+        letterSpacing: "1.5px",
+        color: "var(--muted)",
+        marginBottom: 14,
+      }}>
         Ajustar economia
       </div>
       <GoalConfig currentGoal={user.goal} currentBase={user.baseAmount} />
 
-    </div> {/* fim .meta-right */}
-    </div> {/* fim .meta-grid */}
+    </div>
+    </div>
 
     {/* Simulador "E Se?" — seção abaixo, largura total no desktop */}
     <Simulator

@@ -34,7 +34,9 @@ export function HeroCard({ totalSaved, goal }: HeroCardProps) {
 
   return (
     <>
+      {/* className="hero-card-wrapper" → no mobile: borda mais sutil */}
       <div
+        className="hero-card-wrapper"
         style={{
           background: "var(--card)",
           border: "1px solid var(--border)",
@@ -45,8 +47,9 @@ export function HeroCard({ totalSaved, goal }: HeroCardProps) {
           overflow: "hidden",
         }}
       >
-        {/* Glow decoration */}
+        {/* Glow decoration — className="hero-glow-decor" oculto no mobile */}
         <div
+          className="hero-glow-decor"
           style={{
             position: "absolute",
             top: -40,
@@ -58,7 +61,9 @@ export function HeroCard({ totalSaved, goal }: HeroCardProps) {
           }}
         />
 
+        {/* className="hero-progress-label" → no mobile remove uppercase robótico */}
         <div
+          className="hero-progress-label"
           style={{
             fontSize: 11,
             textTransform: "uppercase",
@@ -70,7 +75,9 @@ export function HeroCard({ totalSaved, goal }: HeroCardProps) {
           Progresso da meta
         </div>
 
+        {/* className="hero-value-amount" → no mobile: display size agressivo */}
         <div
+          className="hero-value-amount"
           style={{
             fontFamily: "var(--font-syne), sans-serif",
             fontSize: 42,
@@ -84,7 +91,8 @@ export function HeroCard({ totalSaved, goal }: HeroCardProps) {
           <small style={{ fontSize: 22, color: "var(--muted)" }}> / 100K</small>
         </div>
 
-        <div style={{ color: "var(--muted)", fontSize: 13, marginBottom: 20 }}>
+        {/* className="hero-remaining" → no mobile: texto menor e mais sutil */}
+        <div className="hero-remaining" style={{ color: "var(--muted)", fontSize: 13, marginBottom: 20 }}>
           {remaining > 0
             ? `Faltam ${fmt(remaining)} para sua meta`
             : "🎉 Meta atingida! Parabéns!"}
@@ -93,8 +101,10 @@ export function HeroCard({ totalSaved, goal }: HeroCardProps) {
         {/* Progress bar clicável — abre o Mapa do Tesouro */}
         <div style={{ position: "relative", marginBottom: 20 }}>
           {/* Área clicável da barra */}
+          {/* className="hero-progress-track" → no mobile: barra fina estilo fintech */}
           <div
             onClick={() => setModalAberto(true)}
+            className="hero-progress-track"
             style={{
               background: "rgba(255,255,255,0.06)",
               borderRadius: 100,
@@ -143,8 +153,8 @@ export function HeroCard({ totalSaved, goal }: HeroCardProps) {
             })}
           </div>
 
-          {/* Labels dos marcos + hint do mapa */}
-          <div style={{ position: "relative", height: 22, marginTop: 6 }}>
+          {/* Labels dos marcos + hint do mapa — className="hero-milestone-labels" oculto no mobile */}
+          <div className="hero-milestone-labels" style={{ position: "relative", height: 22, marginTop: 6 }}>
             {MILESTONES.map((m) => {
               const reached = pct >= m.pct;
               return (
@@ -169,8 +179,9 @@ export function HeroCard({ totalSaved, goal }: HeroCardProps) {
           </div>
         </div>
 
-        {/* Linha de status + hint "Ver jornada" */}
+        {/* Linha de status + hint "Ver jornada" — className="hero-status-line" */}
         <div
+          className="hero-status-line"
           style={{
             display: "flex",
             justifyContent: "space-between",

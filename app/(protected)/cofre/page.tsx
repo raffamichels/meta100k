@@ -41,8 +41,9 @@ export default async function CofrePage() {
 
   return (
     <div style={{ maxWidth: 700, margin: "0 auto", padding: "0 0 32px" }}>
-      {/* Cabeçalho */}
+      {/* Cabeçalho — className="cofre-header": mobile sem gradiente roxo */}
       <div
+        className="cofre-header"
         style={{
           background: "linear-gradient(135deg, rgba(180,60,240,0.12), rgba(120,40,200,0.07))",
           border: "1px solid rgba(180,60,240,0.35)",
@@ -71,8 +72,9 @@ export default async function CofrePage() {
         </div>
       </div>
 
-      {/* Stats de topo */}
+      {/* Stats de topo — className="cofre-stats-grid" */}
       <div
+        className="cofre-stats-grid"
         style={{
           display: "grid",
           gridTemplateColumns: "1fr 1fr 1fr",
@@ -82,6 +84,7 @@ export default async function CofrePage() {
       >
         {/* Total resistido */}
         <div
+          className="cofre-stat-card"
           style={{
             background: "var(--card)",
             border: "1px solid rgba(180,60,240,0.25)",
@@ -109,6 +112,7 @@ export default async function CofrePage() {
 
         {/* Quantidade */}
         <div
+          className="cofre-stat-card"
           style={{
             background: "var(--card)",
             border: "1px solid rgba(180,60,240,0.25)",
@@ -136,6 +140,7 @@ export default async function CofrePage() {
 
         {/* Série dos últimos 7 dias */}
         <div
+          className="cofre-stat-card"
           style={{
             background: "var(--card)",
             border: "1px solid rgba(180,60,240,0.25)",
@@ -231,8 +236,9 @@ export default async function CofrePage() {
         </div>
       )}
 
-      {/* Lista cronológica */}
+      {/* Lista cronológica — className="cofre-section-title" */}
       <div
+        className="cofre-section-title"
         style={{
           fontFamily: "var(--font-syne), sans-serif",
           fontWeight: 700,
@@ -269,6 +275,7 @@ export default async function CofrePage() {
           {temptations.map((t) => (
             <div
               key={t.id}
+              className="cofre-list-item"
               style={{
                 background: "var(--card)",
                 border: "1px solid rgba(180,60,240,0.2)",

@@ -80,22 +80,19 @@ export function BottomNav() {
             WebkitTapHighlightColor: "transparent",
           }}
         >
+          {/* Botão CTA: verde sólido — linguagem fintech, sem gradiente secundário */}
           <div
             style={{
-              width: 52,
-              height: 52,
+              width: 56,
+              height: 56,
               borderRadius: "50%",
-              background: launchActive
-                ? "var(--accent2)"
-                : "linear-gradient(135deg, var(--accent), var(--accent2))",
+              background: "var(--accent)",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
-              boxShadow: launchActive
-                ? "0 0 20px rgba(200,240,96,0.5)"
-                : "0 4px 16px rgba(96,212,240,0.3)",
+              boxShadow: "0 4px 20px rgba(200,240,96,0.45)",
               transition: "all 0.2s",
-              marginTop: -10,
+              marginTop: -14,
             }}
           >
             <svg viewBox="0 0 24 24" fill="none" stroke="#0a0a0f" strokeWidth={2.5} width={24} height={24}>
@@ -109,7 +106,7 @@ export function BottomNav() {
               fontWeight: 500,
               letterSpacing: "0.5px",
               textTransform: "uppercase",
-              color: launchActive ? "var(--accent2)" : "var(--muted)",
+              color: launchActive ? "var(--accent)" : "var(--muted)",
               marginTop: 4,
               transition: "color 0.2s",
             }}
