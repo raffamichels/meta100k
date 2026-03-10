@@ -7,12 +7,13 @@ type Message = {
   content: string;
 };
 
-type ExpenseData = {
-  desc: string;
-  value: number;
-  category: string;
-  date: string; // "YYYY-MM-DD"
-};
+// Tipos espelhados dos definidos em route.ts
+type ExpenseEntry    = { type: "expense";    desc: string; value: number; category: string; date: string };
+type SalaryEntry     = { type: "salary";     value: number; month: string };
+type SavingsEntry    = { type: "savings";    desc: string; value: number; date: string };
+type ExtraEntry      = { type: "extra";      desc: string; value: number; date: string };
+type TemptationEntry = { type: "temptation"; desc: string; value: number; category: string; place?: string; date: string };
+type EntryData = ExpenseEntry | SalaryEntry | SavingsEntry | ExtraEntry | TemptationEntry;
 
 const WELCOME_MESSAGE: Message = {
   role: "assistant",
@@ -46,8 +47,8 @@ export function FinancialAssistant() {
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
   const [pulse, setPulse] = useState(true);
-  // Despesa aguardando confirmação do usuário
-  const [pendingExpense, setPendingExpense] = useState<ExpenseData | null>(null);
+  // Lançamento aguardando confirmação do usuário
+  const [pendingEntry, setPendingEntry] = useState<EntryData | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -73,7 +74,7 @@ export function FinancialAssistant() {
     setOpen(false);
     setInput("");
     setMessages([WELCOME_MESSAGE]);
-    setPendingExpense(null);
+    setPendingEntry(null);
   }, []);
 
   // Aceita texto opcional para envio direto (ex.: sugestões rápidas)
@@ -96,10 +97,10 @@ export function FinancialAssistant() {
 
       if (!res.ok) throw new Error("Erro na API");
 
-      const data = await res.json() as { content: string; pendingExpense?: ExpenseData };
+      const data = await res.json() as { content: string; pendingEntry?: EntryData };
       setMessages((prev) => [...prev, { role: "assistant", content: data.content }]);
-      // Se a IA identificou uma despesa, armazena para confirmação
-      if (data.pendingExpense) setPendingExpense(data.pendingExpense);
+      // Se a IA identificou um lançamento, armazena para confirmação
+      if (data.pendingEntry) setPendingEntry(data.pendingEntry);
     } catch {
       setMessages((prev) => [
         ...prev,
@@ -120,42 +121,48 @@ export function FinancialAssistant() {
     }
   };
 
-  // Confirma e salva a despesa pendente via API
-  const confirmExpense = useCallback(async () => {
-    if (!pendingExpense || loading) return;
+  // Confirma e salva o lançamento pendente via API unificada
+  const confirmEntry = useCallback(async () => {
+    if (!pendingEntry || loading) return;
+    const entry = pendingEntry;
     setLoading(true);
-    setPendingExpense(null);
+    setPendingEntry(null);
     try {
-      const res = await fetch("/api/chat/confirm-expense", {
+      const res = await fetch("/api/chat/confirm-entry", {
         method: "POST",
         headers: { "content-type": "application/json" },
-        body: JSON.stringify(pendingExpense),
+        body: JSON.stringify(entry),
       });
       if (!res.ok) throw new Error("Erro ao salvar");
-      const formattedValue = pendingExpense.value.toLocaleString("pt-BR", {
-        minimumFractionDigits: 2,
-        maximumFractionDigits: 2,
-      });
-      setMessages((prev) => [
-        ...prev,
-        {
-          role: "assistant",
-          content: `✅ Despesa de **R$ ${formattedValue}** (${pendingExpense.desc}) registrada com sucesso! Ela já aparece no seu histórico.`,
-        },
-      ]);
+
+      // Mensagem de sucesso adaptada ao tipo de lançamento
+      const fmtVal = (v: number) => v.toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+      let successMsg = "✅ Lançamento registrado com sucesso!";
+      if (entry.type === "expense")
+        successMsg = `✅ Despesa de **R$ ${fmtVal(entry.value)}** (${entry.desc}) registrada! Já aparece no histórico.`;
+      else if (entry.type === "salary")
+        successMsg = `✅ Salário de **R$ ${fmtVal(entry.value)}** registrado para ${entry.month.split("-").reverse().join("/")}!`;
+      else if (entry.type === "savings")
+        successMsg = `🏦 Economia de **R$ ${fmtVal(entry.value)}** (${entry.desc}) registrada! Continue assim!`;
+      else if (entry.type === "extra")
+        successMsg = `⚡ Ganho de **R$ ${fmtVal(entry.value)}** (${entry.desc}) adicionado!`;
+      else if (entry.type === "temptation")
+        successMsg = `😈🔒 **R$ ${fmtVal(entry.value)}** salvos no Cofre do Diabo! Você resistiu a: ${entry.desc}. Parabéns!`;
+
+      setMessages((prev) => [...prev, { role: "assistant", content: successMsg }]);
     } catch {
       setMessages((prev) => [
         ...prev,
-        { role: "assistant", content: "Ops, não consegui registrar a despesa. Tente novamente." },
+        { role: "assistant", content: "Ops, não consegui registrar o lançamento. Tente novamente." },
       ]);
     } finally {
       setLoading(false);
     }
-  }, [pendingExpense, loading]);
+  }, [pendingEntry, loading]);
 
   // Cancela o lançamento pendente
-  const cancelExpense = useCallback(() => {
-    setPendingExpense(null);
+  const cancelEntry = useCallback(() => {
+    setPendingEntry(null);
     setMessages((prev) => [
       ...prev,
       { role: "assistant", content: "Tudo bem! Lançamento cancelado. Posso ajudar com mais alguma coisa?" },
@@ -401,11 +408,11 @@ export function FinancialAssistant() {
             </div>
           )}
 
-          {/* Botões de confirmação de despesa */}
-          {pendingExpense && !loading && (
+          {/* Botões de confirmação de lançamento */}
+          {pendingEntry && !loading && (
             <div style={{ display: "flex", gap: 8, marginTop: 4 }}>
               <button
-                onClick={confirmExpense}
+                onClick={confirmEntry}
                 style={{
                   flex: 1,
                   padding: "10px 0",
@@ -424,7 +431,7 @@ export function FinancialAssistant() {
                 ✅ Confirmar lançamento
               </button>
               <button
-                onClick={cancelExpense}
+                onClick={cancelEntry}
                 style={{
                   flex: 1,
                   padding: "10px 0",

@@ -7,12 +7,16 @@ import { calcDailyStreak } from "@/lib/utils";
 
 // ─── Detecção e parsing de intent de despesa ────────────────────────────────
 
-type ExpenseData = {
-  desc: string;
-  value: number;
-  category: string;
-  date: string; // "YYYY-MM-DD"
-};
+// Tipos de dados para cada lançamento possível pelo chat
+type ExpenseEntry    = { type: "expense";    desc: string; value: number; category: string; date: string };
+type SalaryEntry     = { type: "salary";     value: number; month: string }; // month = "YYYY-MM"
+type SavingsEntry    = { type: "savings";    desc: string; value: number; date: string };
+type ExtraEntry      = { type: "extra";      desc: string; value: number; date: string };
+type TemptationEntry = { type: "temptation"; desc: string; value: number; category: string; place?: string; date: string };
+type EntryData = ExpenseEntry | SalaryEntry | SavingsEntry | ExtraEntry | TemptationEntry;
+
+// Alias para uso interno do parseExpenseIntent (sem o campo type, adicionado depois)
+type ExpenseData = Omit<ExpenseEntry, "type">;
 
 // Mapeia palavras-chave para categorias de despesa
 function inferCategory(text: string): string {
@@ -370,22 +374,20 @@ export async function POST(request: NextRequest) {
 
   const lastUserMessage = messages[messages.length - 1]?.content ?? "";
 
-  // ── Detecção de intent de despesa (tem prioridade sobre auto-answer e IA) ──
+  // ── Detecção rápida de despesa por regex (sem chamar a IA) ──────────────────
   const expenseData = parseExpenseIntent(lastUserMessage);
   if (expenseData) {
-    const formattedValue = expenseData.value.toLocaleString("pt-BR", {
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2,
-    });
+    const entry: ExpenseEntry = { type: "expense", ...expenseData };
+    const formattedValue = entry.value.toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
     const content =
       `Entendido! Aqui está o resumo da despesa que vou registrar:\n\n` +
       `💸 **Tipo:** Despesa\n` +
-      `📝 **Descrição:** ${expenseData.desc}\n` +
+      `📝 **Descrição:** ${entry.desc}\n` +
       `💰 **Valor:** R$ ${formattedValue}\n` +
-      `${expenseData.category.split(" ")[0]} **Categoria:** ${expenseData.category}\n` +
-      `📅 **Data:** ${formatDateBR(expenseData.date)}\n\n` +
+      `${entry.category.split(" ")[0]} **Categoria:** ${entry.category}\n` +
+      `📅 **Data:** ${formatDateBR(entry.date)}\n\n` +
       `Posso confirmar esse lançamento?`;
-    return NextResponse.json({ content, pendingExpense: expenseData });
+    return NextResponse.json({ content, pendingEntry: entry });
   }
 
   // Tenta resposta automática (sem IA)
@@ -435,32 +437,81 @@ ${financialContext}`;
     return NextResponse.json({ error: "API key not configured" }, { status: 500 });
   }
 
-  // Ferramenta que Claude pode chamar para registrar despesas via chat
+  // Ferramentas disponíveis para o Claude registrar lançamentos via chat
   const todayISO = now.toISOString().slice(0, 10);
+  const currentMonthISO = todayISO.slice(0, 7);
   const tools = [
     {
       name: "register_expense",
-      description: `Registra uma despesa no sistema financeiro do usuário. Use esta ferramenta sempre que o usuário quiser adicionar, registrar, lançar ou anotar um gasto ou despesa — independente de como ele formular o pedido. Data padrão se não informada: ${todayISO}.`,
+      description: `Registra uma despesa/gasto no sistema. Use sempre que o usuário quiser adicionar, registrar, lançar ou anotar uma despesa ou gasto. Data padrão: ${todayISO}.`,
       input_schema: {
         type: "object",
         properties: {
-          desc: {
-            type: "string",
-            description: "Descrição curta da despesa (ex: Gasolina, Almoço, Farmácia)",
-          },
-          value: {
-            type: "number",
-            description: "Valor em reais, número positivo (ex: 50.00)",
-          },
+          desc: { type: "string", description: "Descrição curta (ex: Gasolina, Almoço, Farmácia)" },
+          value: { type: "number", description: "Valor em reais, positivo" },
           category: {
             type: "string",
             enum: ["🏠 Moradia", "🍔 Alimentação", "🚗 Transporte", "💊 Saúde", "🎓 Educação", "🎉 Lazer", "👕 Vestuário", "📱 Assinaturas", "💡 Contas", "❓ Outros"],
-            description: "Categoria mais adequada para a despesa",
+            description: "Categoria mais adequada",
           },
-          date: {
+          date: { type: "string", description: `Data YYYY-MM-DD. Padrão: ${todayISO}.` },
+        },
+        required: ["desc", "value", "category", "date"],
+      },
+    },
+    {
+      name: "register_salary",
+      description: `Registra o salário/renda mensal do usuário. Use quando ele informar quanto ganha, recebeu o salário, ou quiser atualizar a renda do mês. Mês padrão: ${currentMonthISO}.`,
+      input_schema: {
+        type: "object",
+        properties: {
+          value: { type: "number", description: "Valor do salário em reais" },
+          month: { type: "string", description: `Mês no formato YYYY-MM. Padrão: ${currentMonthISO}.` },
+        },
+        required: ["value", "month"],
+      },
+    },
+    {
+      name: "register_savings",
+      description: `Registra uma economia/poupança. Use quando o usuário disser que guardou, poupou, economizou ou separou um valor. Data padrão: ${todayISO}.`,
+      input_schema: {
+        type: "object",
+        properties: {
+          desc: { type: "string", description: "Descrição (ex: Reserva mensal, Economiei no almoço)" },
+          value: { type: "number", description: "Valor economizado em reais" },
+          date: { type: "string", description: `Data YYYY-MM-DD. Padrão: ${todayISO}.` },
+        },
+        required: ["desc", "value", "date"],
+      },
+    },
+    {
+      name: "register_extra_income",
+      description: `Registra um ganho avulso/renda extra. Use quando o usuário recebeu um freela, bônus, venda, presente em dinheiro ou qualquer renda fora do salário. Data padrão: ${todayISO}.`,
+      input_schema: {
+        type: "object",
+        properties: {
+          desc: { type: "string", description: "Descrição (ex: Freela, Bônus, Venda de item)" },
+          value: { type: "number", description: "Valor recebido em reais" },
+          date: { type: "string", description: `Data YYYY-MM-DD. Padrão: ${todayISO}.` },
+        },
+        required: ["desc", "value", "date"],
+      },
+    },
+    {
+      name: "register_temptation",
+      description: `Registra uma compra que o usuário QUASE fez mas resistiu (Cofre do Diabo). Use quando o usuário disser que quase comprou algo, resistiu a uma tentação, evitou uma compra por impulso, ou usar frases como "quase comprei", "quase cedi", "resistiu a comprar". Data padrão: ${todayISO}.`,
+      input_schema: {
+        type: "object",
+        properties: {
+          desc: { type: "string", description: "Nome/descrição do item que foi resistido (ex: iPhone, Tênis Nike, Smartwatch)" },
+          value: { type: "number", description: "Valor que seria gasto" },
+          category: {
             type: "string",
-            description: `Data no formato YYYY-MM-DD. Use ${todayISO} se o usuário não informar data.`,
+            enum: ["📱 Tecnologia", "👕 Vestuário", "🍔 Alimentação", "🎉 Lazer", "🏠 Casa & Decoração", "💄 Beleza", "🎮 Games", "✈️ Viagem", "💎 Luxo", "❓ Outros"],
+            description: "Categoria da tentação",
           },
+          place: { type: "string", description: "Local onde a tentação ocorreu (opcional, ex: Shopping, Amazon)" },
+          date: { type: "string", description: `Data YYYY-MM-DD. Padrão: ${todayISO}.` },
         },
         required: ["desc", "value", "category", "date"],
       },
@@ -490,28 +541,110 @@ ${financialContext}`;
 
   type ClaudeContent =
     | { type: "text"; text: string }
-    | { type: "tool_use"; id: string; name: string; input: ExpenseData };
+    | { type: "tool_use"; id: string; name: string; input: Record<string, unknown> };
 
   const data = await response.json() as { content: ClaudeContent[]; stop_reason: string };
 
-  // Claude decidiu registrar a despesa via ferramenta → mostra card de confirmação
+  // Claude chamou uma ferramenta de lançamento → monta card de confirmação
   if (data.stop_reason === "tool_use") {
     const toolUse = data.content.find((c): c is Extract<ClaudeContent, { type: "tool_use" }> => c.type === "tool_use");
-    if (toolUse?.name === "register_expense") {
-      const expenseData = toolUse.input;
-      const formattedValue = expenseData.value.toLocaleString("pt-BR", {
-        minimumFractionDigits: 2,
-        maximumFractionDigits: 2,
-      });
-      const content =
-        `Entendido! Aqui está o resumo da despesa que vou registrar:\n\n` +
-        `💸 **Tipo:** Despesa\n` +
-        `📝 **Descrição:** ${expenseData.desc}\n` +
-        `💰 **Valor:** R$ ${formattedValue}\n` +
-        `${expenseData.category.split(" ")[0]} **Categoria:** ${expenseData.category}\n` +
-        `📅 **Data:** ${formatDateBR(expenseData.date)}\n\n` +
-        `Posso confirmar esse lançamento?`;
-      return NextResponse.json({ content, pendingExpense: expenseData });
+
+    if (toolUse) {
+      const inp = toolUse.input;
+      const fmtVal = (v: number) => v.toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+
+      let pendingEntry: EntryData | null = null;
+      let content = "";
+
+      if (toolUse.name === "register_expense") {
+        const entry: ExpenseEntry = {
+          type: "expense",
+          desc: inp.desc as string,
+          value: inp.value as number,
+          category: inp.category as string,
+          date: inp.date as string,
+        };
+        pendingEntry = entry;
+        content =
+          `Entendido! Aqui está o resumo da despesa:\n\n` +
+          `💸 **Tipo:** Despesa\n` +
+          `📝 **Descrição:** ${entry.desc}\n` +
+          `💰 **Valor:** R$ ${fmtVal(entry.value)}\n` +
+          `${entry.category.split(" ")[0]} **Categoria:** ${entry.category}\n` +
+          `📅 **Data:** ${formatDateBR(entry.date)}\n\n` +
+          `Posso confirmar esse lançamento?`;
+
+      } else if (toolUse.name === "register_salary") {
+        const entry: SalaryEntry = {
+          type: "salary",
+          value: inp.value as number,
+          month: inp.month as string,
+        };
+        pendingEntry = entry;
+        const [y, m] = entry.month.split("-");
+        content =
+          `Entendido! Aqui está o resumo do salário:\n\n` +
+          `💼 **Tipo:** Salário\n` +
+          `💰 **Valor:** R$ ${fmtVal(entry.value)}\n` +
+          `📅 **Mês:** ${m}/${y}\n\n` +
+          `Posso confirmar esse lançamento?`;
+
+      } else if (toolUse.name === "register_savings") {
+        const entry: SavingsEntry = {
+          type: "savings",
+          desc: inp.desc as string,
+          value: inp.value as number,
+          date: inp.date as string,
+        };
+        pendingEntry = entry;
+        content =
+          `Entendido! Aqui está o resumo da economia:\n\n` +
+          `🏦 **Tipo:** Economia\n` +
+          `📝 **Descrição:** ${entry.desc}\n` +
+          `💰 **Valor:** R$ ${fmtVal(entry.value)}\n` +
+          `📅 **Data:** ${formatDateBR(entry.date)}\n\n` +
+          `Posso confirmar esse lançamento?`;
+
+      } else if (toolUse.name === "register_extra_income") {
+        const entry: ExtraEntry = {
+          type: "extra",
+          desc: inp.desc as string,
+          value: inp.value as number,
+          date: inp.date as string,
+        };
+        pendingEntry = entry;
+        content =
+          `Entendido! Aqui está o resumo do ganho avulso:\n\n` +
+          `⚡ **Tipo:** Ganho Avulso\n` +
+          `📝 **Descrição:** ${entry.desc}\n` +
+          `💰 **Valor:** R$ ${fmtVal(entry.value)}\n` +
+          `📅 **Data:** ${formatDateBR(entry.date)}\n\n` +
+          `Posso confirmar esse lançamento?`;
+
+      } else if (toolUse.name === "register_temptation") {
+        const entry: TemptationEntry = {
+          type: "temptation",
+          desc: inp.desc as string,
+          value: inp.value as number,
+          category: inp.category as string,
+          place: inp.place as string | undefined,
+          date: inp.date as string,
+        };
+        pendingEntry = entry;
+        content =
+          `Resistiu! Aqui está o resumo da tentação:\n\n` +
+          `😈 **Tipo:** Cofre do Diabo\n` +
+          `📝 **Item:** ${entry.desc}\n` +
+          `💰 **Valor resistido:** R$ ${fmtVal(entry.value)}\n` +
+          `${entry.category.split(" ")[0]} **Categoria:** ${entry.category}\n` +
+          (entry.place ? `📍 **Local:** ${entry.place}\n` : ``) +
+          `📅 **Data:** ${formatDateBR(entry.date)}\n\n` +
+          `Parabéns por resistir! Posso registrar isso no Cofre do Diabo?`;
+      }
+
+      if (pendingEntry && content) {
+        return NextResponse.json({ content, pendingEntry });
+      }
     }
   }
 
