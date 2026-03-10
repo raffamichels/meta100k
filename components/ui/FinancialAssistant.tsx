@@ -7,6 +7,13 @@ type Message = {
   content: string;
 };
 
+type ExpenseData = {
+  desc: string;
+  value: number;
+  category: string;
+  date: string; // "YYYY-MM-DD"
+};
+
 const WELCOME_MESSAGE: Message = {
   role: "assistant",
   content:
@@ -39,6 +46,8 @@ export function FinancialAssistant() {
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
   const [pulse, setPulse] = useState(true);
+  // Despesa aguardando confirmação do usuário
+  const [pendingExpense, setPendingExpense] = useState<ExpenseData | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -64,10 +73,12 @@ export function FinancialAssistant() {
     setOpen(false);
     setInput("");
     setMessages([WELCOME_MESSAGE]);
+    setPendingExpense(null);
   }, []);
 
-  const sendMessage = useCallback(async () => {
-    const text = input.trim();
+  // Aceita texto opcional para envio direto (ex.: sugestões rápidas)
+  const sendMessage = useCallback(async (overrideText?: string) => {
+    const text = (overrideText ?? input).trim();
     if (!text || loading) return;
 
     const userMsg: Message = { role: "user", content: text };
@@ -85,8 +96,10 @@ export function FinancialAssistant() {
 
       if (!res.ok) throw new Error("Erro na API");
 
-      const data = await res.json() as { content: string };
+      const data = await res.json() as { content: string; pendingExpense?: ExpenseData };
       setMessages((prev) => [...prev, { role: "assistant", content: data.content }]);
+      // Se a IA identificou uma despesa, armazena para confirmação
+      if (data.pendingExpense) setPendingExpense(data.pendingExpense);
     } catch {
       setMessages((prev) => [
         ...prev,
@@ -106,6 +119,48 @@ export function FinancialAssistant() {
       sendMessage();
     }
   };
+
+  // Confirma e salva a despesa pendente via API
+  const confirmExpense = useCallback(async () => {
+    if (!pendingExpense || loading) return;
+    setLoading(true);
+    setPendingExpense(null);
+    try {
+      const res = await fetch("/api/chat/confirm-expense", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify(pendingExpense),
+      });
+      if (!res.ok) throw new Error("Erro ao salvar");
+      const formattedValue = pendingExpense.value.toLocaleString("pt-BR", {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      });
+      setMessages((prev) => [
+        ...prev,
+        {
+          role: "assistant",
+          content: `✅ Despesa de **R$ ${formattedValue}** (${pendingExpense.desc}) registrada com sucesso! Ela já aparece no seu histórico.`,
+        },
+      ]);
+    } catch {
+      setMessages((prev) => [
+        ...prev,
+        { role: "assistant", content: "Ops, não consegui registrar a despesa. Tente novamente." },
+      ]);
+    } finally {
+      setLoading(false);
+    }
+  }, [pendingExpense, loading]);
+
+  // Cancela o lançamento pendente
+  const cancelExpense = useCallback(() => {
+    setPendingExpense(null);
+    setMessages((prev) => [
+      ...prev,
+      { role: "assistant", content: "Tudo bem! Lançamento cancelado. Posso ajudar com mais alguma coisa?" },
+    ]);
+  }, []);
 
   const SUGGESTIONS = [
     "Quanto guardei até agora?",
@@ -346,16 +401,58 @@ export function FinancialAssistant() {
             </div>
           )}
 
+          {/* Botões de confirmação de despesa */}
+          {pendingExpense && !loading && (
+            <div style={{ display: "flex", gap: 8, marginTop: 4 }}>
+              <button
+                onClick={confirmExpense}
+                style={{
+                  flex: 1,
+                  padding: "10px 0",
+                  borderRadius: 14,
+                  border: "none",
+                  background: "rgba(200,240,96,0.15)",
+                  color: "#c8f060",
+                  fontSize: 13,
+                  fontWeight: 700,
+                  cursor: "pointer",
+                  fontFamily: "inherit",
+                  WebkitTapHighlightColor: "transparent",
+                  transition: "background 0.2s",
+                }}
+              >
+                ✅ Confirmar lançamento
+              </button>
+              <button
+                onClick={cancelExpense}
+                style={{
+                  flex: 1,
+                  padding: "10px 0",
+                  borderRadius: 14,
+                  border: "none",
+                  background: "rgba(240,96,96,0.1)",
+                  color: "rgba(240,96,96,0.85)",
+                  fontSize: 13,
+                  fontWeight: 700,
+                  cursor: "pointer",
+                  fontFamily: "inherit",
+                  WebkitTapHighlightColor: "transparent",
+                  transition: "background 0.2s",
+                }}
+              >
+                ❌ Cancelar
+              </button>
+            </div>
+          )}
+
           {/* Sugestões (apenas na primeira mensagem) */}
           {messages.length === 1 && !loading && (
             <div style={{ display: "flex", flexWrap: "wrap", gap: 6, marginTop: 4 }}>
               {SUGGESTIONS.map((s) => (
                 <button
                   key={s}
-                  onClick={() => {
-                    setInput(s);
-                    setTimeout(() => inputRef.current?.focus(), 50);
-                  }}
+                  // Envia a sugestão diretamente, sem precisar clicar em Enviar
+                  onClick={() => sendMessage(s)}
                   style={{
                     background: "var(--card)",
                     border: "1px solid var(--border)",
@@ -409,7 +506,7 @@ export function FinancialAssistant() {
             }}
           />
           <button
-            onClick={sendMessage}
+            onClick={() => sendMessage()}
             disabled={loading || !input.trim()}
             style={{
               width: 40,

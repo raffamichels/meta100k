@@ -5,7 +5,6 @@ import Link from "next/link";
 import { calcLevel, xpToNextLevel } from "@/lib/gamification";
 import { ACHIEVEMENTS } from "@/lib/achievements";
 import { calcDailyStreak } from "@/lib/utils";
-import { FinancialAssistant } from "@/components/ui/FinancialAssistant";
 
 export default async function PerfilPage() {
   const session = await auth();
@@ -399,8 +398,6 @@ export default async function PerfilPage() {
           Sair da conta
         </button>
       </form>
-
-      <FinancialAssistant />
 
     </div>
   );

@@ -4,6 +4,7 @@ import { prisma } from "@/lib/prisma";
 import { Header } from "@/components/ui/Header";
 import { BottomNav } from "@/components/ui/BottomNav";
 import { GamificationProvider } from "@/components/gamification/GamificationContext";
+import { FinancialAssistant } from "@/components/ui/FinancialAssistant";
 
 export default async function ProtectedLayout({
   children,
@@ -34,6 +35,8 @@ export default async function ProtectedLayout({
           {children}
         </main>
         <BottomNav />
+        {/* Chatbot disponível em todas as páginas protegidas */}
+        <FinancialAssistant />
       </div>
     </GamificationProvider>
   );
