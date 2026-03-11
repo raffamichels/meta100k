@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect, useCallback } from "react";
+import { shouldShowCoachBadge, markCoachRead } from "@/lib/coach";
 
 type Message = {
   role: "user" | "assistant";
@@ -49,6 +50,8 @@ export function FinancialAssistant() {
   const [pulse, setPulse] = useState(true);
   // Lançamento aguardando confirmação do usuário
   const [pendingEntry, setPendingEntry] = useState<EntryData | null>(null);
+  // Badge do coach preditivo
+  const [coachBadge, setCoachBadge] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -57,6 +60,34 @@ export function FinancialAssistant() {
     const t = setTimeout(() => setPulse(false), 5000);
     return () => clearTimeout(t);
   }, []);
+
+  // Verifica no mount se há análise do coach pendente
+  useEffect(() => {
+    setCoachBadge(shouldShowCoachBadge());
+  }, []);
+
+  // Quando o chat abre com badge ativo: busca a análise e injeta como primeira mensagem
+  useEffect(() => {
+    if (!open || !coachBadge) return;
+
+    setLoading(true);
+    fetch("/api/coach")
+      .then((r) => r.json())
+      .then((data: { analise?: string }) => {
+        if (data.analise) {
+          setMessages((prev) => [...prev, { role: "assistant", content: data.analise as string }]);
+          markCoachRead();
+          setCoachBadge(false);
+        }
+      })
+      .catch(() => {
+        // Falha silenciosa — não interrompe o chat
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [open]);
 
   // Scroll para a última mensagem
   useEffect(() => {
@@ -215,6 +246,31 @@ export function FinancialAssistant() {
           <path d="M5 13H3" stroke="#0a0a0f" strokeWidth="1.5" strokeLinecap="round" />
           <path d="M21 13h-2" stroke="#0a0a0f" strokeWidth="1.5" strokeLinecap="round" />
         </svg>
+
+        {/* Badge do coach preditivo */}
+        {coachBadge && (
+          <span
+            style={{
+              position: "absolute",
+              top: 2,
+              right: 2,
+              width: 18,
+              height: 18,
+              borderRadius: "50%",
+              background: "#f06060",
+              border: "2px solid var(--bg, #0a0a0f)",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              fontSize: 10,
+              fontWeight: 800,
+              color: "#fff",
+              lineHeight: 1,
+            }}
+          >
+            1
+          </span>
+        )}
       </button>
 
       {/* Overlay */}
