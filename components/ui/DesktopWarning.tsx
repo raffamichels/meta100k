@@ -7,7 +7,7 @@ export function DesktopWarning() {
           position: "absolute",
           inset: 0,
           backgroundImage:
-            "repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(200,240,96,0.015) 2px, rgba(200,240,96,0.015) 4px)",
+            "repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(34,197,94,0.015) 2px, rgba(34,197,94,0.015) 4px)",
           pointerEvents: "none",
         }}
       />
@@ -19,11 +19,11 @@ export function DesktopWarning() {
           maxWidth: 420,
           width: "90%",
           background: "var(--card)",
-          border: "1px solid rgba(200,240,96,0.25)",
+          border: "1px solid var(--border)",
           borderRadius: 28,
           padding: "32px 36px",
           textAlign: "center",
-          boxShadow: "0 0 80px rgba(200,240,96,0.08), 0 0 0 1px rgba(200,240,96,0.08)",
+          boxShadow: "var(--card-shadow)",
         }}
       >
         {/* Chips decorativos de XP no topo */}
@@ -32,13 +32,13 @@ export function DesktopWarning() {
             <div
               key={chip}
               style={{
-                background: "rgba(200,240,96,0.08)",
-                border: "1px solid rgba(200,240,96,0.2)",
+                background: "rgba(34,197,94,0.08)",
+                border: "1px solid rgba(34,197,94,0.2)",
                 borderRadius: 20,
                 padding: "4px 10px",
                 fontSize: 11,
                 fontWeight: 600,
-                color: "var(--accent)",
+                color: "var(--accent-dark)",
                 opacity: 0.7,
               }}
             >
@@ -54,7 +54,7 @@ export function DesktopWarning() {
             marginBottom: 16,
             display: "block",
             animation: "floatPhone 3s ease-in-out infinite",
-            filter: "drop-shadow(0 0 24px rgba(96,212,240,0.5))",
+            filter: "drop-shadow(0 0 24px rgba(66,99,235,0.25))",
           }}
         >
           📱
@@ -66,8 +66,8 @@ export function DesktopWarning() {
             display: "inline-flex",
             alignItems: "center",
             gap: 6,
-            background: "rgba(240,96,96,0.12)",
-            border: "1px solid rgba(240,96,96,0.3)",
+            background: "rgba(239,68,68,0.12)",
+            border: "1px solid rgba(239,68,68,0.3)",
             borderRadius: 20,
             padding: "4px 12px",
             fontSize: 11,
@@ -93,7 +93,7 @@ export function DesktopWarning() {
         {/* Título */}
         <div
           style={{
-            fontFamily: "var(--font-syne), sans-serif",
+            fontFamily: "var(--font-display), sans-serif",
             fontWeight: 800,
             fontSize: 28,
             letterSpacing: "-1px",
@@ -124,7 +124,7 @@ export function DesktopWarning() {
         {/* Barra de progresso decorativa */}
         <div
           style={{
-            background: "rgba(255,255,255,0.06)",
+            background: "rgba(0,0,0,0.06)",
             borderRadius: 100,
             height: 6,
             overflow: "hidden",
@@ -137,7 +137,7 @@ export function DesktopWarning() {
               borderRadius: 100,
               width: "68%",
               background: "linear-gradient(90deg, var(--accent2), var(--accent))",
-              boxShadow: "0 0 10px rgba(96,212,240,0.4)",
+              boxShadow: "0 0 10px rgba(66,99,235,0.3)",
             }}
           />
         </div>
@@ -152,7 +152,7 @@ export function DesktopWarning() {
             <div
               key={item.label}
               style={{
-                background: "rgba(255,255,255,0.04)",
+                background: "#f4f6f5",
                 border: "1px solid var(--border)",
                 borderRadius: 14,
                 padding: "8px 12px",
@@ -177,7 +177,7 @@ export function DesktopWarning() {
           opacity: 0.6,
         }}
       >
-        meta<span style={{ color: "var(--accent)" }}>100K</span> · acesso exclusivo mobile
+        meta<span style={{ color: "var(--accent-dark)" }}>100K</span> · acesso exclusivo mobile
       </div>
     </div>
   );

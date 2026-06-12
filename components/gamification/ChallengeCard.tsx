@@ -31,17 +31,18 @@ export function ChallengeCard({ challenges }: ChallengeCardProps) {
       className="challenge-card-section"
       style={{
         background: "var(--card)",
-        border: "1px solid rgba(96,212,240,0.2)",
+        border: "1px solid rgba(66,99,235,0.2)",
         borderRadius: 20,
         padding: 20,
         marginBottom: 16,
+        boxShadow: "var(--card-shadow)",
       }}
     >
       {/* className="challenge-card-title" → no mobile: compacto */}
       <div
         className="challenge-card-title"
         style={{
-          fontFamily: "var(--font-syne), sans-serif",
+          fontFamily: "var(--font-display), sans-serif",
           fontWeight: 700,
           fontSize: 15,
           marginBottom: 14,
@@ -58,7 +59,7 @@ export function ChallengeCard({ challenges }: ChallengeCardProps) {
           const { title } = getChallengeLabel(ch.key, ch.target);
           const pct = Math.min((ch.current / ch.target) * 100, 100);
           const daysLeft = getDaysLeft(ch.endDate);
-          const typeColor = ch.type === "weekly" ? "var(--accent2)" : "var(--accent)";
+          const typeColor = ch.type === "weekly" ? "var(--accent2)" : "var(--accent-dark)";
 
           return (
             // className="challenge-item" → no mobile: flat, fundo mais escuro
@@ -66,8 +67,8 @@ export function ChallengeCard({ challenges }: ChallengeCardProps) {
               key={ch.id}
               className="challenge-item"
               style={{
-                background: "rgba(255,255,255,0.03)",
-                border: "1px solid rgba(255,255,255,0.08)",
+                background: "#f4f6f5",
+                border: "1px solid var(--border)",
                 borderRadius: 14,
                 padding: "12px 14px",
               }}
@@ -90,7 +91,7 @@ export function ChallengeCard({ challenges }: ChallengeCardProps) {
                   </div>
                   <div
                     style={{
-                      fontFamily: "var(--font-syne), sans-serif",
+                      fontFamily: "var(--font-display), sans-serif",
                       fontWeight: 700,
                       fontSize: 13,
                       color: "var(--text)",
@@ -100,7 +101,7 @@ export function ChallengeCard({ challenges }: ChallengeCardProps) {
                   </div>
                 </div>
                 <div style={{ textAlign: "right", flexShrink: 0 }}>
-                  <div style={{ fontSize: 11, fontWeight: 700, color: "var(--accent)" }}>
+                  <div style={{ fontSize: 11, fontWeight: 700, color: "var(--accent-dark)" }}>
                     +{ch.xpReward} XP
                   </div>
                   <div style={{ fontSize: 10, color: "var(--muted)" }}>
@@ -112,7 +113,7 @@ export function ChallengeCard({ challenges }: ChallengeCardProps) {
               {/* Barra de progresso do desafio */}
               <div
                 style={{
-                  background: "rgba(255,255,255,0.06)",
+                  background: "#e8ecea",
                   borderRadius: 100,
                   height: 6,
                   overflow: "hidden",
@@ -126,7 +127,7 @@ export function ChallengeCard({ challenges }: ChallengeCardProps) {
                     background: `linear-gradient(90deg, ${typeColor}, var(--accent))`,
                     width: `${pct}%`,
                     transition: "width 0.8s ease",
-                    boxShadow: `0 0 6px ${typeColor}55`,
+                    boxShadow: ch.type === "weekly" ? "0 0 6px rgba(66,99,235,0.33)" : "0 0 6px rgba(34,197,94,0.33)",
                   }}
                 />
               </div>
@@ -137,7 +138,7 @@ export function ChallengeCard({ challenges }: ChallengeCardProps) {
                     ? `${Math.round(ch.current)}/${Math.round(ch.target)} dias`
                     : `${fmt(ch.current)} / ${fmt(ch.target)}`}
                 </span>
-                <span style={{ color: pct >= 100 ? "var(--accent)" : "var(--muted)" }}>
+                <span style={{ color: pct >= 100 ? "var(--accent-dark)" : "var(--muted)" }}>
                   {pct.toFixed(0)}%
                 </span>
               </div>
@@ -152,8 +153,8 @@ export function ChallengeCard({ challenges }: ChallengeCardProps) {
             <div
               key={ch.id}
               style={{
-                background: "rgba(200,240,96,0.04)",
-                border: "1px solid rgba(200,240,96,0.15)",
+                background: "rgba(34,197,94,0.04)",
+                border: "1px solid rgba(34,197,94,0.15)",
                 borderRadius: 14,
                 padding: "10px 14px",
                 display: "flex",
@@ -167,7 +168,7 @@ export function ChallengeCard({ challenges }: ChallengeCardProps) {
                 <div style={{ fontSize: 12, fontWeight: 600, color: "var(--muted)" }}>Concluído</div>
                 <div style={{ fontSize: 13, color: "var(--text)", fontWeight: 600 }}>{title}</div>
               </div>
-              <div style={{ marginLeft: "auto", fontSize: 11, fontWeight: 700, color: "var(--accent)" }}>
+              <div style={{ marginLeft: "auto", fontSize: 11, fontWeight: 700, color: "var(--accent-dark)" }}>
                 +{ch.xpReward} XP
               </div>
             </div>

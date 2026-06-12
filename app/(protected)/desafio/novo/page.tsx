@@ -37,7 +37,7 @@ export default async function NovoDesafioPage() {
       <div style={{ marginBottom: 24 }}>
         <div
           style={{
-            fontFamily: "var(--font-syne), sans-serif",
+            fontFamily: "var(--font-display), sans-serif",
             fontWeight: 800,
             fontSize: 28,
             letterSpacing: "-1px",
@@ -89,8 +89,8 @@ export default async function NovoDesafioPage() {
                       isPending
                         ? "var(--border)"
                         : isHard
-                        ? "rgba(240,96,160,0.25)"
-                        : "rgba(96,212,240,0.25)"
+                        ? "rgba(124,58,237,0.25)"
+                        : "rgba(66,99,235,0.25)"
                     }`,
                     borderRadius: 16,
                     padding: "14px 16px",
@@ -107,7 +107,7 @@ export default async function NovoDesafioPage() {
                   <div style={{ flex: 1, minWidth: 0 }}>
                     <div
                       style={{
-                        fontFamily: "var(--font-syne), sans-serif",
+                        fontFamily: "var(--font-display), sans-serif",
                         fontWeight: 700,
                         fontSize: 14,
                         color: "var(--text)",

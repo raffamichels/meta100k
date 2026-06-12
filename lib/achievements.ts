@@ -1098,8 +1098,8 @@ export const RARITY_LABELS: Record<AchievementRarity, string> = {
 };
 
 export const RARITY_COLORS: Record<AchievementRarity, string> = {
-  common: "#90f060",
-  rare: "#60a0f0",
-  epic: "#a060f0",
-  legendary: "#f0c060",
+  common: "#16a34a",
+  rare: "#4263eb",
+  epic: "#7c3aed",
+  legendary: "#f59e0b",
 };

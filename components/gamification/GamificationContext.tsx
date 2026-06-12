@@ -95,8 +95,8 @@ function NotificationItem({ n }: { n: Notification }) {
     return (
       <div
         style={{
-          background: "rgba(200,240,96,0.15)",
-          border: "1px solid rgba(200,240,96,0.4)",
+          background: "#ffffff",
+          border: "1px solid rgba(34,197,94,0.4)",
           borderRadius: 14,
           padding: "10px 16px",
           display: "flex",
@@ -104,16 +104,16 @@ function NotificationItem({ n }: { n: Notification }) {
           gap: 10,
           backdropFilter: "blur(12px)",
           animation: "slideInRight 0.35s cubic-bezier(0.34,1.56,0.64,1)",
-          boxShadow: "0 4px 20px rgba(200,240,96,0.15)",
+          boxShadow: "0 4px 18px rgba(34,197,94,0.3), 0 8px 28px rgba(25,42,35,0.18)",
         }}
       >
         <span style={{ fontSize: 20 }}>⚡</span>
         <span
           style={{
-            fontFamily: "var(--font-syne), sans-serif",
+            fontFamily: "var(--font-display), sans-serif",
             fontWeight: 700,
             fontSize: 14,
-            color: "var(--accent)",
+            color: "var(--accent-dark)",
           }}
         >
           +{n.xpGained} XP
@@ -126,8 +126,8 @@ function NotificationItem({ n }: { n: Notification }) {
     return (
       <div
         style={{
-          background: "linear-gradient(135deg, rgba(200,240,96,0.2), rgba(96,212,240,0.15))",
-          border: "1px solid rgba(200,240,96,0.5)",
+          background: "linear-gradient(135deg, #ffffff, rgba(34,197,94,0.08))",
+          border: "1px solid rgba(34,197,94,0.5)",
           borderRadius: 18,
           padding: "14px 18px",
           display: "flex",
@@ -135,11 +135,11 @@ function NotificationItem({ n }: { n: Notification }) {
           gap: 12,
           backdropFilter: "blur(12px)",
           animation: "slideInRight 0.4s cubic-bezier(0.34,1.56,0.64,1)",
-          boxShadow: "0 8px 32px rgba(200,240,96,0.25)",
+          boxShadow: "0 4px 18px rgba(34,197,94,0.3), 0 8px 28px rgba(25,42,35,0.18)",
           minWidth: 220,
         }}
       >
-        <span style={{ fontSize: 32, filter: "drop-shadow(0 0 12px rgba(200,240,96,0.6))" }}>
+        <span style={{ fontSize: 32, filter: "drop-shadow(0 0 12px rgba(34,197,94,0.5))" }}>
           {n.levelIcon}
         </span>
         <div>
@@ -149,7 +149,7 @@ function NotificationItem({ n }: { n: Notification }) {
               fontWeight: 700,
               textTransform: "uppercase",
               letterSpacing: "1.5px",
-              color: "var(--accent)",
+              color: "var(--accent-dark)",
               marginBottom: 2,
             }}
           >
@@ -157,7 +157,7 @@ function NotificationItem({ n }: { n: Notification }) {
           </div>
           <div
             style={{
-              fontFamily: "var(--font-syne), sans-serif",
+              fontFamily: "var(--font-display), sans-serif",
               fontWeight: 800,
               fontSize: 16,
               color: "var(--text)",
@@ -175,15 +175,15 @@ function NotificationItem({ n }: { n: Notification }) {
     if (!def) return null;
 
     const rarityColor =
-      def.rarity === "legendary" ? "#f0c060" :
-      def.rarity === "epic"      ? "#a060f0" :
-      def.rarity === "rare"      ? "#60a0f0" :
-      "#90f060";
+      def.rarity === "legendary" ? "#f59e0b" :
+      def.rarity === "epic"      ? "#7c3aed" :
+      def.rarity === "rare"      ? "#4263eb" :
+      "#16a34a";
 
     return (
       <div
         style={{
-          background: "rgba(19,19,26,0.97)",
+          background: "rgba(255,255,255,0.97)",
           border: `1px solid ${rarityColor}55`,
           borderLeft: `3px solid ${rarityColor}`,
           borderRadius: 16,
@@ -193,7 +193,7 @@ function NotificationItem({ n }: { n: Notification }) {
           gap: 14,
           backdropFilter: "blur(16px)",
           animation: "slideInRight 0.4s cubic-bezier(0.34,1.56,0.64,1)",
-          boxShadow: `0 8px 32px ${rarityColor}22`,
+          boxShadow: `0 8px 28px rgba(25,42,35,0.18), 0 8px 32px ${rarityColor}22`,
           minWidth: 240,
         }}
       >
@@ -221,7 +221,7 @@ function NotificationItem({ n }: { n: Notification }) {
           </div>
           <div
             style={{
-              fontFamily: "var(--font-syne), sans-serif",
+              fontFamily: "var(--font-display), sans-serif",
               fontWeight: 800,
               fontSize: 14,
               color: "var(--text)",
@@ -238,9 +238,9 @@ function NotificationItem({ n }: { n: Notification }) {
               flexShrink: 0,
               fontSize: 11,
               fontWeight: 700,
-              color: "var(--accent)",
-              background: "rgba(200,240,96,0.1)",
-              border: "1px solid rgba(200,240,96,0.2)",
+              color: "var(--accent-dark)",
+              background: "rgba(34,197,94,0.1)",
+              border: "1px solid rgba(34,197,94,0.2)",
               borderRadius: 8,
               padding: "3px 8px",
             }}

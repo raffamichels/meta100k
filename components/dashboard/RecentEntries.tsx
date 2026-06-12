@@ -20,7 +20,7 @@ export function RecentEntries({ entries }: RecentEntriesProps) {
       <div
         className="recent-entries-title"
         style={{
-          fontFamily: "var(--font-syne), sans-serif",
+          fontFamily: "var(--font-display), sans-serif",
           fontSize: 13,
           fontWeight: 700,
           textTransform: "uppercase",
@@ -69,8 +69,8 @@ export function RecentEntries({ entries }: RecentEntriesProps) {
                 borderRadius: 12,
                 background:
                   item.type === "expense"
-                    ? "rgba(240,96,96,0.12)"
-                    : "rgba(200,240,96,0.12)",
+                    ? "rgba(239,68,68,0.12)"
+                    : "rgba(34,197,94,0.12)",
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
@@ -102,12 +102,12 @@ export function RecentEntries({ entries }: RecentEntriesProps) {
 
             <div
               style={{
-                fontFamily: "var(--font-syne), sans-serif",
+                fontFamily: "var(--font-display), sans-serif",
                 fontWeight: 700,
                 fontSize: 15,
                 whiteSpace: "nowrap",
                 color:
-                  item.type === "expense" ? "var(--danger)" : "var(--accent)",
+                  item.type === "expense" ? "var(--danger)" : "var(--accent-dark)",
               }}
             >
               {item.type === "expense" ? "-" : "+"}

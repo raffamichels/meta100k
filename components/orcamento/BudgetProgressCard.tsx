@@ -3,11 +3,12 @@
 import type { BudgetWithProgress } from "@/lib/actions/budget";
 
 // Cores e mensagens por faixa de uso
+// Hex literais (não CSS vars) porque a cor é concatenada com alpha no boxShadow da barra
 function getBarStyle(pct: number): { color: string; label: string } {
-  if (pct >= 100) return { color: "#f04040", label: "Limite ultrapassado" };
-  if (pct >= 80)  return { color: "#f08020", label: "Alerta — próximo do limite" };
-  if (pct >= 60)  return { color: "#f0d040", label: "Atenção — mais da metade usada" };
-  return { color: "#60d060", label: "Dentro do orçamento" };
+  if (pct >= 100) return { color: "#ef4444", label: "Limite ultrapassado" };
+  if (pct >= 80)  return { color: "#f97316", label: "Alerta — próximo do limite" };
+  if (pct >= 60)  return { color: "#f59e0b", label: "Atenção — mais da metade usada" };
+  return { color: "#22c55e", label: "Dentro do orçamento" };
 }
 
 interface Props {
@@ -27,7 +28,7 @@ export function BudgetProgressCard({ budget, daysLeft }: Props) {
     <div
       style={{
         background: "var(--card)",
-        border: `1px solid ${isOver ? "rgba(240,64,64,0.4)" : "var(--border)"}`,
+        border: `1px solid ${isOver ? "rgba(239,68,68,0.4)" : "var(--border)"}`,
         borderRadius: 16,
         padding: 16,
         marginBottom: 12,
@@ -37,15 +38,15 @@ export function BudgetProgressCard({ budget, daysLeft }: Props) {
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 10 }}>
         <div
           style={{
-            fontFamily: "var(--font-syne), sans-serif",
+            fontFamily: "var(--font-display), sans-serif",
             fontWeight: 700,
             fontSize: 15,
-            color: isOver ? "#f04040" : "var(--text)",
+            color: isOver ? "var(--danger)" : "var(--text)",
           }}
         >
           {isOver ? "🔴 " : ""}{budget.category}
         </div>
-        <div style={{ fontSize: 11, color: isOver ? "#f04040" : "var(--muted)", fontWeight: isOver ? 700 : 400 }}>
+        <div style={{ fontSize: 11, color: isOver ? "var(--danger)" : "var(--muted)", fontWeight: isOver ? 700 : 400 }}>
           {isOver
             ? `R$ ${Math.abs(budget.remaining).toLocaleString("pt-BR", { minimumFractionDigits: 0 })} ACIMA`
             : label}
@@ -67,7 +68,7 @@ export function BudgetProgressCard({ budget, daysLeft }: Props) {
       {/* Barra de progresso */}
       <div
         style={{
-          background: "rgba(255,255,255,0.06)",
+          background: "rgba(0,0,0,0.06)",
           borderRadius: 100,
           height: 8,
           overflow: "hidden",

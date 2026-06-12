@@ -98,11 +98,11 @@ export default async function DashboardPage() {
           className="streak-banner-mobile"
           style={{
             background: streak > 0
-              ? "linear-gradient(135deg, rgba(240,140,40,0.13) 0%, rgba(200,240,96,0.08) 100%)"
-              : "linear-gradient(135deg, rgba(96,212,240,0.07) 0%, rgba(200,240,96,0.07) 100%)",
+              ? "linear-gradient(135deg, rgba(240,140,40,0.10) 0%, rgba(34,197,94,0.06) 100%)"
+              : "linear-gradient(135deg, rgba(66,99,235,0.06) 0%, rgba(34,197,94,0.06) 100%)",
             border: streak > 0
               ? "1px solid rgba(240,140,40,0.35)"
-              : "1px solid rgba(96,212,240,0.25)",
+              : "1px solid rgba(66,99,235,0.25)",
             borderRadius: 20,
             padding: "18px 20px",
             marginBottom: 16,
@@ -126,10 +126,10 @@ export default async function DashboardPage() {
           <div style={{ flex: 1, minWidth: 0 }}>
             <div
               style={{
-                fontFamily: "var(--font-syne), sans-serif",
+                fontFamily: "var(--font-display), sans-serif",
                 fontWeight: 800,
                 fontSize: 16,
-                color: streak > 0 ? "#f08c28" : "var(--accent2)",
+                color: streak > 0 ? "#d97706" : "var(--accent2)",
                 marginBottom: 4,
               }}
             >
@@ -155,7 +155,7 @@ export default async function DashboardPage() {
               <div
                 style={{
                   textAlign: "center",
-                  background: "rgba(240,140,40,0.15)",
+                  background: "rgba(240,140,40,0.12)",
                   border: "1px solid rgba(240,140,40,0.3)",
                   borderRadius: 14,
                   padding: "8px 14px",
@@ -163,10 +163,10 @@ export default async function DashboardPage() {
               >
                 <div
                   style={{
-                    fontFamily: "var(--font-syne), sans-serif",
+                    fontFamily: "var(--font-display), sans-serif",
                     fontWeight: 900,
                     fontSize: 26,
-                    color: "#f08c28",
+                    color: "#d97706",
                     lineHeight: 1,
                   }}
                 >
@@ -176,7 +176,7 @@ export default async function DashboardPage() {
                   style={{
                     fontSize: 10,
                     fontWeight: 600,
-                    color: "rgba(240,140,40,0.7)",
+                    color: "rgba(217,119,6,0.8)",
                     textTransform: "uppercase",
                     letterSpacing: "0.6px",
                     marginTop: 2,
@@ -192,7 +192,7 @@ export default async function DashboardPage() {
                     <span
                       key={i}
                       title="Escudo de streak"
-                      style={{ fontSize: 14, filter: "drop-shadow(0 0 4px rgba(96,160,240,0.7))" }}
+                      style={{ fontSize: 14, filter: "drop-shadow(0 0 4px rgba(66,99,235,0.5))" }}
                     >
                       🛡️
                     </span>
@@ -222,8 +222,8 @@ export default async function DashboardPage() {
           className="social-challenge-link"
           style={{
             display: "block",
-            background: "linear-gradient(135deg, rgba(240,96,160,0.1), rgba(160,96,240,0.07))",
-            border: "1px solid rgba(240,96,160,0.3)",
+            background: "linear-gradient(135deg, rgba(124,58,237,0.08), rgba(124,58,237,0.04))",
+            border: "1px solid rgba(124,58,237,0.25)",
             borderRadius: 20,
             padding: "18px 20px",
             textDecoration: "none",
@@ -235,7 +235,7 @@ export default async function DashboardPage() {
               style={{
                 fontSize: 32,
                 flexShrink: 0,
-                filter: "drop-shadow(0 0 8px rgba(240,96,160,0.5))",
+                filter: "drop-shadow(0 0 8px rgba(124,58,237,0.35))",
               }}
             >
               ⚔️
@@ -243,10 +243,10 @@ export default async function DashboardPage() {
             <div style={{ flex: 1 }}>
               <div
                 style={{
-                  fontFamily: "var(--font-syne), sans-serif",
+                  fontFamily: "var(--font-display), sans-serif",
                   fontWeight: 800,
                   fontSize: 15,
-                  color: "#f060a0",
+                  color: "var(--accent3)",
                   marginBottom: 3,
                 }}
               >
@@ -259,7 +259,7 @@ export default async function DashboardPage() {
             <svg
               viewBox="0 0 24 24"
               fill="none"
-              stroke="rgba(240,96,160,0.6)"
+              stroke="rgba(124,58,237,0.6)"
               strokeWidth={2}
               width={16}
               height={16}

@@ -2,8 +2,6 @@
 
 import { hash } from "bcryptjs";
 import { prisma } from "@/lib/prisma";
-import { signIn } from "@/lib/auth";
-import { isRedirectError } from "next/dist/client/components/redirect-error";
 
 type AuthState = { error: string } | undefined;
 
@@ -32,12 +30,7 @@ export async function registerUser(
     data: { email, name: name || null, password: hashedPassword },
   });
 
-  try {
-    await signIn("credentials", { email, password, redirectTo: "/" });
-  } catch (e) {
-    if (isRedirectError(e)) throw e;
-    return { error: "Erro ao entrar automaticamente. Tente na página de login." };
-  }
+  return undefined;
 }
 
 export async function loginUser(
@@ -51,10 +44,16 @@ export async function loginUser(
     return { error: "Preencha todos os campos" };
   }
 
-  try {
-    await signIn("credentials", { email, password, redirectTo: "/" });
-  } catch (e) {
-    if (isRedirectError(e)) throw e;
+  const user = await prisma.user.findUnique({ where: { email } });
+  if (!user) {
     return { error: "E-mail ou senha incorretos" };
   }
+
+  const { compare } = await import("bcryptjs");
+  const valid = await compare(password, user.password);
+  if (!valid) {
+    return { error: "E-mail ou senha incorretos" };
+  }
+
+  return undefined;
 }

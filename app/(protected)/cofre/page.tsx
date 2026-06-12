@@ -45,23 +45,23 @@ export default async function CofrePage() {
       <div
         className="cofre-header"
         style={{
-          background: "linear-gradient(135deg, rgba(180,60,240,0.12), rgba(120,40,200,0.07))",
-          border: "1px solid rgba(180,60,240,0.35)",
+          background: "linear-gradient(135deg, rgba(124,58,237,0.10), rgba(124,58,237,0.05))",
+          border: "1px solid rgba(124,58,237,0.3)",
           borderRadius: 20,
           padding: "24px 22px",
           marginBottom: 20,
           textAlign: "center",
         }}
       >
-        <div style={{ fontSize: 44, marginBottom: 8, filter: "drop-shadow(0 0 16px rgba(180,60,240,0.5))" }}>
+        <div style={{ fontSize: 44, marginBottom: 8, filter: "drop-shadow(0 0 16px rgba(124,58,237,0.35))" }}>
           😈
         </div>
         <div
           style={{
-            fontFamily: "var(--font-syne), sans-serif",
+            fontFamily: "var(--font-display), sans-serif",
             fontWeight: 900,
             fontSize: 24,
-            color: "#c060f0",
+            color: "var(--accent3)",
             marginBottom: 4,
           }}
         >
@@ -87,7 +87,7 @@ export default async function CofrePage() {
           className="cofre-stat-card"
           style={{
             background: "var(--card)",
-            border: "1px solid rgba(180,60,240,0.25)",
+            border: "1px solid rgba(124,58,237,0.25)",
             borderRadius: 16,
             padding: "14px 12px",
             textAlign: "center",
@@ -95,10 +95,10 @@ export default async function CofrePage() {
         >
           <div
             style={{
-              fontFamily: "var(--font-syne), sans-serif",
+              fontFamily: "var(--font-display), sans-serif",
               fontWeight: 900,
               fontSize: 20,
-              color: "#c060f0",
+              color: "var(--accent3)",
               lineHeight: 1,
               marginBottom: 4,
             }}
@@ -115,7 +115,7 @@ export default async function CofrePage() {
           className="cofre-stat-card"
           style={{
             background: "var(--card)",
-            border: "1px solid rgba(180,60,240,0.25)",
+            border: "1px solid rgba(124,58,237,0.25)",
             borderRadius: 16,
             padding: "14px 12px",
             textAlign: "center",
@@ -123,10 +123,10 @@ export default async function CofrePage() {
         >
           <div
             style={{
-              fontFamily: "var(--font-syne), sans-serif",
+              fontFamily: "var(--font-display), sans-serif",
               fontWeight: 900,
               fontSize: 20,
-              color: "#c060f0",
+              color: "var(--accent3)",
               lineHeight: 1,
               marginBottom: 4,
             }}
@@ -143,7 +143,7 @@ export default async function CofrePage() {
           className="cofre-stat-card"
           style={{
             background: "var(--card)",
-            border: "1px solid rgba(180,60,240,0.25)",
+            border: "1px solid rgba(124,58,237,0.25)",
             borderRadius: 16,
             padding: "14px 12px",
             textAlign: "center",
@@ -151,10 +151,10 @@ export default async function CofrePage() {
         >
           <div
             style={{
-              fontFamily: "var(--font-syne), sans-serif",
+              fontFamily: "var(--font-display), sans-serif",
               fontWeight: 900,
               fontSize: 20,
-              color: "#c060f0",
+              color: "var(--accent3)",
               lineHeight: 1,
               marginBottom: 4,
             }}
@@ -180,10 +180,10 @@ export default async function CofrePage() {
         >
           <div
             style={{
-              fontFamily: "var(--font-syne), sans-serif",
+              fontFamily: "var(--font-display), sans-serif",
               fontWeight: 700,
               fontSize: 14,
-              color: "#c060f0",
+              color: "var(--accent3)",
               marginBottom: 12,
             }}
           >
@@ -223,7 +223,7 @@ export default async function CofrePage() {
                     style={{
                       padding: "8px 0",
                       fontSize: 13,
-                      color: "#c060f0",
+                      color: "var(--accent3)",
                       fontWeight: 700,
                     }}
                   >
@@ -240,7 +240,7 @@ export default async function CofrePage() {
       <div
         className="cofre-section-title"
         style={{
-          fontFamily: "var(--font-syne), sans-serif",
+          fontFamily: "var(--font-display), sans-serif",
           fontWeight: 700,
           fontSize: 14,
           color: "var(--muted)",
@@ -278,7 +278,7 @@ export default async function CofrePage() {
               className="cofre-list-item"
               style={{
                 background: "var(--card)",
-                border: "1px solid rgba(180,60,240,0.2)",
+                border: "1px solid rgba(124,58,237,0.2)",
                 borderRadius: 14,
                 padding: "14px 16px",
                 display: "flex",
@@ -293,7 +293,7 @@ export default async function CofrePage() {
               <div style={{ flex: 1, minWidth: 0 }}>
                 <div
                   style={{
-                    fontFamily: "var(--font-syne), sans-serif",
+                    fontFamily: "var(--font-display), sans-serif",
                     fontWeight: 700,
                     fontSize: 14,
                     color: "var(--text)",
@@ -315,10 +315,10 @@ export default async function CofrePage() {
               {/* Valor */}
               <div
                 style={{
-                  fontFamily: "var(--font-syne), sans-serif",
+                  fontFamily: "var(--font-display), sans-serif",
                   fontWeight: 800,
                   fontSize: 15,
-                  color: "#c060f0",
+                  color: "var(--accent3)",
                   flexShrink: 0,
                 }}
               >

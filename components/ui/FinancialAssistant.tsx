@@ -221,15 +221,15 @@ export function FinancialAssistant() {
           width: 52,
           height: 52,
           borderRadius: "50%",
-          background: "linear-gradient(135deg, #c8f060, #60d4f0)",
+          background: "var(--accent)",
           border: "none",
           cursor: "pointer",
           display: open ? "none" : "flex",
           alignItems: "center",
           justifyContent: "center",
           boxShadow: pulse
-            ? "0 0 0 8px rgba(200,240,96,0.2), 0 4px 20px rgba(200,240,96,0.4)"
-            : "0 4px 20px rgba(200,240,96,0.35)",
+            ? "0 0 0 8px rgba(34,197,94,0.2), 0 4px 14px rgba(34,197,94,0.35)"
+            : "0 4px 14px rgba(34,197,94,0.35)",
           transition: "box-shadow 0.3s, transform 0.2s",
           animation: pulse ? "assistantPulse 1.5s ease-in-out infinite" : "none",
           WebkitTapHighlightColor: "transparent",
@@ -237,14 +237,14 @@ export function FinancialAssistant() {
       >
         {/* Ícone de robô/assistente */}
         <svg viewBox="0 0 24 24" fill="none" width={26} height={26}>
-          <rect x="5" y="8" width="14" height="10" rx="3" fill="#0a0a0f" />
-          <rect x="8" y="11" width="2.5" height="2.5" rx="1" fill="#c8f060" />
-          <rect x="13.5" y="11" width="2.5" height="2.5" rx="1" fill="#c8f060" />
-          <path d="M9 16.5h6" stroke="#60d4f0" strokeWidth="1.5" strokeLinecap="round" />
-          <path d="M12 8V5" stroke="#0a0a0f" strokeWidth="2" strokeLinecap="round" />
-          <circle cx="12" cy="4" r="1.5" fill="#0a0a0f" />
-          <path d="M5 13H3" stroke="#0a0a0f" strokeWidth="1.5" strokeLinecap="round" />
-          <path d="M21 13h-2" stroke="#0a0a0f" strokeWidth="1.5" strokeLinecap="round" />
+          <rect x="5" y="8" width="14" height="10" rx="3" fill="#ffffff" />
+          <rect x="8" y="11" width="2.5" height="2.5" rx="1" fill="var(--accent)" />
+          <rect x="13.5" y="11" width="2.5" height="2.5" rx="1" fill="var(--accent)" />
+          <path d="M9 16.5h6" stroke="var(--accent)" strokeWidth="1.5" strokeLinecap="round" />
+          <path d="M12 8V5" stroke="#ffffff" strokeWidth="2" strokeLinecap="round" />
+          <circle cx="12" cy="4" r="1.5" fill="#ffffff" />
+          <path d="M5 13H3" stroke="#ffffff" strokeWidth="1.5" strokeLinecap="round" />
+          <path d="M21 13h-2" stroke="#ffffff" strokeWidth="1.5" strokeLinecap="round" />
         </svg>
 
         {/* Badge do coach preditivo */}
@@ -257,8 +257,8 @@ export function FinancialAssistant() {
               width: 18,
               height: 18,
               borderRadius: "50%",
-              background: "#f06060",
-              border: "2px solid var(--bg, #0a0a0f)",
+              background: "var(--danger)",
+              border: "2px solid #ffffff",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
@@ -281,7 +281,7 @@ export function FinancialAssistant() {
             position: "fixed",
             inset: 0,
             zIndex: 200,
-            background: "rgba(0,0,0,0.5)",
+            background: "rgba(0,0,0,0.4)",
             backdropFilter: "blur(4px)",
           }}
         />
@@ -305,6 +305,7 @@ export function FinancialAssistant() {
           borderLeft: open ? "1px solid var(--border)" : "none",
           borderRight: open ? "1px solid var(--border)" : "none",
           borderBottom: "none",
+          boxShadow: open ? "0 -8px 30px rgba(25,42,35,0.12)" : "none",
           overflow: "hidden",
           transition: "height 0.35s cubic-bezier(0.4, 0, 0.2, 1)",
           display: "flex",
@@ -315,7 +316,8 @@ export function FinancialAssistant() {
         <div
           style={{
             padding: "16px 20px 14px",
-            borderBottom: "1px solid var(--border)",
+            background: "var(--accent)",
+            borderBottom: "1px solid rgba(255,255,255,0.15)",
             display: "flex",
             alignItems: "center",
             gap: 12,
@@ -327,7 +329,7 @@ export function FinancialAssistant() {
               width: 38,
               height: 38,
               borderRadius: "50%",
-              background: "linear-gradient(135deg, #c8f060, #60d4f0)",
+              background: "#ffffff",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
@@ -335,34 +337,34 @@ export function FinancialAssistant() {
             }}
           >
             <svg viewBox="0 0 24 24" fill="none" width={22} height={22}>
-              <rect x="5" y="8" width="14" height="10" rx="3" fill="#0a0a0f" />
-              <rect x="8" y="11" width="2.5" height="2.5" rx="1" fill="#c8f060" />
-              <rect x="13.5" y="11" width="2.5" height="2.5" rx="1" fill="#c8f060" />
-              <path d="M9 16.5h6" stroke="#60d4f0" strokeWidth="1.5" strokeLinecap="round" />
-              <path d="M12 8V5" stroke="#0a0a0f" strokeWidth="2" strokeLinecap="round" />
-              <circle cx="12" cy="4" r="1.5" fill="#0a0a0f" />
-              <path d="M5 13H3" stroke="#0a0a0f" strokeWidth="1.5" strokeLinecap="round" />
-              <path d="M21 13h-2" stroke="#0a0a0f" strokeWidth="1.5" strokeLinecap="round" />
+              <rect x="5" y="8" width="14" height="10" rx="3" fill="var(--accent)" />
+              <rect x="8" y="11" width="2.5" height="2.5" rx="1" fill="#ffffff" />
+              <rect x="13.5" y="11" width="2.5" height="2.5" rx="1" fill="#ffffff" />
+              <path d="M9 16.5h6" stroke="#ffffff" strokeWidth="1.5" strokeLinecap="round" />
+              <path d="M12 8V5" stroke="var(--accent)" strokeWidth="2" strokeLinecap="round" />
+              <circle cx="12" cy="4" r="1.5" fill="var(--accent)" />
+              <path d="M5 13H3" stroke="var(--accent)" strokeWidth="1.5" strokeLinecap="round" />
+              <path d="M21 13h-2" stroke="var(--accent)" strokeWidth="1.5" strokeLinecap="round" />
             </svg>
           </div>
           <div style={{ flex: 1 }}>
             <div
               style={{
-                fontFamily: "var(--font-syne), sans-serif",
+                fontFamily: "var(--font-display), sans-serif",
                 fontWeight: 800,
                 fontSize: 15,
-                color: "var(--text)",
+                color: "#ffffff",
               }}
             >
               Tony
             </div>
-            <div style={{ fontSize: 11, color: "var(--success)", display: "flex", alignItems: "center", gap: 4 }}>
+            <div style={{ fontSize: 11, color: "rgba(255,255,255,0.85)", display: "flex", alignItems: "center", gap: 4 }}>
               <span
                 style={{
                   width: 6,
                   height: 6,
                   borderRadius: "50%",
-                  background: "var(--success)",
+                  background: "#ffffff",
                   display: "inline-block",
                 }}
               />
@@ -375,7 +377,7 @@ export function FinancialAssistant() {
               background: "none",
               border: "none",
               cursor: "pointer",
-              color: "var(--muted)",
+              color: "rgba(255,255,255,0.9)",
               padding: 4,
               display: "flex",
               alignItems: "center",
@@ -417,15 +419,15 @@ export function FinancialAssistant() {
                     msg.role === "user" ? "18px 18px 4px 18px" : "18px 18px 18px 4px",
                   background:
                     msg.role === "user"
-                      ? "linear-gradient(135deg, rgba(200,240,96,0.15), rgba(200,240,96,0.08))"
-                      : "var(--card)",
+                      ? "var(--accent)"
+                      : "#f4f6f5",
                   border:
                     msg.role === "user"
-                      ? "1px solid rgba(200,240,96,0.25)"
+                      ? "1px solid var(--accent)"
                       : "1px solid var(--border)",
                   fontSize: 14,
                   lineHeight: 1.5,
-                  color: "var(--text)",
+                  color: msg.role === "user" ? "#ffffff" : "var(--text)",
                 }}
               >
                 {renderMarkdown(msg.content)}
@@ -440,7 +442,7 @@ export function FinancialAssistant() {
                 style={{
                   padding: "10px 16px",
                   borderRadius: "18px 18px 18px 4px",
-                  background: "var(--card)",
+                  background: "#f4f6f5",
                   border: "1px solid var(--border)",
                   display: "flex",
                   gap: 5,
@@ -474,8 +476,8 @@ export function FinancialAssistant() {
                   padding: "10px 0",
                   borderRadius: 14,
                   border: "none",
-                  background: "rgba(200,240,96,0.15)",
-                  color: "#c8f060",
+                  background: "var(--accent)",
+                  color: "#ffffff",
                   fontSize: 13,
                   fontWeight: 700,
                   cursor: "pointer",
@@ -493,8 +495,8 @@ export function FinancialAssistant() {
                   padding: "10px 0",
                   borderRadius: 14,
                   border: "none",
-                  background: "rgba(240,96,96,0.1)",
-                  color: "rgba(240,96,96,0.85)",
+                  background: "rgba(239,68,68,0.1)",
+                  color: "var(--danger)",
                   fontSize: 13,
                   fontWeight: 700,
                   cursor: "pointer",
@@ -558,7 +560,7 @@ export function FinancialAssistant() {
             disabled={loading}
             style={{
               flex: 1,
-              background: "var(--card)",
+              background: "#f4f6f5",
               border: "1px solid var(--border)",
               borderRadius: 24,
               padding: "10px 16px",
@@ -577,8 +579,8 @@ export function FinancialAssistant() {
               borderRadius: "50%",
               background:
                 loading || !input.trim()
-                  ? "rgba(200,240,96,0.2)"
-                  : "linear-gradient(135deg, #c8f060, #60d4f0)",
+                  ? "rgba(34,197,94,0.2)"
+                  : "var(--accent)",
               border: "none",
               cursor: loading || !input.trim() ? "not-allowed" : "pointer",
               display: "flex",
@@ -591,14 +593,14 @@ export function FinancialAssistant() {
             <svg viewBox="0 0 24 24" fill="none" width={18} height={18}>
               <path
                 d="M22 2L11 13"
-                stroke={loading || !input.trim() ? "var(--muted)" : "#0a0a0f"}
+                stroke={loading || !input.trim() ? "var(--muted)" : "#ffffff"}
                 strokeWidth={2}
                 strokeLinecap="round"
                 strokeLinejoin="round"
               />
               <path
                 d="M22 2L15 22L11 13L2 9L22 2Z"
-                stroke={loading || !input.trim() ? "var(--muted)" : "#0a0a0f"}
+                stroke={loading || !input.trim() ? "var(--muted)" : "#ffffff"}
                 strokeWidth={2}
                 strokeLinecap="round"
                 strokeLinejoin="round"
@@ -611,8 +613,8 @@ export function FinancialAssistant() {
       {/* Animações */}
       <style>{`
         @keyframes assistantPulse {
-          0%, 100% { box-shadow: 0 0 0 0 rgba(200,240,96,0.4), 0 4px 20px rgba(200,240,96,0.35); }
-          50% { box-shadow: 0 0 0 10px rgba(200,240,96,0), 0 4px 20px rgba(200,240,96,0.5); }
+          0%, 100% { box-shadow: 0 0 0 0 rgba(34,197,94,0.4), 0 4px 14px rgba(34,197,94,0.35); }
+          50% { box-shadow: 0 0 0 10px rgba(34,197,94,0), 0 4px 14px rgba(34,197,94,0.5); }
         }
         @keyframes dotBounce {
           0%, 80%, 100% { transform: scale(0.7); opacity: 0.5; }

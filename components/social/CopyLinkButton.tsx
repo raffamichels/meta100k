@@ -17,11 +17,11 @@ export function CopyLinkButton({ path }: { path: string }) {
     <button
       onClick={handleCopy}
       style={{
-        background: copied ? "var(--accent)" : "rgba(200,240,96,0.12)",
-        border: "1px solid rgba(200,240,96,0.3)",
+        background: copied ? "var(--accent)" : "rgba(34,197,94,0.12)",
+        border: "1px solid rgba(34,197,94,0.3)",
         borderRadius: 8,
         padding: "6px 14px",
-        color: copied ? "#0a0a0f" : "var(--accent)",
+        color: copied ? "#ffffff" : "var(--accent-dark)",
         fontSize: 12,
         fontWeight: 700,
         cursor: "pointer",

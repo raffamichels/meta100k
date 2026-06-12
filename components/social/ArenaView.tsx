@@ -84,11 +84,11 @@ export function ArenaView({ challenge, participants }: Props) {
       <div
         style={{
           background: isHard
-            ? "linear-gradient(135deg, rgba(240,96,160,0.15), rgba(160,96,240,0.1))"
-            : "linear-gradient(135deg, rgba(96,212,240,0.15), rgba(200,240,96,0.08))",
+            ? "linear-gradient(135deg, rgba(124,58,237,0.12), rgba(124,58,237,0.05))"
+            : "linear-gradient(135deg, rgba(66,99,235,0.12), rgba(34,197,94,0.06))",
           border: isHard
-            ? "1px solid rgba(240,96,160,0.4)"
-            : "1px solid rgba(96,212,240,0.4)",
+            ? "1px solid rgba(124,58,237,0.4)"
+            : "1px solid rgba(66,99,235,0.4)",
           borderRadius: 20,
           padding: "20px",
           textAlign: "center",
@@ -99,12 +99,12 @@ export function ArenaView({ challenge, participants }: Props) {
         </div>
         <div
           style={{
-            fontFamily: "var(--font-syne), sans-serif",
+            fontFamily: "var(--font-display), sans-serif",
             fontWeight: 900,
             fontSize: 20,
             letterSpacing: "-0.5px",
             marginBottom: 4,
-            color: isHard ? "#f060a0" : "var(--accent2)",
+            color: isHard ? "var(--accent3)" : "var(--accent2)",
           }}
         >
           {isHard ? "CORRIDA PARA R$100K" : `DESAFIO ${challenge.days} DIAS`}
@@ -121,7 +121,7 @@ export function ArenaView({ challenge, participants }: Props) {
             <div
               style={{
                 height: 6,
-                background: "rgba(255,255,255,0.08)",
+                background: "rgba(0,0,0,0.06)",
                 borderRadius: 3,
                 overflow: "hidden",
               }}
@@ -149,17 +149,18 @@ export function ArenaView({ challenge, participants }: Props) {
       {opponent == null ? (
         <div
           style={{
-            background: "rgba(255,255,255,0.03)",
+            background: "var(--surface)",
             border: "1px solid var(--border)",
             borderRadius: 16,
             padding: "24px",
+            boxShadow: "var(--card-shadow)",
             textAlign: "center",
           }}
         >
           <div style={{ fontSize: 32, marginBottom: 10 }}>⏳</div>
           <div
             style={{
-              fontFamily: "var(--font-syne), sans-serif",
+              fontFamily: "var(--font-display), sans-serif",
               fontWeight: 700,
               fontSize: 16,
               marginBottom: 8,
@@ -177,23 +178,23 @@ export function ArenaView({ challenge, participants }: Props) {
           <div
             style={{
               background: isFinished
-                ? "rgba(200,240,96,0.08)"
+                ? "rgba(34,197,94,0.08)"
                 : tied
-                  ? "rgba(255,255,255,0.05)"
+                  ? "var(--surface)"
                   : iAmWinning
-                    ? "rgba(200,240,96,0.1)"
-                    : "rgba(240,96,160,0.08)",
+                    ? "rgba(34,197,94,0.1)"
+                    : "rgba(124,58,237,0.08)",
               border: isFinished
-                ? "1px solid rgba(200,240,96,0.25)"
+                ? "1px solid rgba(34,197,94,0.25)"
                 : tied
                   ? "1px solid var(--border)"
                   : iAmWinning
-                    ? "1px solid rgba(200,240,96,0.25)"
-                    : "1px solid rgba(240,96,160,0.25)",
+                    ? "1px solid rgba(34,197,94,0.25)"
+                    : "1px solid rgba(124,58,237,0.25)",
               borderRadius: 14,
               padding: "12px 16px",
               textAlign: "center",
-              fontFamily: "var(--font-syne), sans-serif",
+              fontFamily: "var(--font-display), sans-serif",
               fontWeight: 800,
               fontSize: 15,
             }}
@@ -243,7 +244,7 @@ export function ArenaView({ challenge, participants }: Props) {
             <div style={{ flex: 1, height: 1, background: "var(--border)" }} />
             <span
               style={{
-                fontFamily: "var(--font-syne), sans-serif",
+                fontFamily: "var(--font-display), sans-serif",
                 fontWeight: 900,
                 fontSize: 13,
                 color: "var(--muted)",
@@ -285,17 +286,18 @@ function PlayerCard({
   isWinning: boolean;
   isMe: boolean;
 }) {
-  const accentColor = isWinning ? "#c8f060" : isMe ? "var(--accent2)" : "var(--muted)";
+  const accentColor = isWinning ? "var(--accent-dark)" : isMe ? "var(--accent2)" : "var(--muted)";
 
   return (
     <div
       style={{
         background: isWinning
-          ? "linear-gradient(160deg, rgba(200,240,96,0.12), rgba(200,240,96,0.04))"
-          : "rgba(255,255,255,0.03)",
+          ? "linear-gradient(160deg, rgba(34,197,94,0.12), rgba(34,197,94,0.04))"
+          : "var(--surface)",
         border: isWinning
-          ? "1px solid rgba(200,240,96,0.35)"
+          ? "1px solid rgba(34,197,94,0.35)"
           : "1px solid var(--border)",
+        boxShadow: "var(--card-shadow)",
         borderRadius: 18,
         padding: "18px 14px",
         display: "flex",
@@ -315,7 +317,7 @@ function PlayerCard({
             left: "50%",
             transform: "translateX(-50%)",
             fontSize: 22,
-            filter: "drop-shadow(0 0 8px rgba(200,240,96,0.8))",
+            filter: "drop-shadow(0 0 8px rgba(34,197,94,0.5))",
           }}
         >
           👑
@@ -328,8 +330,8 @@ function PlayerCard({
           width: 52,
           height: 52,
           borderRadius: "50%",
-          background: `linear-gradient(135deg, ${isWinning ? "rgba(200,240,96,0.25)" : "rgba(255,255,255,0.08)"}, rgba(255,255,255,0.04))`,
-          border: `2px solid ${isWinning ? "rgba(200,240,96,0.5)" : "var(--border)"}`,
+          background: `linear-gradient(135deg, ${isWinning ? "rgba(34,197,94,0.20)" : "rgba(0,0,0,0.05)"}, rgba(0,0,0,0.02))`,
+          border: `2px solid ${isWinning ? "rgba(34,197,94,0.5)" : "var(--border)"}`,
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
@@ -344,7 +346,7 @@ function PlayerCard({
       <div style={{ textAlign: "center" }}>
         <div
           style={{
-            fontFamily: "var(--font-syne), sans-serif",
+            fontFamily: "var(--font-display), sans-serif",
             fontWeight: 700,
             fontSize: 14,
             color: accentColor,
@@ -365,10 +367,10 @@ function PlayerCard({
       {/* Valor */}
       <div
         style={{
-          fontFamily: "var(--font-syne), sans-serif",
+          fontFamily: "var(--font-display), sans-serif",
           fontWeight: 900,
           fontSize: 16,
-          color: isWinning ? "#c8f060" : "var(--foreground)",
+          color: isWinning ? "var(--accent-dark)" : "var(--foreground)",
           textAlign: "center",
           lineHeight: 1,
         }}
@@ -381,7 +383,7 @@ function PlayerCard({
         <div
           style={{
             height: 8,
-            background: "rgba(255,255,255,0.07)",
+            background: "#e8ecea",
             borderRadius: 4,
             overflow: "hidden",
           }}
@@ -391,13 +393,13 @@ function PlayerCard({
               height: "100%",
               width: `${pct}%`,
               background: isWinning
-                ? "linear-gradient(90deg, #c8f060, #90f060)"
+                ? "linear-gradient(90deg, var(--accent), var(--success))"
                 : isMe
                   ? "linear-gradient(90deg, var(--accent2), var(--accent))"
-                  : "rgba(255,255,255,0.2)",
+                  : "rgba(0,0,0,0.15)",
               borderRadius: 4,
               transition: "width 1s ease",
-              boxShadow: isWinning ? "0 0 8px rgba(200,240,96,0.5)" : "none",
+              boxShadow: isWinning ? "0 0 8px rgba(34,197,94,0.4)" : "none",
             }}
           />
         </div>
@@ -432,7 +434,7 @@ function DifferenceCard({
     return (
       <div
         style={{
-          background: "rgba(255,255,255,0.04)",
+          background: "var(--surface)",
           border: "1px solid var(--border)",
           borderRadius: 14,
           padding: "14px 16px",
@@ -450,11 +452,11 @@ function DifferenceCard({
     <div
       style={{
         background: iAmAhead
-          ? "rgba(200,240,96,0.07)"
-          : "rgba(240,96,160,0.07)",
+          ? "rgba(34,197,94,0.07)"
+          : "rgba(124,58,237,0.07)",
         border: iAmAhead
-          ? "1px solid rgba(200,240,96,0.2)"
-          : "1px solid rgba(240,96,160,0.2)",
+          ? "1px solid rgba(34,197,94,0.2)"
+          : "1px solid rgba(124,58,237,0.2)",
         borderRadius: 14,
         padding: "14px 16px",
         textAlign: "center",
@@ -462,10 +464,10 @@ function DifferenceCard({
     >
       <div
         style={{
-          fontFamily: "var(--font-syne), sans-serif",
+          fontFamily: "var(--font-display), sans-serif",
           fontWeight: 700,
           fontSize: 15,
-          color: iAmAhead ? "#c8f060" : "#f060a0",
+          color: iAmAhead ? "var(--accent-dark)" : "var(--accent3)",
           marginBottom: 4,
         }}
       >

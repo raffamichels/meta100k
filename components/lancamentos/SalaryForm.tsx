@@ -9,12 +9,12 @@ import { thisMonth } from "@/lib/utils";
 
 const inputStyle: React.CSSProperties = {
   width: "100%",
-  background: "rgba(255,255,255,0.04)",
-  border: "1px solid var(--border)",
+  background: "#f4f6f5",
+  border: "1px solid rgba(0,0,0,0.08)",
   borderRadius: 12,
   padding: "12px 14px",
   color: "var(--text)",
-  fontFamily: "var(--font-dm-sans), sans-serif",
+  fontFamily: "var(--font-body), sans-serif",
   fontSize: 15,
   outline: "none",
   WebkitAppearance: "none",
@@ -57,7 +57,7 @@ export function SalaryForm() {
     >
       <div
         style={{
-          fontFamily: "var(--font-syne), sans-serif",
+          fontFamily: "var(--font-display), sans-serif",
           fontSize: 16,
           fontWeight: 700,
           marginBottom: 16,
@@ -104,8 +104,9 @@ export function SalaryForm() {
             borderRadius: 14,
             border: "none",
             background: "var(--accent)",
-            color: "#0a0a0f",
-            fontFamily: "var(--font-syne), sans-serif",
+            color: "#ffffff",
+            boxShadow: "0 4px 14px rgba(34,197,94,0.35)",
+            fontFamily: "var(--font-display), sans-serif",
             fontSize: 15,
             fontWeight: 700,
             cursor: pending ? "not-allowed" : "pointer",

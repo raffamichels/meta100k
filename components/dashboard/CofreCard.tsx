@@ -27,8 +27,8 @@ export function CofreCard({
       style={{
         display: "block",
         textDecoration: "none",
-        background: "linear-gradient(135deg, rgba(180,60,240,0.08) 0%, rgba(120,40,200,0.05) 100%)",
-        border: "1px solid rgba(180,60,240,0.3)",
+        background: "linear-gradient(135deg, rgba(124,58,237,0.08) 0%, rgba(124,58,237,0.04) 100%)",
+        border: "1px solid rgba(124,58,237,0.3)",
         borderRadius: 20,
         padding: "18px 20px",
         marginBottom: 16,
@@ -45,16 +45,16 @@ export function CofreCard({
       >
         <div
           style={{
-            fontFamily: "var(--font-syne), sans-serif",
+            fontFamily: "var(--font-display), sans-serif",
             fontWeight: 800,
             fontSize: 15,
-            color: "#c060f0",
+            color: "var(--accent3)",
             display: "flex",
             alignItems: "center",
             gap: 8,
           }}
         >
-          <span style={{ filter: "drop-shadow(0 0 6px rgba(180,60,240,0.6))", fontSize: 18 }}>
+          <span style={{ filter: "drop-shadow(0 0 6px rgba(124,58,237,0.35))", fontSize: 18 }}>
             😈
           </span>
           Cofre do Diabo
@@ -63,7 +63,7 @@ export function CofreCard({
         <svg
           viewBox="0 0 24 24"
           fill="none"
-          stroke="rgba(180,60,240,0.5)"
+          stroke="rgba(124,58,237,0.5)"
           strokeWidth={2}
           width={14}
           height={14}
@@ -87,10 +87,10 @@ export function CofreCard({
           {/* Valor total protegido */}
           <div
             style={{
-              fontFamily: "var(--font-syne), sans-serif",
+              fontFamily: "var(--font-display), sans-serif",
               fontWeight: 900,
               fontSize: 28,
-              color: "#c060f0",
+              color: "var(--accent3)",
               lineHeight: 1,
               marginBottom: 2,
             }}
@@ -110,7 +110,7 @@ export function CofreCard({
 
           {/* Contagem */}
           <div style={{ fontSize: 13, color: "var(--muted)", marginBottom: 6 }}>
-            <span style={{ color: "#c060f0", fontWeight: 700 }}>{count}</span>{" "}
+            <span style={{ color: "var(--accent3)", fontWeight: 700 }}>{count}</span>{" "}
             {count === 1 ? "tentação resistida" : "tentações resistidas"}
           </div>
 
@@ -129,7 +129,7 @@ export function CofreCard({
               Última:{" "}
               <span style={{ color: "var(--text)" }}>&ldquo;{lastDesc}&rdquo;</span>
               {" · "}
-              <span style={{ color: "#c060f0" }}>R$ {fmt(lastValue)}</span>
+              <span style={{ color: "var(--accent3)" }}>R$ {fmt(lastValue)}</span>
             </div>
           )}
 
@@ -139,7 +139,7 @@ export function CofreCard({
               Top categoria:{" "}
               <span style={{ color: "var(--text)" }}>{topCategoryName.replace(/^\S+\s/, "")}</span>
               {" (R$ "}
-              <span style={{ color: "#c060f0" }}>{fmt(topCategoryTotal)}</span>
+              <span style={{ color: "var(--accent3)" }}>{fmt(topCategoryTotal)}</span>
               {")"}
             </div>
           )}

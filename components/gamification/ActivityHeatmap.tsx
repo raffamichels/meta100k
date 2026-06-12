@@ -15,11 +15,11 @@ function getIntensity(value: number): number {
 }
 
 const INTENSITY_COLORS = [
-  "rgba(255,255,255,0.05)",    // 0 — nenhum
-  "rgba(200,240,96,0.25)",     // 1 — R$1–99
-  "rgba(200,240,96,0.50)",     // 2 — R$100–499
-  "rgba(200,240,96,0.75)",     // 3 — R$500–999
-  "rgba(200,240,96,1.00)",     // 4 — R$1000+
+  "#e8ecea",    // 0 — nenhum
+  "#bbf7d0",    // 1 — R$1–99
+  "#4ade80",    // 2 — R$100–499
+  "#22c55e",    // 3 — R$500–999
+  "#16a34a",    // 4 — R$1000+
 ];
 
 const INTENSITY_LABELS = ["Nenhum", "R$1–99", "R$100–499", "R$500–999", "R$1.000+"];
@@ -85,11 +85,12 @@ export function ActivityHeatmap({ savingEntries }: ActivityHeatmapProps) {
         padding: "18px 20px",
         marginBottom: 28,
         overflowX: "auto",
+        boxShadow: "var(--card-shadow)",
       }}
     >
       <div
         style={{
-          fontFamily: "var(--font-syne), sans-serif",
+          fontFamily: "var(--font-display), sans-serif",
           fontWeight: 700,
           fontSize: 14,
           marginBottom: 16,
@@ -172,7 +173,7 @@ export function ActivityHeatmap({ savingEntries }: ActivityHeatmapProps) {
                         height: cellSize,
                         borderRadius: 3,
                         background: isFuture || !dateStr ? "transparent" : INTENSITY_COLORS[intensity],
-                        border: isFuture || !dateStr ? "none" : `1px solid rgba(255,255,255,0.04)`,
+                        border: isFuture || !dateStr ? "none" : `1px solid rgba(0,0,0,0.06)`,
                         cursor: value > 0 ? "pointer" : "default",
                         transition: "transform 0.1s",
                       }}
@@ -212,7 +213,7 @@ export function ActivityHeatmap({ savingEntries }: ActivityHeatmapProps) {
               height: cellSize,
               borderRadius: 3,
               background: color,
-              border: "1px solid rgba(255,255,255,0.04)",
+              border: "1px solid rgba(0,0,0,0.06)",
             }}
           />
         ))}
@@ -226,7 +227,7 @@ export function ActivityHeatmap({ savingEntries }: ActivityHeatmapProps) {
             position: "fixed",
             left: tooltip.x + 16,
             top: tooltip.y - 44,
-            background: "rgba(10,10,15,0.95)",
+            background: "rgba(255,255,255,0.97)",
             border: "1px solid var(--border)",
             borderRadius: 10,
             padding: "6px 12px",
@@ -236,11 +237,11 @@ export function ActivityHeatmap({ savingEntries }: ActivityHeatmapProps) {
             zIndex: 9998,
             pointerEvents: "none",
             whiteSpace: "nowrap",
-            boxShadow: "0 4px 20px rgba(0,0,0,0.5)",
+            boxShadow: "0 8px 28px rgba(25,42,35,0.18)",
           }}
         >
           <div>{formatDateBR(tooltip.date)}</div>
-          <div style={{ color: "var(--accent)" }}>
+          <div style={{ color: "var(--accent-dark)" }}>
             {tooltip.value > 0 ? `R$ ${tooltip.value.toLocaleString("pt-BR", { minimumFractionDigits: 0 })}` : "Sem economia"}
           </div>
         </div>

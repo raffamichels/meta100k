@@ -21,7 +21,7 @@ export default async function ProtectedLayout({
       where: { userId },
       select: { key: true, savings: true, savingEntries: { select: { date: true, value: true } } },
     }),
-    prisma.user.findUnique({ where: { id: userId }, select: { xp: true } }),
+    prisma.user.findUnique({ where: { id: userId }, select: { xp: true, name: true } }),
   ]);
 
   const allSavingEntries = months.flatMap((m) => m.savingEntries);
@@ -29,7 +29,7 @@ export default async function ProtectedLayout({
   return (
     <GamificationProvider>
       <div style={{ position: "relative", zIndex: 1 }}>
-        <Header savingEntries={allSavingEntries} xp={user?.xp ?? 0} />
+        <Header savingEntries={allSavingEntries} xp={user?.xp ?? 0} userName={user?.name} />
         {/* className="main-content" → no desktop: margin-left para o sidebar + padding generoso */}
         <main style={{ padding: "20px 20px 100px" }} className="page-fade main-content">
           {children}

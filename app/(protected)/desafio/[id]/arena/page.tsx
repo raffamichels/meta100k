@@ -47,14 +47,14 @@ export default async function ArenaPage({ params }: Props) {
         <div style={{ fontSize: 48, marginBottom: 12 }}>❌</div>
         <div
           style={{
-            fontFamily: "var(--font-syne), sans-serif",
+            fontFamily: "var(--font-display), sans-serif",
             fontWeight: 800,
             fontSize: 22,
           }}
         >
           Desafio não encontrado
         </div>
-        <Link href="/" style={{ color: "var(--accent)", textDecoration: "none", marginTop: 16, display: "block" }}>
+        <Link href="/" style={{ color: "var(--accent-dark)", textDecoration: "none", marginTop: 16, display: "block" }}>
           ← Voltar
         </Link>
       </div>
@@ -126,7 +126,7 @@ export default async function ArenaPage({ params }: Props) {
         <div>
           <div
             style={{
-              fontFamily: "var(--font-syne), sans-serif",
+              fontFamily: "var(--font-display), sans-serif",
               fontWeight: 800,
               fontSize: 24,
               letterSpacing: "-0.8px",

@@ -56,7 +56,7 @@ export function HeroCard({ totalSaved, goal }: HeroCardProps) {
             right: -40,
             width: 180,
             height: 180,
-            background: "radial-gradient(circle, rgba(200,240,96,0.15), transparent 70%)",
+            background: "radial-gradient(circle, rgba(34,197,94,0.10), transparent 70%)",
             pointerEvents: "none",
           }}
         />
@@ -79,7 +79,7 @@ export function HeroCard({ totalSaved, goal }: HeroCardProps) {
         <div
           className="hero-value-amount"
           style={{
-            fontFamily: "var(--font-syne), sans-serif",
+            fontFamily: "var(--font-display), sans-serif",
             fontSize: 42,
             fontWeight: 800,
             letterSpacing: "-2px",
@@ -87,7 +87,7 @@ export function HeroCard({ totalSaved, goal }: HeroCardProps) {
             marginBottom: 4,
           }}
         >
-          <span style={{ color: "var(--accent)" }}>{fmt(totalSaved)}</span>
+          <span style={{ color: "var(--accent-dark)" }}>{fmt(totalSaved)}</span>
           <small style={{ fontSize: 22, color: "var(--muted)" }}> / 100K</small>
         </div>
 
@@ -106,7 +106,7 @@ export function HeroCard({ totalSaved, goal }: HeroCardProps) {
             onClick={() => setModalAberto(true)}
             className="hero-progress-track"
             style={{
-              background: "rgba(255,255,255,0.06)",
+              background: "rgba(0,0,0,0.06)",
               borderRadius: 100,
               height: 12,
               position: "relative",
@@ -122,7 +122,7 @@ export function HeroCard({ totalSaved, goal }: HeroCardProps) {
                 background: "linear-gradient(90deg, var(--accent), var(--accent2))",
                 width: `${pct}%`,
                 transition: "width 0.8s cubic-bezier(0.34,1.56,0.64,1)",
-                boxShadow: "0 0 10px rgba(200,240,96,0.35)",
+                boxShadow: "0 0 10px rgba(34,197,94,0.35)",
               }}
             />
 
@@ -141,9 +141,9 @@ export function HeroCard({ totalSaved, goal }: HeroCardProps) {
                     width: reached ? 14 : 8,
                     height: reached ? 14 : 8,
                     borderRadius: "50%",
-                    background: reached ? "var(--accent)" : "rgba(255,255,255,0.2)",
-                    border: reached ? "2px solid rgba(10,10,15,0.8)" : "2px solid rgba(255,255,255,0.1)",
-                    boxShadow: reached ? "0 0 8px rgba(200,240,96,0.7)" : "none",
+                    background: reached ? "var(--accent)" : "rgba(0,0,0,0.12)",
+                    border: reached ? "2px solid #ffffff" : "2px solid rgba(0,0,0,0.08)",
+                    boxShadow: reached ? "0 0 8px rgba(34,197,94,0.45)" : "none",
                     transition: "all 0.4s ease",
                     zIndex: 2,
                     pointerEvents: "none", // clique passa para o wrapper
@@ -166,7 +166,7 @@ export function HeroCard({ totalSaved, goal }: HeroCardProps) {
                     transform: "translateX(-50%)",
                     fontSize: 9,
                     fontWeight: 700,
-                    color: reached ? "var(--accent)" : "rgba(255,255,255,0.2)",
+                    color: reached ? "var(--accent-dark)" : "rgba(138,148,160,0.6)",
                     textAlign: "center",
                     whiteSpace: "nowrap",
                     transition: "color 0.4s ease",
@@ -191,7 +191,7 @@ export function HeroCard({ totalSaved, goal }: HeroCardProps) {
           }}
         >
           <span>
-            <strong style={{ color: "var(--accent)" }}>{pct.toFixed(1)}%</strong>{" "}
+            <strong style={{ color: "var(--accent-dark)" }}>{pct.toFixed(1)}%</strong>{" "}
             concluído
             {lastReached && (
               <span style={{ marginLeft: 6, opacity: 0.65 }}>
@@ -201,7 +201,7 @@ export function HeroCard({ totalSaved, goal }: HeroCardProps) {
           </span>
           <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
             {nextMilestone && (
-              <span style={{ color: "rgba(255,255,255,0.3)", fontSize: 11 }}>
+              <span style={{ color: "var(--muted)", fontSize: 11 }}>
                 próximo: {nextMilestone.icon} {nextMilestone.pct}%
               </span>
             )}
@@ -210,7 +210,7 @@ export function HeroCard({ totalSaved, goal }: HeroCardProps) {
               onClick={() => setModalAberto(true)}
               style={{
                 background: "none",
-                border: "1px solid rgba(255,255,255,0.12)",
+                border: "1px solid var(--border)",
                 borderRadius: 20,
                 padding: "3px 10px",
                 fontSize: 11,
@@ -222,11 +222,11 @@ export function HeroCard({ totalSaved, goal }: HeroCardProps) {
                 transition: "border-color 0.2s, color 0.2s",
               }}
               onMouseEnter={(e) => {
-                (e.currentTarget as HTMLButtonElement).style.borderColor = "rgba(200,240,96,0.5)";
-                (e.currentTarget as HTMLButtonElement).style.color = "var(--accent)";
+                (e.currentTarget as HTMLButtonElement).style.borderColor = "rgba(34,197,94,0.5)";
+                (e.currentTarget as HTMLButtonElement).style.color = "var(--accent-dark)";
               }}
               onMouseLeave={(e) => {
-                (e.currentTarget as HTMLButtonElement).style.borderColor = "rgba(255,255,255,0.12)";
+                (e.currentTarget as HTMLButtonElement).style.borderColor = "var(--border)";
                 (e.currentTarget as HTMLButtonElement).style.color = "var(--muted)";
               }}
             >

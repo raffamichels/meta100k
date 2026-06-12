@@ -28,7 +28,7 @@ export function XPBar({ xp }: XPBarProps) {
           fontSize: 28,
           lineHeight: 1,
           flexShrink: 0,
-          filter: "drop-shadow(0 0 8px rgba(200,240,96,0.4))",
+          filter: "drop-shadow(0 0 8px rgba(34,197,94,0.4))",
         }}
       >
         {current.icon}
@@ -40,10 +40,10 @@ export function XPBar({ xp }: XPBarProps) {
           <div>
             <span
               style={{
-                fontFamily: "var(--font-syne), sans-serif",
+                fontFamily: "var(--font-display), sans-serif",
                 fontWeight: 800,
                 fontSize: 14,
-                color: "var(--accent)",
+                color: "var(--accent-dark)",
               }}
             >
               {current.name}
@@ -67,7 +67,7 @@ export function XPBar({ xp }: XPBarProps) {
         {/* Barra de XP */}
         <div
           style={{
-            background: "rgba(255,255,255,0.06)",
+            background: "#e8ecea",
             borderRadius: 100,
             height: 7,
             overflow: "hidden",
@@ -81,7 +81,7 @@ export function XPBar({ xp }: XPBarProps) {
               background: "linear-gradient(90deg, var(--accent), var(--accent2))",
               width: `${progress}%`,
               transition: "width 1s cubic-bezier(0.34,1.56,0.64,1)",
-              boxShadow: "0 0 8px rgba(200,240,96,0.4)",
+              boxShadow: "0 0 8px rgba(34,197,94,0.4)",
             }}
           />
         </div>
@@ -90,13 +90,13 @@ export function XPBar({ xp }: XPBarProps) {
         {next && (
           <div style={{ fontSize: 10, color: "var(--muted)", marginTop: 4 }}>
             {next.icon} {next.name} em{" "}
-            <span style={{ color: "var(--accent)", fontWeight: 600 }}>
+            <span style={{ color: "var(--accent-dark)", fontWeight: 600 }}>
               {(next.minXP - xp).toLocaleString("pt-BR")} XP
             </span>
           </div>
         )}
         {!next && (
-          <div style={{ fontSize: 10, color: "var(--accent)", marginTop: 4, fontWeight: 700 }}>
+          <div style={{ fontSize: 10, color: "var(--accent-dark)", marginTop: 4, fontWeight: 700 }}>
             Nível máximo atingido! 🏆
           </div>
         )}

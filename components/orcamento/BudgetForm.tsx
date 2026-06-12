@@ -7,12 +7,12 @@ import type { ManagedBudget } from "@/lib/actions/budget";
 
 const inputStyle: React.CSSProperties = {
   width: "100%",
-  background: "rgba(255,255,255,0.04)",
-  border: "1px solid var(--border)",
+  background: "#f4f6f5",
+  border: "1px solid rgba(0,0,0,0.08)",
   borderRadius: 12,
   padding: "12px 14px",
   color: "var(--text)",
-  fontFamily: "var(--font-dm-sans), sans-serif",
+  fontFamily: "var(--font-body), sans-serif",
   fontSize: 15,
   outline: "none",
   WebkitAppearance: "none",
@@ -56,8 +56,9 @@ export function BudgetForm({ currentMonthKey, editing, recurringCategories, onSu
   return (
     <div
       style={{
-        background: "rgba(255,255,255,0.03)",
-        border: "1px solid rgba(96,212,240,0.2)",
+        background: "var(--card)",
+        border: "1px solid rgba(66,99,235,0.2)",
+        boxShadow: "var(--card-shadow)",
         borderRadius: 16,
         padding: 16,
         marginBottom: 12,
@@ -65,7 +66,7 @@ export function BudgetForm({ currentMonthKey, editing, recurringCategories, onSu
     >
       <div
         style={{
-          fontFamily: "var(--font-syne), sans-serif",
+          fontFamily: "var(--font-display), sans-serif",
           fontWeight: 700,
           fontSize: 14,
           marginBottom: 14,
@@ -166,9 +167,10 @@ export function BudgetForm({ currentMonthKey, editing, recurringCategories, onSu
               padding: "11px 0",
               borderRadius: 12,
               border: "none",
-              background: "rgba(96,212,240,0.85)",
-              color: "#0a0a0f",
-              fontFamily: "var(--font-syne), sans-serif",
+              background: "var(--accent)",
+              color: "#ffffff",
+              boxShadow: "0 4px 14px rgba(34,197,94,0.35)",
+              fontFamily: "var(--font-display), sans-serif",
               fontSize: 14,
               fontWeight: 700,
               cursor: pending ? "not-allowed" : "pointer",
@@ -186,7 +188,7 @@ export function BudgetForm({ currentMonthKey, editing, recurringCategories, onSu
               border: "1px solid var(--border)",
               background: "transparent",
               color: "var(--muted)",
-              fontFamily: "var(--font-syne), sans-serif",
+              fontFamily: "var(--font-display), sans-serif",
               fontSize: 14,
               fontWeight: 600,
               cursor: "pointer",

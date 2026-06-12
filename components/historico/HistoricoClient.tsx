@@ -46,13 +46,13 @@ interface Props {
 }
 
 const btnDangerStyle: React.CSSProperties = {
-  background: "rgba(240,96,96,0.15)",
+  background: "rgba(239,68,68,0.1)",
   color: "var(--danger)",
-  border: "1px solid rgba(240,96,96,0.3)",
+  border: "1px solid rgba(239,68,68,0.3)",
   padding: "4px 8px",
   borderRadius: 8,
   fontSize: 11,
-  fontFamily: "var(--font-syne), sans-serif",
+  fontFamily: "var(--font-display), sans-serif",
   fontWeight: 600,
   cursor: "pointer",
   flexShrink: 0,
@@ -146,8 +146,8 @@ export function HistoricoClient({ months, initialMonth }: Props) {
               borderRadius: 20,
               border: `1px solid ${mk === selected ? "var(--accent)" : "var(--border)"}`,
               background: mk === selected ? "var(--accent)" : "transparent",
-              color: mk === selected ? "#0a0a0f" : "var(--muted)",
-              fontFamily: "var(--font-dm-sans), sans-serif",
+              color: mk === selected ? "#ffffff" : "var(--muted)",
+              fontFamily: "var(--font-body), sans-serif",
               fontSize: 13,
               cursor: "pointer",
               whiteSpace: "nowrap",
@@ -180,7 +180,7 @@ export function HistoricoClient({ months, initialMonth }: Props) {
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10, marginBottom: 16 }}>
           <div>
             <div style={{ fontSize: 11, color: "var(--muted)", textTransform: "uppercase", letterSpacing: "0.8px" }}>Salário</div>
-            <div style={{ fontFamily: "var(--font-syne), sans-serif", fontSize: 18, fontWeight: 700, color: "var(--accent2)", display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
+            <div style={{ fontFamily: "var(--font-display), sans-serif", fontSize: 18, fontWeight: 700, color: "var(--accent2)", display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
               {salary > 0 ? fmt(salary) : "—"}
               {salary > 0 && (
                 <button style={btnDangerStyle} onClick={handleDeleteSalary}>✕</button>
@@ -190,17 +190,17 @@ export function HistoricoClient({ months, initialMonth }: Props) {
           <div>
             <div style={{ fontSize: 11, color: "var(--muted)", textTransform: "uppercase", letterSpacing: "0.8px" }}>Economizado</div>
             {/* Total de savings: soma de todos os registros do mês. Deleção é por entrada individual na lista abaixo. */}
-            <div style={{ fontFamily: "var(--font-syne), sans-serif", fontSize: 18, fontWeight: 700, color: "var(--accent)" }}>
+            <div style={{ fontFamily: "var(--font-display), sans-serif", fontSize: 18, fontWeight: 700, color: "var(--accent)" }}>
               {savings > 0 ? fmt(savings) : "—"}
             </div>
           </div>
           <div>
             <div style={{ fontSize: 11, color: "var(--muted)", textTransform: "uppercase", letterSpacing: "0.8px" }}>Ganhos avulsos</div>
-            <div style={{ fontFamily: "var(--font-syne), sans-serif", fontSize: 18, fontWeight: 700, color: "var(--gold)" }}>{fmt(extras)}</div>
+            <div style={{ fontFamily: "var(--font-display), sans-serif", fontSize: 18, fontWeight: 700, color: "var(--gold)" }}>{fmt(extras)}</div>
           </div>
           <div>
             <div style={{ fontSize: 11, color: "var(--muted)", textTransform: "uppercase", letterSpacing: "0.8px" }}>Gastos</div>
-            <div style={{ fontFamily: "var(--font-syne), sans-serif", fontSize: 18, fontWeight: 700, color: "var(--danger)" }}>{fmt(expenses)}</div>
+            <div style={{ fontFamily: "var(--font-display), sans-serif", fontSize: 18, fontWeight: 700, color: "var(--danger)" }}>{fmt(expenses)}</div>
           </div>
         </div>
 
@@ -208,7 +208,7 @@ export function HistoricoClient({ months, initialMonth }: Props) {
 
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
           <span style={{ fontSize: 13, color: "var(--muted)" }}>Saldo do mês</span>
-          <span style={{ fontFamily: "var(--font-syne), sans-serif", fontWeight: 700, fontSize: 18, color: balance >= 0 ? "var(--success)" : "var(--danger)" }}>
+          <span style={{ fontFamily: "var(--font-display), sans-serif", fontWeight: 700, fontSize: 18, color: balance >= 0 ? "var(--success)" : "var(--danger)" }}>
             {balance >= 0 ? "+" : ""}{fmt(balance)}
           </span>
         </div>
@@ -217,7 +217,7 @@ export function HistoricoClient({ months, initialMonth }: Props) {
       {/* CATEGORY CHART */}
       <div
         style={{
-          fontFamily: "var(--font-syne), sans-serif",
+          fontFamily: "var(--font-display), sans-serif",
           fontSize: 13,
           fontWeight: 700,
           textTransform: "uppercase",
@@ -256,7 +256,7 @@ export function HistoricoClient({ months, initialMonth }: Props) {
                     </span>
                   </div>
                 </div>
-                <div style={{ background: "rgba(255,255,255,0.06)", borderRadius: 100, height: 6, overflow: "hidden" }}>
+                <div style={{ background: "rgba(0,0,0,0.06)", borderRadius: 100, height: 6, overflow: "hidden" }}>
                   <div
                     style={{
                       height: "100%",
@@ -286,7 +286,7 @@ export function HistoricoClient({ months, initialMonth }: Props) {
       {/* ENTRIES LIST */}
       <div
         style={{
-          fontFamily: "var(--font-syne), sans-serif",
+          fontFamily: "var(--font-display), sans-serif",
           fontSize: 13,
           fontWeight: 700,
           textTransform: "uppercase",
@@ -326,10 +326,10 @@ export function HistoricoClient({ months, initialMonth }: Props) {
                 borderRadius: 12,
                 background:
                   item.type === "expense"
-                    ? "rgba(240,96,96,0.12)"
+                    ? "rgba(239,68,68,0.12)"
                     : item.type === "saving"
-                    ? "rgba(96,212,240,0.12)"
-                    : "rgba(200,240,96,0.12)",
+                    ? "rgba(66,99,235,0.12)"
+                    : "rgba(34,197,94,0.12)",
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
@@ -357,7 +357,7 @@ export function HistoricoClient({ months, initialMonth }: Props) {
             <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
               <div
                 style={{
-                  fontFamily: "var(--font-syne), sans-serif",
+                  fontFamily: "var(--font-display), sans-serif",
                   fontWeight: 700,
                   fontSize: 15,
                   whiteSpace: "nowrap",

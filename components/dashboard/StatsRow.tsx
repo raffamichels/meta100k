@@ -58,7 +58,7 @@ function StatCard({ icon, iconBg, label, value }: StatCardProps) {
       </div>
       <div
         style={{
-          fontFamily: "var(--font-syne), sans-serif",
+          fontFamily: "var(--font-display), sans-serif",
           fontSize: 20,
           fontWeight: 700,
           letterSpacing: "-0.5px",
@@ -85,25 +85,25 @@ export function StatsRow({ salary, expenses, extras, savings }: StatsRowProps) {
     >
       <StatCard
         icon="💰"
-        iconBg="rgba(200,240,96,0.12)"
+        iconBg="rgba(34,197,94,0.12)"
         label="Renda Mensal"
         value={fmt(salary)}
       />
       <StatCard
         icon="💸"
-        iconBg="rgba(240,96,96,0.12)"
+        iconBg="rgba(239,68,68,0.12)"
         label="Gastos/Mês"
         value={fmt(expenses)}
       />
       <StatCard
         icon="📈"
-        iconBg="rgba(96,212,240,0.12)"
+        iconBg="rgba(66,99,235,0.12)"
         label="Extras/Mês"
         value={fmt(extras)}
       />
       <StatCard
         icon="🏦"
-        iconBg="rgba(96,240,160,0.12)"
+        iconBg="rgba(16,185,129,0.12)"
         label="Guardado/Mês"
         value={fmt(savings)}
       />

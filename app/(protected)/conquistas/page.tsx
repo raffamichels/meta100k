@@ -75,7 +75,7 @@ export default async function ConquistasPage() {
       <div style={{ marginBottom: 24 }}>
         <div
           style={{
-            fontFamily: "var(--font-syne), sans-serif",
+            fontFamily: "var(--font-display), sans-serif",
             fontWeight: 800,
             fontSize: 28,
             letterSpacing: "-1px",
@@ -95,8 +95,8 @@ export default async function ConquistasPage() {
       {/* Card de status do jogador */}
       <div
         style={{
-          background: "linear-gradient(135deg, rgba(200,240,96,0.08), rgba(96,212,240,0.06))",
-          border: "1px solid rgba(200,240,96,0.25)",
+          background: "linear-gradient(135deg, rgba(34,197,94,0.08), rgba(66,99,235,0.06))",
+          border: "1px solid rgba(34,197,94,0.25)",
           borderRadius: 20,
           padding: 20,
           marginBottom: 24,
@@ -107,15 +107,15 @@ export default async function ConquistasPage() {
         }}
       >
         <div style={{ textAlign: "center", minWidth: 80 }}>
-          <div style={{ fontSize: 40, marginBottom: 4, filter: "drop-shadow(0 0 12px rgba(200,240,96,0.5))" }}>
+          <div style={{ fontSize: 40, marginBottom: 4, filter: "drop-shadow(0 0 12px rgba(34,197,94,0.35))" }}>
             {currentLevel.icon}
           </div>
           <div
             style={{
-              fontFamily: "var(--font-syne), sans-serif",
+              fontFamily: "var(--font-display), sans-serif",
               fontWeight: 800,
               fontSize: 14,
-              color: "var(--accent)",
+              color: "var(--accent-dark)",
             }}
           >
             {currentLevel.name}
@@ -126,13 +126,13 @@ export default async function ConquistasPage() {
         <div style={{ flex: 1, minWidth: 160 }}>
           <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 6, fontSize: 13 }}>
             <span style={{ color: "var(--muted)" }}>XP Total</span>
-            <span style={{ fontWeight: 700, color: "var(--accent)" }}>
+            <span style={{ fontWeight: 700, color: "var(--accent-dark)" }}>
               {user.xp.toLocaleString("pt-BR")}
             </span>
           </div>
           <div
             style={{
-              background: "rgba(255,255,255,0.06)",
+              background: "rgba(0,0,0,0.06)",
               borderRadius: 100,
               height: 8,
               overflow: "hidden",
@@ -145,7 +145,7 @@ export default async function ConquistasPage() {
                 borderRadius: 100,
                 background: "linear-gradient(90deg, var(--accent), var(--accent2))",
                 width: `${progress}%`,
-                boxShadow: "0 0 8px rgba(200,240,96,0.4)",
+                boxShadow: "0 0 8px rgba(34,197,94,0.3)",
               }}
             />
           </div>
@@ -160,10 +160,10 @@ export default async function ConquistasPage() {
           <div style={{ textAlign: "center" }}>
             <div
               style={{
-                fontFamily: "var(--font-syne), sans-serif",
+                fontFamily: "var(--font-display), sans-serif",
                 fontWeight: 900,
                 fontSize: 22,
-                color: "#f08c28",
+                color: "#d97706",
               }}
             >
               {streak}
@@ -175,7 +175,7 @@ export default async function ConquistasPage() {
           <div style={{ textAlign: "center" }}>
             <div
               style={{
-                fontFamily: "var(--font-syne), sans-serif",
+                fontFamily: "var(--font-display), sans-serif",
                 fontWeight: 900,
                 fontSize: 22,
                 color: "var(--accent2)",
@@ -190,10 +190,10 @@ export default async function ConquistasPage() {
           <div style={{ textAlign: "center" }}>
             <div
               style={{
-                fontFamily: "var(--font-syne), sans-serif",
+                fontFamily: "var(--font-display), sans-serif",
                 fontWeight: 900,
                 fontSize: 22,
-                color: "var(--accent)",
+                color: "var(--accent-dark)",
               }}
             >
               {totalUnlocked}/{totalCount}
@@ -215,7 +215,7 @@ export default async function ConquistasPage() {
           <div style={{ marginBottom: 18 }}>
             <div
               style={{
-                fontFamily: "var(--font-syne), sans-serif",
+                fontFamily: "var(--font-display), sans-serif",
                 fontWeight: 800,
                 fontSize: 18,
                 letterSpacing: "-0.5px",
@@ -234,7 +234,7 @@ export default async function ConquistasPage() {
             <div style={{ marginBottom: 24 }}>
               <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 12 }}>
                 <span style={{ fontSize: 13 }}>🔥</span>
-                <span style={{ fontSize: 11, fontWeight: 700, textTransform: "uppercase", letterSpacing: "1.5px", color: "#f0c060" }}>
+                <span style={{ fontSize: 11, fontWeight: 700, textTransform: "uppercase", letterSpacing: "1.5px", color: "var(--gold)" }}>
                   Disponíveis Agora
                 </span>
               </div>
@@ -262,7 +262,7 @@ export default async function ConquistasPage() {
                       </span>
                       <div style={{ flex: 1, minWidth: 0 }}>
                         <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 2 }}>
-                          <span style={{ fontFamily: "var(--font-syne), sans-serif", fontWeight: 700, fontSize: 14, color: "var(--text)" }}>
+                          <span style={{ fontFamily: "var(--font-display), sans-serif", fontWeight: 700, fontSize: 14, color: "var(--text)" }}>
                             {ach.title}
                           </span>
                         </div>
@@ -273,16 +273,16 @@ export default async function ConquistasPage() {
                           <span style={{ fontSize: 10, fontWeight: 700, color, background: `${color}18`, border: `1px solid ${color}44`, borderRadius: 6, padding: "2px 7px" }}>
                             {RARITY_LABELS[ach.rarity]}
                           </span>
-                          <span style={{ fontSize: 10, fontWeight: 600, color: "#f0c060", background: "rgba(240,192,96,0.12)", border: "1px solid rgba(240,192,96,0.3)", borderRadius: 6, padding: "2px 7px" }}>
+                          <span style={{ fontSize: 10, fontWeight: 600, color: "var(--gold)", background: "rgba(245,158,11,0.12)", border: "1px solid rgba(245,158,11,0.3)", borderRadius: 6, padding: "2px 7px" }}>
                             🗓️ SAZONAL
                           </span>
-                          <span style={{ fontSize: 10, fontWeight: 600, color: "var(--muted)", background: "rgba(255,255,255,0.06)", borderRadius: 6, padding: "2px 7px" }}>
+                          <span style={{ fontSize: 10, fontWeight: 600, color: "var(--muted)", background: "rgba(0,0,0,0.04)", borderRadius: 6, padding: "2px 7px" }}>
                             📅 {currentYear}
                           </span>
                         </div>
                       </div>
                       {ach.xpReward > 0 && (
-                        <div style={{ flexShrink: 0, fontSize: 11, fontWeight: 700, color: "var(--accent)", background: "rgba(200,240,96,0.1)", border: "1px solid rgba(200,240,96,0.2)", borderRadius: 8, padding: "2px 8px" }}>
+                        <div style={{ flexShrink: 0, fontSize: 11, fontWeight: 700, color: "var(--accent-dark)", background: "rgba(34,197,94,0.1)", border: "1px solid rgba(34,197,94,0.2)", borderRadius: 8, padding: "2px 8px" }}>
                           +{ach.xpReward} XP
                         </div>
                       )}
@@ -298,7 +298,7 @@ export default async function ConquistasPage() {
             <div style={{ marginBottom: 24 }}>
               <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 12 }}>
                 <span style={{ fontSize: 13 }}>✅</span>
-                <span style={{ fontSize: 11, fontWeight: 700, textTransform: "uppercase", letterSpacing: "1.5px", color: "#90f060" }}>
+                <span style={{ fontSize: 11, fontWeight: 700, textTransform: "uppercase", letterSpacing: "1.5px", color: "var(--success)" }}>
                   Conquistadas este ano
                 </span>
               </div>
@@ -324,7 +324,7 @@ export default async function ConquistasPage() {
                         {ach.icon}
                       </span>
                       <div style={{ flex: 1, minWidth: 0 }}>
-                        <div style={{ fontFamily: "var(--font-syne), sans-serif", fontWeight: 700, fontSize: 14, marginBottom: 2, color: "var(--text)" }}>
+                        <div style={{ fontFamily: "var(--font-display), sans-serif", fontWeight: 700, fontSize: 14, marginBottom: 2, color: "var(--text)" }}>
                           {ach.title}
                         </div>
                         <div style={{ fontSize: 12, color: "var(--muted)", lineHeight: 1.4, marginBottom: 4 }}>
@@ -339,16 +339,16 @@ export default async function ConquistasPage() {
                           <span style={{ fontSize: 10, fontWeight: 700, color, background: `${color}18`, border: `1px solid ${color}44`, borderRadius: 6, padding: "2px 7px" }}>
                             {RARITY_LABELS[ach.rarity]}
                           </span>
-                          <span style={{ fontSize: 10, fontWeight: 600, color: "#f0c060", background: "rgba(240,192,96,0.12)", border: "1px solid rgba(240,192,96,0.3)", borderRadius: 6, padding: "2px 7px" }}>
+                          <span style={{ fontSize: 10, fontWeight: 600, color: "var(--gold)", background: "rgba(245,158,11,0.12)", border: "1px solid rgba(245,158,11,0.3)", borderRadius: 6, padding: "2px 7px" }}>
                             🗓️ SAZONAL
                           </span>
-                          <span style={{ fontSize: 10, fontWeight: 600, color: "var(--muted)", background: "rgba(255,255,255,0.06)", borderRadius: 6, padding: "2px 7px" }}>
+                          <span style={{ fontSize: 10, fontWeight: 600, color: "var(--muted)", background: "rgba(0,0,0,0.04)", borderRadius: 6, padding: "2px 7px" }}>
                             📅 {currentYear}
                           </span>
                         </div>
                       </div>
                       {ach.xpReward > 0 && (
-                        <div style={{ flexShrink: 0, fontSize: 11, fontWeight: 700, color: "var(--accent)", background: "rgba(200,240,96,0.1)", border: "1px solid rgba(200,240,96,0.2)", borderRadius: 8, padding: "2px 8px" }}>
+                        <div style={{ flexShrink: 0, fontSize: 11, fontWeight: 700, color: "var(--accent-dark)", background: "rgba(34,197,94,0.1)", border: "1px solid rgba(34,197,94,0.2)", borderRadius: 8, padding: "2px 8px" }}>
                           +{ach.xpReward} XP
                         </div>
                       )}
@@ -375,9 +375,9 @@ export default async function ConquistasPage() {
                     <div
                       key={ach.key}
                       style={{
-                        background: "rgba(255,255,255,0.02)",
-                        border: "1px solid rgba(255,255,255,0.06)",
-                        borderLeft: "3px solid rgba(255,255,255,0.06)",
+                        background: "#f4f6f5",
+                        border: "1px solid rgba(0,0,0,0.06)",
+                        borderLeft: "3px solid rgba(0,0,0,0.08)",
                         borderRadius: 16,
                         padding: "14px 16px",
                         display: "flex",
@@ -388,7 +388,7 @@ export default async function ConquistasPage() {
                     >
                       <span style={{ fontSize: 28, flexShrink: 0, filter: "grayscale(1)" }}>🔒</span>
                       <div style={{ flex: 1, minWidth: 0 }}>
-                        <div style={{ fontFamily: "var(--font-syne), sans-serif", fontWeight: 700, fontSize: 14, marginBottom: 2, color: "var(--muted)" }}>
+                        <div style={{ fontFamily: "var(--font-display), sans-serif", fontWeight: 700, fontSize: 14, marginBottom: 2, color: "var(--muted)" }}>
                           {ach.title}
                         </div>
                         <div style={{ fontSize: 12, color: "var(--muted)", lineHeight: 1.4, marginBottom: 4 }}>
@@ -401,10 +401,10 @@ export default async function ConquistasPage() {
                           <span style={{ fontSize: 10, fontWeight: 700, color, background: `${color}18`, border: `1px solid ${color}44`, borderRadius: 6, padding: "2px 7px" }}>
                             {RARITY_LABELS[ach.rarity]}
                           </span>
-                          <span style={{ fontSize: 10, fontWeight: 600, color: "#f0c060", background: "rgba(240,192,96,0.12)", border: "1px solid rgba(240,192,96,0.3)", borderRadius: 6, padding: "2px 7px" }}>
+                          <span style={{ fontSize: 10, fontWeight: 600, color: "var(--gold)", background: "rgba(245,158,11,0.12)", border: "1px solid rgba(245,158,11,0.3)", borderRadius: 6, padding: "2px 7px" }}>
                             🗓️ SAZONAL
                           </span>
-                          <span style={{ fontSize: 10, fontWeight: 600, color: "var(--muted)", background: "rgba(255,255,255,0.06)", borderRadius: 6, padding: "2px 7px" }}>
+                          <span style={{ fontSize: 10, fontWeight: 600, color: "var(--muted)", background: "rgba(0,0,0,0.04)", borderRadius: 6, padding: "2px 7px" }}>
                             📅 {currentYear}
                           </span>
                         </div>
@@ -425,7 +425,7 @@ export default async function ConquistasPage() {
 
       {/* Divisor entre sazonais e permanentes */}
       {visibleSeasonal.length > 0 && (
-        <div style={{ borderTop: "1px solid rgba(255,255,255,0.07)", marginBottom: 28 }}>
+        <div style={{ borderTop: "1px solid var(--border)", marginBottom: 28 }}>
           <div style={{ textAlign: "center", marginTop: 12, marginBottom: 20, fontSize: 11, color: "var(--muted)", textTransform: "uppercase", letterSpacing: "1.5px" }}>
             🏆 Conquistas Permanentes
           </div>
@@ -486,9 +486,9 @@ export default async function ConquistasPage() {
                   <div
                     key={ach.key}
                     style={{
-                      background: isUnlocked ? "var(--card)" : "rgba(255,255,255,0.02)",
-                      border: isUnlocked ? `1px solid ${color}44` : "1px solid rgba(255,255,255,0.06)",
-                      borderLeft: isUnlocked ? `3px solid ${color}` : "3px solid rgba(255,255,255,0.06)",
+                      background: isUnlocked ? "var(--card)" : "#f4f6f5",
+                      border: isUnlocked ? `1px solid ${color}44` : "1px solid rgba(0,0,0,0.06)",
+                      borderLeft: isUnlocked ? `3px solid ${color}` : "3px solid rgba(0,0,0,0.08)",
                       borderRadius: 16,
                       padding: "14px 16px",
                       display: "flex",
@@ -510,7 +510,7 @@ export default async function ConquistasPage() {
                     <div style={{ flex: 1, minWidth: 0 }}>
                       <div
                         style={{
-                          fontFamily: "var(--font-syne), sans-serif",
+                          fontFamily: "var(--font-display), sans-serif",
                           fontWeight: 700,
                           fontSize: 14,
                           marginBottom: 2,
@@ -534,9 +534,9 @@ export default async function ConquistasPage() {
                           flexShrink: 0,
                           fontSize: 11,
                           fontWeight: 700,
-                          color: isUnlocked ? "var(--accent)" : "var(--muted)",
-                          background: isUnlocked ? "rgba(200,240,96,0.1)" : "transparent",
-                          border: isUnlocked ? "1px solid rgba(200,240,96,0.2)" : "none",
+                          color: isUnlocked ? "var(--accent-dark)" : "var(--muted)",
+                          background: isUnlocked ? "rgba(34,197,94,0.1)" : "transparent",
+                          border: isUnlocked ? "1px solid rgba(34,197,94,0.2)" : "none",
                           borderRadius: 8,
                           padding: "2px 8px",
                         }}

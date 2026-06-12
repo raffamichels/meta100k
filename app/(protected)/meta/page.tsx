@@ -29,6 +29,7 @@ const card: React.CSSProperties = {
   border: "1px solid var(--border)",
   borderRadius: 20,
   padding: 24,
+  boxShadow: "var(--card-shadow)",
 };
 
 const sectionLabel: React.CSSProperties = {
@@ -85,7 +86,7 @@ export default async function MetaPage() {
   // Avaliação da taxa de poupança
   let rateColor = "var(--danger)";
   let rateLabel = "Abaixo do ideal";
-  if (savingsRate >= 30) { rateColor = "#60f0a0"; rateLabel = "Excelente"; }
+  if (savingsRate >= 30) { rateColor = "var(--success)"; rateLabel = "Excelente"; }
   else if (savingsRate >= 20) { rateColor = "var(--accent)"; rateLabel = "Muito bom"; }
   else if (savingsRate >= 10) { rateColor = "var(--gold)"; rateLabel = "Regular"; }
 
@@ -118,7 +119,7 @@ export default async function MetaPage() {
 
         {/* Número principal */}
         <div style={{
-          fontFamily: "var(--font-syne), sans-serif",
+          fontFamily: "var(--font-display), sans-serif",
           fontSize: 58,
           fontWeight: 900,
           letterSpacing: "-3px",
@@ -136,7 +137,7 @@ export default async function MetaPage() {
         </div>
 
         {/* Barra de progresso */}
-        <div style={{ background: "rgba(255,255,255,0.06)", borderRadius: 100, height: 5, position: "relative", marginBottom: 10 }}>
+        <div style={{ background: "rgba(0,0,0,0.06)", borderRadius: 100, height: 5, position: "relative", marginBottom: 10 }}>
           <div style={{
             height: "100%",
             borderRadius: 100,
@@ -155,7 +156,7 @@ export default async function MetaPage() {
               borderRadius: "50%",
               background: "var(--accent)",
               border: "2px solid var(--card)",
-              boxShadow: "0 0 8px rgba(200,240,96,0.6)",
+              boxShadow: "0 0 8px rgba(34,197,94,0.5)",
             }}/>
           )}
         </div>
@@ -170,7 +171,7 @@ export default async function MetaPage() {
           marginBottom: 24,
         }}>
           <span>
-            <strong style={{ color: "var(--accent)", fontFamily: "var(--font-syne)" }}>{pct.toFixed(1)}%</strong>
+            <strong style={{ color: "var(--accent-dark)", fontFamily: "var(--font-display)" }}>{pct.toFixed(1)}%</strong>
             {lastReached && (
               <span style={{ marginLeft: 8, opacity: 0.55 }}>{lastReached.icon}</span>
             )}
@@ -188,7 +189,7 @@ export default async function MetaPage() {
         {/* 3 stats em linha */}
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr" }}>
           {[
-            { label: "Total ganho", value: fmt(totalEarned), sub: "salário + extras", color: "var(--accent)" },
+            { label: "Total ganho", value: fmt(totalEarned), sub: "salário + extras", color: "var(--accent-dark)" },
             { label: "Total gasto", value: fmt(totalSpent), sub: "despesas", color: "var(--danger)" },
             { label: "Saldo livre", value: fmt(saldo), sub: "ganho − gasto", color: saldo >= 0 ? "var(--accent2)" : "var(--danger)" },
           ].map((stat, i) => (
@@ -202,7 +203,7 @@ export default async function MetaPage() {
             >
               <div style={{ fontSize: 11, color: "var(--muted)", marginBottom: 6 }}>{stat.label}</div>
               <div style={{
-                fontFamily: "var(--font-syne), sans-serif",
+                fontFamily: "var(--font-display), sans-serif",
                 fontSize: 17,
                 fontWeight: 800,
                 letterSpacing: "-0.5px",
@@ -242,7 +243,7 @@ export default async function MetaPage() {
                   gap: 16,
                   padding: "12px 0",
                   borderBottom: i < timelineRows.length - 1
-                    ? "1px solid rgba(255,255,255,0.04)"
+                    ? "1px solid rgba(0,0,0,0.05)"
                     : "none",
                 }}
               >
@@ -259,7 +260,7 @@ export default async function MetaPage() {
                   <div style={{ fontSize: 13, color: i === 0 ? "var(--text)" : "var(--muted)" }}>
                     {formatMonth(row.key)}
                   </div>
-                  <div style={{ marginTop: 5, background: "rgba(255,255,255,0.04)", borderRadius: 100, height: 3 }}>
+                  <div style={{ marginTop: 5, background: "rgba(0,0,0,0.06)", borderRadius: 100, height: 3 }}>
                     <div style={{
                       height: "100%",
                       borderRadius: 100,
@@ -274,10 +275,10 @@ export default async function MetaPage() {
                 </div>
 
                 <div style={{
-                  fontFamily: "var(--font-syne), sans-serif",
+                  fontFamily: "var(--font-display), sans-serif",
                   fontSize: 15,
                   fontWeight: 700,
-                  color: "var(--accent)",
+                  color: "var(--accent-dark)",
                   flexShrink: 0,
                 }}>
                   +{fmt(row.savings)}
@@ -301,7 +302,7 @@ export default async function MetaPage() {
           <>
             <div style={{ display: "flex", alignItems: "baseline", gap: 12, marginBottom: 6 }}>
               <div style={{
-                fontFamily: "var(--font-syne), sans-serif",
+                fontFamily: "var(--font-display), sans-serif",
                 fontSize: 52,
                 fontWeight: 900,
                 letterSpacing: "-3px",
@@ -332,7 +333,7 @@ export default async function MetaPage() {
             {/* Métricas */}
             {[
               { label: "Salário médio", value: `${fmtFull(avgSalary)}/mês`, color: "var(--text)" },
-              { label: "Economia média", value: `${fmtFull(avgSavings)}/mês`, color: "var(--accent)" },
+              { label: "Economia média", value: `${fmtFull(avgSavings)}/mês`, color: "var(--accent-dark)" },
               { label: "Falta para a meta", value: fmt(Math.max(user.goal - totalSaved, 0)), color: "var(--gold)" },
             ].map((item, i) => (
               <div
@@ -342,12 +343,12 @@ export default async function MetaPage() {
                   justifyContent: "space-between",
                   alignItems: "center",
                   padding: "11px 0",
-                  borderBottom: i < 2 ? "1px solid rgba(255,255,255,0.04)" : "none",
+                  borderBottom: i < 2 ? "1px solid rgba(0,0,0,0.05)" : "none",
                 }}
               >
                 <div style={{ fontSize: 13, color: "var(--muted)" }}>{item.label}</div>
                 <div style={{
-                  fontFamily: "var(--font-syne), sans-serif",
+                  fontFamily: "var(--font-display), sans-serif",
                   fontSize: 14,
                   fontWeight: 700,
                   color: item.color,
@@ -367,16 +368,16 @@ export default async function MetaPage() {
       {/* CARD: PROJEÇÃO — destaque com borda accent */}
       <div style={{
         ...card,
-        background: "rgba(200,240,96,0.04)",
-        borderColor: "rgba(200,240,96,0.2)",
+        background: "rgba(34,197,94,0.06)",
+        borderColor: "rgba(34,197,94,0.25)",
       }}>
         <div style={sectionLabel}>Projeção</div>
         <div style={{
-          fontFamily: "var(--font-syne), sans-serif",
+          fontFamily: "var(--font-display), sans-serif",
           fontSize: 28,
           fontWeight: 800,
           letterSpacing: "-1px",
-          color: "var(--accent)",
+          color: "var(--accent-dark)",
           marginBottom: 6,
         }}>
           {projDateText}

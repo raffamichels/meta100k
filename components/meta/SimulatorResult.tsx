@@ -39,8 +39,8 @@ export default function SimulatorResult({
   avgMonthlySavings,
 }: SimulatorResultProps) {
   const baseCard = {
-    background: 'rgba(200,240,96,0.06)',
-    border: '1px solid rgba(200,240,96,0.2)',
+    background: 'rgba(34,197,94,0.06)',
+    border: '1px solid rgba(34,197,94,0.2)',
     borderRadius: 16,
     padding: 20,
     minHeight: 160,
@@ -63,11 +63,11 @@ export default function SimulatorResult({
 
     const isMore = inverseResult.difference > 0
     return (
-      <div style={{ ...baseCard, background: 'rgba(96,212,240,0.06)', border: '1px solid rgba(96,212,240,0.25)' }}>
+      <div style={{ ...baseCard, background: 'rgba(66,99,235,0.06)', border: '1px solid rgba(66,99,235,0.25)' }}>
         <div style={{ fontSize: 11, color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '0.8px', marginBottom: 12 }}>
           Para atingir a meta nessa data
         </div>
-        <div style={{ fontFamily: 'var(--font-syne), sans-serif', fontSize: 32, fontWeight: 800, color: 'var(--accent2)' }}>
+        <div style={{ fontFamily: 'var(--font-display), sans-serif', fontSize: 32, fontWeight: 800, color: 'var(--accent2)' }}>
           {fmt(inverseResult.required)}
           <span style={{ fontSize: 14, fontWeight: 400 }}>/mês</span>
         </div>
@@ -89,7 +89,7 @@ export default function SimulatorResult({
   // Média atual zerada: impossível calcular projeção de base
   if (!forwardResult.possible) {
     return (
-      <div style={{ ...baseCard, background: 'rgba(240,96,96,0.06)', border: '1px solid rgba(240,96,96,0.3)' }}>
+      <div style={{ ...baseCard, background: 'rgba(239,68,68,0.06)', border: '1px solid rgba(239,68,68,0.3)' }}>
         <div style={{ fontSize: 24, marginBottom: 8 }}>⚠️</div>
         <div style={{ fontSize: 14, color: 'var(--danger)', fontWeight: 500 }}>
           Com esses números, a meta não seria atingida no prazo calculável.
@@ -111,7 +111,7 @@ export default function SimulatorResult({
         <div style={{ fontSize: 11, color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '0.8px', marginBottom: 12 }}>
           Cenário atual
         </div>
-        <div style={{ fontFamily: 'var(--font-syne), sans-serif', fontSize: 32, fontWeight: 800, color: 'var(--accent2)' }}>
+        <div style={{ fontFamily: 'var(--font-display), sans-serif', fontSize: 32, fontWeight: 800, color: 'var(--accent2)' }}>
           📅 {formatDate(targetDate)}
         </div>
         {avgMonthlySavings > 0 && (
@@ -131,14 +131,14 @@ export default function SimulatorResult({
     <div
       style={{
         ...baseCard,
-        border: isImproved ? '1px solid rgba(200,240,96,0.45)' : '1px solid rgba(200,240,96,0.2)',
-        background: isImproved ? 'rgba(200,240,96,0.09)' : 'rgba(200,240,96,0.04)',
+        border: isImproved ? '1px solid rgba(34,197,94,0.45)' : '1px solid rgba(34,197,94,0.2)',
+        background: isImproved ? 'rgba(34,197,94,0.09)' : 'rgba(34,197,94,0.04)',
       }}
     >
       <div style={{ fontSize: 11, color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '0.8px', marginBottom: 12 }}>
         Com seus ajustes
       </div>
-      <div style={{ fontFamily: 'var(--font-syne), sans-serif', fontSize: 32, fontWeight: 800, color: 'var(--accent)' }}>
+      <div style={{ fontFamily: 'var(--font-display), sans-serif', fontSize: 32, fontWeight: 800, color: 'var(--accent)' }}>
         📅 {formatDate(targetDate)}
       </div>
       {isImproved && (

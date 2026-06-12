@@ -42,8 +42,8 @@ export function ChallengeCreator() {
         {/* Sucesso */}
         <div
           style={{
-            background: "linear-gradient(135deg, rgba(200,240,96,0.12), rgba(96,212,240,0.08))",
-            border: "1px solid rgba(200,240,96,0.3)",
+            background: "linear-gradient(135deg, rgba(34,197,94,0.12), rgba(66,99,235,0.08))",
+            border: "1px solid rgba(34,197,94,0.3)",
             borderRadius: 20,
             padding: "24px 20px",
             textAlign: "center",
@@ -52,11 +52,11 @@ export function ChallengeCreator() {
           <div style={{ fontSize: 48, marginBottom: 12 }}>🎉</div>
           <div
             style={{
-              fontFamily: "var(--font-syne), sans-serif",
+              fontFamily: "var(--font-display), sans-serif",
               fontWeight: 800,
               fontSize: 22,
               marginBottom: 8,
-              color: "var(--accent)",
+              color: "var(--accent-dark)",
             }}
           >
             Desafio criado!
@@ -68,7 +68,7 @@ export function ChallengeCreator() {
           {/* Link para copiar */}
           <div
             style={{
-              background: "rgba(255,255,255,0.04)",
+              background: "#f4f6f5",
               border: "1px solid var(--border)",
               borderRadius: 12,
               padding: "12px 16px",
@@ -94,11 +94,11 @@ export function ChallengeCreator() {
             <button
               onClick={handleCopy}
               style={{
-                background: copied ? "var(--accent)" : "rgba(200,240,96,0.12)",
-                border: "1px solid rgba(200,240,96,0.3)",
+                background: copied ? "var(--accent)" : "rgba(34,197,94,0.12)",
+                border: "1px solid rgba(34,197,94,0.3)",
                 borderRadius: 8,
                 padding: "6px 14px",
-                color: copied ? "#0a0a0f" : "var(--accent)",
+                color: copied ? "#ffffff" : "var(--accent-dark)",
                 fontSize: 13,
                 fontWeight: 700,
                 cursor: "pointer",
@@ -116,7 +116,7 @@ export function ChallengeCreator() {
             style={{
               display: "inline-block",
               background: "linear-gradient(135deg, var(--accent), var(--accent2))",
-              color: "#0a0a0f",
+              color: "#ffffff",
               fontWeight: 800,
               fontSize: 14,
               borderRadius: 12,
@@ -155,10 +155,10 @@ export function ChallengeCreator() {
             onClick={() => setMode("hard")}
             style={{
               background: mode === "hard"
-                ? "linear-gradient(135deg, rgba(240,96,160,0.18), rgba(160,96,240,0.12))"
-                : "rgba(255,255,255,0.03)",
+                ? "linear-gradient(135deg, rgba(124,58,237,0.14), rgba(124,58,237,0.06))"
+                : "#f4f6f5",
               border: mode === "hard"
-                ? "2px solid rgba(240,96,160,0.6)"
+                ? "2px solid rgba(124,58,237,0.6)"
                 : "2px solid var(--border)",
               borderRadius: 16,
               padding: "18px 14px",
@@ -170,10 +170,10 @@ export function ChallengeCreator() {
             <div style={{ fontSize: 28, marginBottom: 8 }}>🏁</div>
             <div
               style={{
-                fontFamily: "var(--font-syne), sans-serif",
+                fontFamily: "var(--font-display), sans-serif",
                 fontWeight: 800,
                 fontSize: 15,
-                color: mode === "hard" ? "#f060a0" : "var(--foreground)",
+                color: mode === "hard" ? "var(--accent3)" : "var(--foreground)",
                 marginBottom: 4,
               }}
             >
@@ -189,10 +189,10 @@ export function ChallengeCreator() {
             onClick={() => setMode("savings")}
             style={{
               background: mode === "savings"
-                ? "linear-gradient(135deg, rgba(96,212,240,0.15), rgba(200,240,96,0.08))"
-                : "rgba(255,255,255,0.03)",
+                ? "linear-gradient(135deg, rgba(66,99,235,0.15), rgba(34,197,94,0.08))"
+                : "#f4f6f5",
               border: mode === "savings"
-                ? "2px solid rgba(96,212,240,0.6)"
+                ? "2px solid rgba(66,99,235,0.6)"
                 : "2px solid var(--border)",
               borderRadius: 16,
               padding: "18px 14px",
@@ -204,7 +204,7 @@ export function ChallengeCreator() {
             <div style={{ fontSize: 28, marginBottom: 8 }}>📊</div>
             <div
               style={{
-                fontFamily: "var(--font-syne), sans-serif",
+                fontFamily: "var(--font-display), sans-serif",
                 fontWeight: 800,
                 fontSize: 15,
                 color: mode === "savings" ? "var(--accent2)" : "var(--foreground)",
@@ -243,8 +243,8 @@ export function ChallengeCreator() {
                 onClick={() => setDays(d)}
                 style={{
                   background: days === d
-                    ? "linear-gradient(135deg, rgba(96,212,240,0.2), rgba(200,240,96,0.1))"
-                    : "rgba(255,255,255,0.03)",
+                    ? "linear-gradient(135deg, rgba(66,99,235,0.2), rgba(34,197,94,0.1))"
+                    : "#f4f6f5",
                   border: days === d
                     ? "2px solid var(--accent2)"
                     : "2px solid var(--border)",
@@ -257,7 +257,7 @@ export function ChallengeCreator() {
               >
                 <div
                   style={{
-                    fontFamily: "var(--font-syne), sans-serif",
+                    fontFamily: "var(--font-display), sans-serif",
                     fontWeight: 900,
                     fontSize: 22,
                     color: days === d ? "var(--accent2)" : "var(--foreground)",
@@ -275,7 +275,7 @@ export function ChallengeCreator() {
       {/* Resumo */}
       <div
         style={{
-          background: "rgba(255,255,255,0.03)",
+          background: "#f4f6f5",
           border: "1px solid var(--border)",
           borderRadius: 14,
           padding: "14px 16px",
@@ -293,12 +293,12 @@ export function ChallengeCreator() {
       {error && (
         <div
           style={{
-            background: "rgba(240,96,96,0.1)",
-            border: "1px solid rgba(240,96,96,0.3)",
+            background: "rgba(239,68,68,0.1)",
+            border: "1px solid rgba(239,68,68,0.3)",
             borderRadius: 10,
             padding: "10px 14px",
             fontSize: 13,
-            color: "#f06060",
+            color: "var(--danger)",
           }}
         >
           {error}
@@ -311,15 +311,15 @@ export function ChallengeCreator() {
         disabled={isPending}
         style={{
           background: isPending
-            ? "rgba(200,240,96,0.2)"
+            ? "rgba(34,197,94,0.2)"
             : "linear-gradient(135deg, var(--accent), var(--accent2))",
           border: "none",
           borderRadius: 14,
           padding: "16px",
-          fontFamily: "var(--font-syne), sans-serif",
+          fontFamily: "var(--font-display), sans-serif",
           fontWeight: 800,
           fontSize: 16,
-          color: isPending ? "var(--muted)" : "#0a0a0f",
+          color: isPending ? "var(--muted)" : "#ffffff",
           cursor: isPending ? "not-allowed" : "pointer",
           width: "100%",
           transition: "all 0.2s",

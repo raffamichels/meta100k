@@ -24,8 +24,8 @@ export function ProjectionCard({ projection, totalSaved }: ProjectionCardProps) 
     <div
       className="projection-card-wrapper"
       style={{
-        background: "linear-gradient(135deg, rgba(200,240,96,0.12), rgba(96,212,240,0.08))",
-        border: "1px solid rgba(200,240,96,0.25)",
+        background: "linear-gradient(135deg, rgba(34,197,94,0.10), rgba(66,99,235,0.06))",
+        border: "1px solid rgba(34,197,94,0.25)",
         borderRadius: 20,
         padding: 20,
         marginBottom: 20,
@@ -47,11 +47,11 @@ export function ProjectionCard({ projection, totalSaved }: ProjectionCardProps) 
       <div
         className="projection-date"
         style={{
-          fontFamily: "var(--font-syne), sans-serif",
+          fontFamily: "var(--font-display), sans-serif",
           fontSize: 28,
           fontWeight: 800,
           letterSpacing: "-1px",
-          color: "var(--accent)",
+          color: "var(--accent-dark)",
           margin: "8px 0 4px",
         }}
       >

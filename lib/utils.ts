@@ -74,8 +74,8 @@ export const TEMPTATION_CATEGORIES = [
 ];
 
 export const CAT_COLORS = [
-  "#c8f060","#60d4f0","#f060a0","#f0c060","#60f0a0",
-  "#f09060","#a060f0","#60a0f0","#f06060","#90f060",
+  "#22c55e","#4263eb","#7c3aed","#f59e0b","#10b981",
+  "#f97316","#a855f7","#3b82f6","#ef4444","#84cc16",
 ];
 
 /** Retorna true se já foi guardado pelo menos R$1,00 hoje (fuso GMT-3). */

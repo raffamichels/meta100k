@@ -1,13 +1,14 @@
 import type { Metadata, Viewport } from "next";
-import { Syne, DM_Sans } from "next/font/google";
+import { Poppins, DM_Sans } from "next/font/google";
 import "./globals.css";
 import { ToastProvider } from "@/components/ui/Toast";
 import { DesktopWarning } from "@/components/ui/DesktopWarning";
+import { Providers } from "@/components/Providers";
 
-const syne = Syne({
+const poppins = Poppins({
   subsets: ["latin"],
   weight: ["400", "600", "700", "800"],
-  variable: "--font-syne",
+  variable: "--font-display",
   display: "swap",
 });
 
@@ -15,7 +16,7 @@ const dmSans = DM_Sans({
   subsets: ["latin"],
   weight: ["300", "400", "500"],
   style: ["normal", "italic"],
-  variable: "--font-dm-sans",
+  variable: "--font-body",
   display: "swap",
 });
 
@@ -30,7 +31,7 @@ export const metadata: Metadata = {
   },
   appleWebApp: {
     capable: true,
-    statusBarStyle: "black-translucent",
+    statusBarStyle: "default",
     title: "Meta 100K",
   },
 };
@@ -39,17 +40,19 @@ export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
   maximumScale: 1,
-  themeColor: "#0a0a0f",
+  themeColor: "#22c55e",
 };
 
 export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="pt-BR" className={`${syne.variable} ${dmSans.variable}`} suppressHydrationWarning>
-      <body style={{ fontFamily: "var(--font-dm-sans), sans-serif" }}>
-        <DesktopWarning />
-        <ToastProvider>{children}</ToastProvider>
+    <html lang="pt-BR" className={`${poppins.variable} ${dmSans.variable}`} suppressHydrationWarning>
+      <body style={{ fontFamily: "var(--font-body), sans-serif" }}>
+        <Providers>
+          <DesktopWarning />
+          <ToastProvider>{children}</ToastProvider>
+        </Providers>
       </body>
     </html>
   );

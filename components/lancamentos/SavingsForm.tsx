@@ -9,12 +9,12 @@ import { todayDate } from "@/lib/utils";
 
 const inputStyle: React.CSSProperties = {
   width: "100%",
-  background: "rgba(255,255,255,0.04)",
-  border: "1px solid var(--border)",
+  background: "#f4f6f5",
+  border: "1px solid rgba(0,0,0,0.08)",
   borderRadius: 12,
   padding: "12px 14px",
   color: "var(--text)",
-  fontFamily: "var(--font-dm-sans), sans-serif",
+  fontFamily: "var(--font-body), sans-serif",
   fontSize: 15,
   outline: "none",
   WebkitAppearance: "none",
@@ -55,7 +55,7 @@ export function SavingsForm() {
       className="form-card savings-form-card"
       style={{
         background: "var(--card)",
-        border: "1px solid rgba(96,212,240,0.3)",
+        border: "1px solid rgba(66,99,235,0.3)",
         borderRadius: 20,
         padding: 20,
         marginBottom: 16,
@@ -63,7 +63,7 @@ export function SavingsForm() {
     >
       <div
         style={{
-          fontFamily: "var(--font-syne), sans-serif",
+          fontFamily: "var(--font-display), sans-serif",
           fontSize: 16,
           fontWeight: 700,
           marginBottom: 16,
@@ -118,12 +118,12 @@ export function SavingsForm() {
                 fontWeight: 500,
                 lineHeight: 1.4,
                 background: amount >= 1
-                  ? "rgba(240,140,40,0.1)"
-                  : "rgba(240,96,96,0.1)",
+                  ? "rgba(245,158,11,0.1)"
+                  : "rgba(239,68,68,0.1)",
                 border: amount >= 1
-                  ? "1px solid rgba(240,140,40,0.3)"
-                  : "1px solid rgba(240,96,96,0.25)",
-                color: amount >= 1 ? "#f08c28" : "var(--danger)",
+                  ? "1px solid rgba(245,158,11,0.3)"
+                  : "1px solid rgba(239,68,68,0.25)",
+                color: amount >= 1 ? "var(--gold)" : "var(--danger)",
               }}
             >
               {amount >= 1
@@ -153,9 +153,10 @@ export function SavingsForm() {
             padding: 14,
             borderRadius: 14,
             border: "none",
-            background: "var(--accent2)",
-            color: "#0a0a0f",
-            fontFamily: "var(--font-syne), sans-serif",
+            background: "var(--accent)",
+            color: "#ffffff",
+            boxShadow: "0 4px 14px rgba(34,197,94,0.35)",
+            fontFamily: "var(--font-display), sans-serif",
             fontSize: 15,
             fontWeight: 700,
             cursor: pending ? "not-allowed" : "pointer",

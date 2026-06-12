@@ -95,7 +95,7 @@ export default async function PerfilPage() {
       <div style={{ marginBottom: 24 }}>
         <div
           style={{
-            fontFamily: "var(--font-syne), sans-serif",
+            fontFamily: "var(--font-display), sans-serif",
             fontWeight: 800,
             fontSize: 26,
             letterSpacing: "-0.5px",
@@ -113,8 +113,8 @@ export default async function PerfilPage() {
       <div
         className="perfil-progress-card"
         style={{
-          background: "linear-gradient(135deg, rgba(96,212,240,0.1), rgba(200,240,96,0.07))",
-          border: "1px solid rgba(96,212,240,0.25)",
+          background: "linear-gradient(135deg, rgba(66,99,235,0.08), rgba(34,197,94,0.06))",
+          border: "1px solid rgba(66,99,235,0.25)",
           borderRadius: 20,
           padding: 20,
           marginBottom: 16,
@@ -127,7 +127,7 @@ export default async function PerfilPage() {
             </div>
             <div
               style={{
-                fontFamily: "var(--font-syne), sans-serif",
+                fontFamily: "var(--font-display), sans-serif",
                 fontSize: 28,
                 fontWeight: 800,
                 color: "var(--accent2)",
@@ -140,10 +140,10 @@ export default async function PerfilPage() {
           <div style={{ textAlign: "right" }}>
             <div
               style={{
-                fontFamily: "var(--font-syne), sans-serif",
+                fontFamily: "var(--font-display), sans-serif",
                 fontWeight: 900,
                 fontSize: 22,
-                color: "var(--accent)",
+                color: "var(--accent-dark)",
               }}
             >
               {goalPct.toFixed(1)}%
@@ -157,7 +157,7 @@ export default async function PerfilPage() {
         {/* Barra de progresso */}
         <div
           style={{
-            background: "rgba(255,255,255,0.06)",
+            background: "rgba(0,0,0,0.06)",
             borderRadius: 100,
             height: 8,
             overflow: "hidden",
@@ -169,7 +169,7 @@ export default async function PerfilPage() {
               borderRadius: 100,
               background: "linear-gradient(90deg, var(--accent2), var(--accent))",
               width: `${goalPct}%`,
-              boxShadow: "0 0 8px rgba(96,212,240,0.4)",
+              boxShadow: "0 0 8px rgba(66,99,235,0.3)",
               transition: "width 0.5s ease",
             }}
           />
@@ -191,21 +191,21 @@ export default async function PerfilPage() {
           className="perfil-stat-card"
           style={{
             background: "var(--card)",
-            border: "1px solid rgba(200,240,96,0.2)",
+            border: "1px solid rgba(34,197,94,0.2)",
             borderRadius: 16,
             padding: "14px 10px",
             textAlign: "center",
           }}
         >
-          <div style={{ fontSize: 26, marginBottom: 4, filter: "drop-shadow(0 0 8px rgba(200,240,96,0.4))" }}>
+          <div style={{ fontSize: 26, marginBottom: 4, filter: "drop-shadow(0 0 8px rgba(34,197,94,0.35))" }}>
             {currentLevel.icon}
           </div>
           <div
             style={{
-              fontFamily: "var(--font-syne), sans-serif",
+              fontFamily: "var(--font-display), sans-serif",
               fontSize: 12,
               fontWeight: 800,
-              color: "var(--accent)",
+              color: "var(--accent-dark)",
               marginBottom: 1,
             }}
           >
@@ -216,7 +216,7 @@ export default async function PerfilPage() {
           {/* Mini barra de XP */}
           <div
             style={{
-              background: "rgba(255,255,255,0.06)",
+              background: "rgba(0,0,0,0.06)",
               borderRadius: 100,
               height: 3,
               overflow: "hidden",
@@ -261,10 +261,10 @@ export default async function PerfilPage() {
           </div>
           <div
             style={{
-              fontFamily: "var(--font-syne), sans-serif",
+              fontFamily: "var(--font-display), sans-serif",
               fontSize: 18,
               fontWeight: 900,
-              color: streak > 0 ? "#f08c28" : "var(--muted)",
+              color: streak > 0 ? "#d97706" : "var(--muted)",
               marginBottom: 1,
             }}
           >
@@ -283,7 +283,7 @@ export default async function PerfilPage() {
           className="perfil-stat-card"
           style={{
             background: "var(--card)",
-            border: "1px solid rgba(96,212,240,0.2)",
+            border: "1px solid rgba(66,99,235,0.2)",
             borderRadius: 16,
             padding: "14px 10px",
             textAlign: "center",
@@ -292,7 +292,7 @@ export default async function PerfilPage() {
           <div style={{ fontSize: 26, marginBottom: 4 }}>🏅</div>
           <div
             style={{
-              fontFamily: "var(--font-syne), sans-serif",
+              fontFamily: "var(--font-display), sans-serif",
               fontSize: 18,
               fontWeight: 900,
               color: "var(--accent2)",
@@ -306,7 +306,7 @@ export default async function PerfilPage() {
           </div>
           <div
             style={{
-              background: "rgba(255,255,255,0.06)",
+              background: "rgba(0,0,0,0.06)",
               borderRadius: 100,
               height: 3,
               overflow: "hidden",
@@ -354,7 +354,7 @@ export default async function PerfilPage() {
             <div style={{ flex: 1 }}>
               <div
                 style={{
-                  fontFamily: "var(--font-syne), sans-serif",
+                  fontFamily: "var(--font-display), sans-serif",
                   fontWeight: 700,
                   fontSize: 15,
                   color: "var(--text)",
@@ -385,10 +385,10 @@ export default async function PerfilPage() {
             width: "100%",
             padding: "14px",
             borderRadius: 16,
-            border: "1px solid rgba(240,96,96,0.25)",
-            background: "rgba(240,96,96,0.06)",
+            border: "1px solid rgba(239,68,68,0.25)",
+            background: "rgba(239,68,68,0.06)",
             color: "var(--danger)",
-            fontFamily: "var(--font-syne), sans-serif",
+            fontFamily: "var(--font-display), sans-serif",
             fontSize: 14,
             fontWeight: 700,
             cursor: "pointer",

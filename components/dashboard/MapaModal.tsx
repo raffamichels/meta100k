@@ -47,7 +47,7 @@ export function MapaModal({ totalSaved, goal, onClose }: MapaModalProps) {
       style={{
         position: "fixed",
         inset: 0,
-        background: "rgba(0,0,0,0.75)",
+        background: "rgba(0,0,0,0.4)",
         zIndex: 1000,
         display: "flex",
         alignItems: "center",
@@ -98,7 +98,7 @@ export function MapaModal({ totalSaved, goal, onClose }: MapaModalProps) {
         {/* Banner da fase atual */}
         <div
           style={{
-            background: "rgba(255,255,255,0.04)",
+            background: "#f4f6f5",
             border: "1px solid var(--border)",
             borderRadius: 14,
             padding: "20px 18px",
@@ -148,13 +148,13 @@ export function MapaModal({ totalSaved, goal, onClose }: MapaModalProps) {
                       background: isAtual
                         ? "var(--accent)"
                         : isConquistada
-                        ? "rgba(200,240,96,0.2)"
-                        : "rgba(255,255,255,0.06)",
+                        ? "rgba(34,197,94,0.15)"
+                        : "#f4f6f5",
                       border: isAtual
                         ? "2px solid var(--accent)"
                         : isConquistada
-                        ? "2px solid rgba(200,240,96,0.5)"
-                        : "2px solid rgba(255,255,255,0.1)",
+                        ? "2px solid rgba(34,197,94,0.5)"
+                        : "2px solid rgba(0,0,0,0.08)",
                       borderRadius: "50%",
                       width: 44,
                       height: 44,
@@ -182,8 +182,8 @@ export function MapaModal({ totalSaved, goal, onClose }: MapaModalProps) {
                         height: 2,
                         background:
                           isConquistada
-                            ? "rgba(200,240,96,0.5)"
-                            : "rgba(255,255,255,0.1)",
+                            ? "rgba(34,197,94,0.5)"
+                            : "rgba(0,0,0,0.08)",
                         flexShrink: 0,
                       }}
                     />
@@ -198,7 +198,7 @@ export function MapaModal({ totalSaved, goal, onClose }: MapaModalProps) {
         {faseSelecionada && faseSelecionada.key !== faseAtual.key && (
           <div
             style={{
-              background: "rgba(255,255,255,0.06)",
+              background: "#f4f6f5",
               border: "1px solid var(--border)",
               borderRadius: 12,
               padding: "14px 16px",
@@ -214,7 +214,7 @@ export function MapaModal({ totalSaved, goal, onClose }: MapaModalProps) {
             </div>
             {conquistadasKeys.has(faseSelecionada.key) ? (
               // Fase conquistada
-              <div style={{ color: "var(--accent)", fontSize: 12 }}>
+              <div style={{ color: "var(--accent-dark)", fontSize: 12 }}>
                 ✓ Fase conquistada · +{faseSelecionada.xp} XP ganhos
               </div>
             ) : (
@@ -242,13 +242,13 @@ export function MapaModal({ totalSaved, goal, onClose }: MapaModalProps) {
             }}
           >
             <span>Progresso na fase atual</span>
-            <span style={{ color: "var(--accent)", fontWeight: 700 }}>
+            <span style={{ color: "var(--accent-dark)", fontWeight: 700 }}>
               {progressoNaFase.toFixed(0)}%
             </span>
           </div>
           <div
             style={{
-              background: "rgba(255,255,255,0.06)",
+              background: "rgba(0,0,0,0.06)",
               borderRadius: 100,
               height: 8,
             }}
@@ -260,7 +260,7 @@ export function MapaModal({ totalSaved, goal, onClose }: MapaModalProps) {
                 background: "linear-gradient(90deg, var(--accent), var(--accent2))",
                 width: `${progressoNaFase}%`,
                 transition: "width 0.6s ease",
-                boxShadow: "0 0 8px rgba(200,240,96,0.3)",
+                boxShadow: "0 0 8px rgba(34,197,94,0.3)",
               }}
             />
           </div>
@@ -270,7 +270,7 @@ export function MapaModal({ totalSaved, goal, onClose }: MapaModalProps) {
         {proximaFase ? (
           <div
             style={{
-              background: "rgba(255,255,255,0.03)",
+              background: "#f4f6f5",
               border: "1px solid var(--border)",
               borderRadius: 12,
               padding: "12px 16px",
@@ -286,7 +286,7 @@ export function MapaModal({ totalSaved, goal, onClose }: MapaModalProps) {
             </div>
             <div>
               Faltam{" "}
-              <strong style={{ color: "var(--accent)" }}>{fmt(valorParaProximaFase)}</strong>
+              <strong style={{ color: "var(--accent-dark)" }}>{fmt(valorParaProximaFase)}</strong>
               {" · "}você está em{" "}
               <strong style={{ color: "var(--foreground)" }}>{fmt(totalSaved)}</strong>
             </div>
@@ -297,7 +297,7 @@ export function MapaModal({ totalSaved, goal, onClose }: MapaModalProps) {
               textAlign: "center",
               padding: "12px 16px",
               fontSize: 14,
-              color: "var(--accent)",
+              color: "var(--accent-dark)",
               fontWeight: 700,
             }}
           >

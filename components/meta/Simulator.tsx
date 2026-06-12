@@ -121,7 +121,7 @@ export default function Simulator({
       {/* Título da seção */}
       <div
         style={{
-          fontFamily: 'var(--font-syne), sans-serif',
+          fontFamily: 'var(--font-display), sans-serif',
           fontSize: 13,
           fontWeight: 700,
           textTransform: 'uppercase',
@@ -166,7 +166,7 @@ export default function Simulator({
                   padding: '6px 14px',
                   borderRadius: 20,
                   border: `1px solid ${mode === 'forward' ? 'var(--accent)' : 'var(--border)'}`,
-                  background: mode === 'forward' ? 'rgba(200,240,96,0.12)' : 'transparent',
+                  background: mode === 'forward' ? 'rgba(34,197,94,0.12)' : 'transparent',
                   color: mode === 'forward' ? 'var(--accent)' : 'var(--muted)',
                   fontSize: 12,
                   fontWeight: 600,
@@ -181,7 +181,7 @@ export default function Simulator({
                   padding: '6px 14px',
                   borderRadius: 20,
                   border: `1px solid ${mode === 'inverse' ? 'var(--accent2)' : 'var(--border)'}`,
-                  background: mode === 'inverse' ? 'rgba(96,212,240,0.12)' : 'transparent',
+                  background: mode === 'inverse' ? 'rgba(66,99,235,0.12)' : 'transparent',
                   color: mode === 'inverse' ? 'var(--accent2)' : 'var(--muted)',
                   fontSize: 12,
                   fontWeight: 600,
@@ -266,8 +266,8 @@ export default function Simulator({
                         trackSimulation()
                       }}
                       style={{
-                        background: 'var(--surface)',
-                        border: '1px solid var(--border)',
+                        background: '#f4f6f5',
+                        border: '1px solid rgba(0,0,0,0.08)',
                         borderRadius: 10,
                         padding: '10px 14px',
                         color: 'var(--text)',

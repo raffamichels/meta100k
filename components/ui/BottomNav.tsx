@@ -23,10 +23,11 @@ export function BottomNav() {
         left: 0,
         right: 0,
         zIndex: 100,
-        background: "rgba(19,19,26,0.95)",
+        background: "rgba(255,255,255,0.97)",
         backdropFilter: "blur(20px)",
         WebkitBackdropFilter: "blur(20px)",
         borderTop: "1px solid var(--border)",
+        boxShadow: "0 -2px 16px rgba(25,42,35,0.08)",
         display: "flex",
         alignItems: "center",
         height: "calc(64px + max(4px, env(safe-area-inset-bottom)))",
@@ -90,12 +91,12 @@ export function BottomNav() {
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
-              boxShadow: "0 4px 20px rgba(200,240,96,0.45)",
+              boxShadow: "0 4px 20px rgba(34,197,94,0.45)",
               transition: "all 0.2s",
               marginTop: -14,
             }}
           >
-            <svg viewBox="0 0 24 24" fill="none" stroke="#0a0a0f" strokeWidth={2.5} width={24} height={24}>
+            <svg viewBox="0 0 24 24" fill="none" stroke="#ffffff" strokeWidth={2.5} width={24} height={24}>
               <line x1="12" y1="5" x2="12" y2="19" />
               <line x1="5" y1="12" x2="19" y2="12" />
             </svg>

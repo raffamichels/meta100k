@@ -34,7 +34,7 @@ export default async function DesafioInvitePage({ params }: Props) {
         <div style={{ fontSize: 48, marginBottom: 12 }}>❌</div>
         <div
           style={{
-            fontFamily: "var(--font-syne), sans-serif",
+            fontFamily: "var(--font-display), sans-serif",
             fontWeight: 800,
             fontSize: 22,
           }}
@@ -48,12 +48,13 @@ export default async function DesafioInvitePage({ params }: Props) {
           href="/"
           style={{
             display: "inline-block",
-            background: "linear-gradient(135deg, var(--accent), var(--accent2))",
-            color: "#0a0a0f",
+            background: "var(--accent)",
+            color: "#ffffff",
             fontWeight: 800,
             borderRadius: 12,
             padding: "12px 24px",
             textDecoration: "none",
+            boxShadow: "0 4px 14px rgba(34,197,94,0.35)",
           }}
         >
           Voltar ao início
@@ -76,7 +77,7 @@ export default async function DesafioInvitePage({ params }: Props) {
         <div style={{ marginBottom: 24 }}>
           <div
             style={{
-              fontFamily: "var(--font-syne), sans-serif",
+              fontFamily: "var(--font-display), sans-serif",
               fontWeight: 800,
               fontSize: 28,
               letterSpacing: "-1px",
@@ -95,16 +96,17 @@ export default async function DesafioInvitePage({ params }: Props) {
         {isCreator && isPending ? (
           <div
             style={{
-              background: "rgba(255,255,255,0.04)",
+              background: "var(--card)",
               border: "1px solid var(--border)",
               borderRadius: 16,
               padding: "20px",
               marginBottom: 16,
+              boxShadow: "var(--card-shadow)",
             }}
           >
             <div
               style={{
-                fontFamily: "var(--font-syne), sans-serif",
+                fontFamily: "var(--font-display), sans-serif",
                 fontWeight: 700,
                 fontSize: 16,
                 marginBottom: 8,
@@ -117,7 +119,7 @@ export default async function DesafioInvitePage({ params }: Props) {
             </div>
             <div
               style={{
-                background: "rgba(255,255,255,0.03)",
+                background: "#f4f6f5",
                 border: "1px solid var(--border)",
                 borderRadius: 10,
                 padding: "10px 12px",
@@ -145,8 +147,8 @@ export default async function DesafioInvitePage({ params }: Props) {
         ) : (
           <div
             style={{
-              background: "rgba(200,240,96,0.08)",
-              border: "1px solid rgba(200,240,96,0.25)",
+              background: "rgba(34,197,94,0.08)",
+              border: "1px solid rgba(34,197,94,0.25)",
               borderRadius: 16,
               padding: "16px 20px",
               marginBottom: 16,
@@ -154,10 +156,10 @@ export default async function DesafioInvitePage({ params }: Props) {
           >
             <div
               style={{
-                fontFamily: "var(--font-syne), sans-serif",
+                fontFamily: "var(--font-display), sans-serif",
                 fontWeight: 700,
                 fontSize: 15,
-                color: "var(--accent)",
+                color: "var(--accent-dark)",
                 marginBottom: 4,
               }}
             >
@@ -173,9 +175,9 @@ export default async function DesafioInvitePage({ params }: Props) {
           href={`/desafio/${id}/arena`}
           style={{
             display: "block",
-            background: "linear-gradient(135deg, var(--accent), var(--accent2))",
-            color: "#0a0a0f",
-            fontFamily: "var(--font-syne), sans-serif",
+            background: "var(--accent)",
+            color: "#ffffff",
+            fontFamily: "var(--font-display), sans-serif",
             fontWeight: 800,
             fontSize: 16,
             borderRadius: 14,
@@ -183,6 +185,7 @@ export default async function DesafioInvitePage({ params }: Props) {
             textDecoration: "none",
             textAlign: "center",
             letterSpacing: "-0.3px",
+            boxShadow: "0 4px 14px rgba(34,197,94,0.35)",
           }}
         >
           {isFinished ? "Ver Resultado Final 🏆" : "Entrar na Arena ⚔️"}
@@ -204,7 +207,7 @@ export default async function DesafioInvitePage({ params }: Props) {
       <div style={{ marginBottom: 24 }}>
         <div
           style={{
-            fontFamily: "var(--font-syne), sans-serif",
+            fontFamily: "var(--font-display), sans-serif",
             fontWeight: 800,
             fontSize: 28,
             letterSpacing: "-1px",
@@ -221,11 +224,11 @@ export default async function DesafioInvitePage({ params }: Props) {
       <div
         style={{
           background: isHard
-            ? "linear-gradient(135deg, rgba(240,96,160,0.12), rgba(160,96,240,0.08))"
-            : "linear-gradient(135deg, rgba(96,212,240,0.12), rgba(200,240,96,0.06))",
+            ? "linear-gradient(135deg, rgba(124,58,237,0.10), rgba(124,58,237,0.05))"
+            : "linear-gradient(135deg, rgba(66,99,235,0.10), rgba(34,197,94,0.06))",
           border: isHard
-            ? "1px solid rgba(240,96,160,0.35)"
-            : "1px solid rgba(96,212,240,0.35)",
+            ? "1px solid rgba(124,58,237,0.3)"
+            : "1px solid rgba(66,99,235,0.3)",
           borderRadius: 20,
           padding: "28px 24px",
           textAlign: "center",
@@ -235,12 +238,12 @@ export default async function DesafioInvitePage({ params }: Props) {
         <div style={{ fontSize: 48, marginBottom: 12 }}>{isHard ? "🏁" : "📊"}</div>
         <div
           style={{
-            fontFamily: "var(--font-syne), sans-serif",
+            fontFamily: "var(--font-display), sans-serif",
             fontWeight: 900,
             fontSize: 22,
             marginBottom: 8,
             letterSpacing: "-0.5px",
-            color: isHard ? "#f060a0" : "var(--accent2)",
+            color: isHard ? "var(--accent3)" : "var(--accent2)",
           }}
         >
           {isHard ? "Corrida para R$100K" : `Desafio de ${challenge.days} Dias`}
@@ -258,8 +261,8 @@ export default async function DesafioInvitePage({ params }: Props) {
             display: "inline-flex",
             alignItems: "center",
             gap: 8,
-            background: "rgba(255,255,255,0.06)",
-            border: "1px solid rgba(255,255,255,0.1)",
+            background: "rgba(0,0,0,0.04)",
+            border: "1px solid rgba(0,0,0,0.08)",
             borderRadius: 20,
             padding: "6px 14px",
             fontSize: 12,
@@ -267,7 +270,7 @@ export default async function DesafioInvitePage({ params }: Props) {
         >
           <span>{isHard ? "🏁" : "📊"}</span>
           <span
-            style={{ color: isHard ? "#a060f0" : "#60a0f0", fontWeight: 600 }}
+            style={{ color: isHard ? "var(--accent3)" : "var(--accent2)", fontWeight: 600 }}
           >
             Conquista: {isHard ? "Desafiante Hard (épico)" : "Poupador Social (raro)"}
           </span>
@@ -279,17 +282,18 @@ export default async function DesafioInvitePage({ params }: Props) {
           <button
             type="submit"
             style={{
-              background: "linear-gradient(135deg, var(--accent), var(--accent2))",
+              background: "var(--accent)",
               border: "none",
               borderRadius: 14,
               padding: "16px",
-              fontFamily: "var(--font-syne), sans-serif",
+              fontFamily: "var(--font-display), sans-serif",
               fontWeight: 800,
               fontSize: 16,
-              color: "#0a0a0f",
+              color: "#ffffff",
               cursor: "pointer",
               width: "100%",
               letterSpacing: "-0.3px",
+              boxShadow: "0 4px 14px rgba(34,197,94,0.35)",
             }}
           >
             ⚔️ Aceitar Desafio
@@ -298,7 +302,7 @@ export default async function DesafioInvitePage({ params }: Props) {
       ) : (
         <div
           style={{
-            background: "rgba(255,255,255,0.04)",
+            background: "var(--card)",
             border: "1px solid var(--border)",
             borderRadius: 14,
             padding: "14px 16px",

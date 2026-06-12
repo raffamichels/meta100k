@@ -34,7 +34,8 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
           left: "50%",
           transform: `translateX(-50%) translateY(${visible ? 0 : 20}px)`,
           background: "var(--accent)",
-          color: "#0a0a0f",
+          color: "#ffffff",
+          boxShadow: "0 4px 14px rgba(34,197,94,0.35)",
           padding: "10px 20px",
           borderRadius: 100,
           fontWeight: 600,
@@ -44,7 +45,7 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
           zIndex: 999,
           whiteSpace: "nowrap",
           pointerEvents: "none",
-          fontFamily: "var(--font-dm-sans), sans-serif",
+          fontFamily: "var(--font-body), sans-serif",
         }}
       >
         {message}

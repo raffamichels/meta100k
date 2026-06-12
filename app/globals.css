@@ -1,33 +1,44 @@
 @import "tailwindcss";
 
 :root {
-  --bg: #0a0a0f;
-  --surface: #13131a;
-  --card: #1a1a24;
-  --border: #2a2a3a;
-  --accent: #c8f060;
-  --accent2: #60d4f0;
-  --accent3: #f060a0;
-  --text: #f0f0f8;
-  --muted: #6b6b85;
-  --danger: #f06060;
-  --success: #60f0a0;
-  --gold: #f0c060;
+  --bg: #f2f4f3;
+  --surface: #ffffff;
+  --card: #ffffff;
+  --border: #e6eae8;
+  --accent: #22c55e;
+  --accent-dark: #16a34a;
+  --accent2: #4263eb;
+  --accent3: #7c3aed;
+  --text: #232b2f;
+  --muted: #8a94a0;
+  --danger: #ef4444;
+  --success: #10b981;
+  --gold: #f59e0b;
+  --foreground: var(--text);
+
+  /* Aliases de migração: componentes antigos referenciam os nomes das
+     fontes anteriores (Syne / DM Sans). Mantêm tudo funcionando enquanto
+     apontam para as novas fontes do rebranding. */
+  --font-syne: var(--font-display);
+  --font-dm-sans: var(--font-body);
+
+  /* Sombra padrão dos cards no tema claro */
+  --card-shadow: 0 2px 12px rgba(25, 42, 35, 0.06);
 }
 
 @theme inline {
-  --color-bg: #0a0a0f;
-  --color-surface: #13131a;
-  --color-card: #1a1a24;
-  --color-border: #2a2a3a;
-  --color-accent: #c8f060;
-  --color-accent2: #60d4f0;
-  --color-accent3: #f060a0;
-  --color-text: #f0f0f8;
-  --color-muted: #6b6b85;
-  --color-danger: #f06060;
-  --color-success: #60f0a0;
-  --color-gold: #f0c060;
+  --color-bg: #f2f4f3;
+  --color-surface: #ffffff;
+  --color-card: #ffffff;
+  --color-border: #e6eae8;
+  --color-accent: #22c55e;
+  --color-accent2: #4263eb;
+  --color-accent3: #7c3aed;
+  --color-text: #232b2f;
+  --color-muted: #8a94a0;
+  --color-danger: #ef4444;
+  --color-success: #10b981;
+  --color-gold: #f59e0b;
 }
 
 * {
@@ -44,17 +55,6 @@ html, body {
   min-height: 100vh;
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
-}
-
-/* NOISE OVERLAY */
-body::before {
-  content: '';
-  position: fixed;
-  inset: 0;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
-  pointer-events: none;
-  z-index: 0;
-  opacity: 0.4;
 }
 
 /* SCROLLBAR */
@@ -84,30 +84,30 @@ input[type="number"]::-webkit-inner-spin-button { display: none; }
 
 /* Pulsar suave para o ícone de streak */
 @keyframes streakPulse {
-  0%, 100% { filter: drop-shadow(0 0 10px rgba(240,140,40,0.5)); }
-  50%       { filter: drop-shadow(0 0 22px rgba(240,140,40,0.9)); }
+  0%, 100% { filter: drop-shadow(0 0 10px rgba(245,158,11,0.4)); }
+  50%       { filter: drop-shadow(0 0 22px rgba(245,158,11,0.8)); }
 }
 
 .streak-pulse { animation: streakPulse 2s ease-in-out infinite; }
 
 /* Pulsação de borda para conquistas sazonais disponíveis agora */
 @keyframes seasonalPulse {
-  0%, 100% { box-shadow: 0 0 0 1px rgba(240,192,96,0.35); }
-  50%       { box-shadow: 0 0 0 3px rgba(240,192,96,0.7), 0 0 18px rgba(240,192,96,0.2); }
+  0%, 100% { box-shadow: 0 0 0 1px rgba(245,158,11,0.35); }
+  50%       { box-shadow: 0 0 0 3px rgba(245,158,11,0.6), 0 0 18px rgba(245,158,11,0.18); }
 }
 
 .seasonal-available { animation: seasonalPulse 2s ease-in-out infinite; }
 
 /* Pulso para a fase atual na trilha do Mapa do Tesouro */
 @keyframes mapPulse {
-  0%, 100% { box-shadow: 0 0 0 2px rgba(200,240,96,0.4); }
-  50%       { box-shadow: 0 0 0 5px rgba(200,240,96,0.15), 0 0 14px rgba(200,240,96,0.35); }
+  0%, 100% { box-shadow: 0 0 0 2px rgba(34,197,94,0.4); }
+  50%       { box-shadow: 0 0 0 5px rgba(34,197,94,0.15), 0 0 14px rgba(34,197,94,0.3); }
 }
 
 /* Brilho para level up badge */
 @keyframes levelGlow {
-  0%, 100% { box-shadow: 0 0 10px rgba(200,240,96,0.3); }
-  50%       { box-shadow: 0 0 28px rgba(200,240,96,0.7); }
+  0%, 100% { box-shadow: 0 0 10px rgba(34,197,94,0.25); }
+  50%       { box-shadow: 0 0 24px rgba(34,197,94,0.55); }
 }
 
 /* XP float up (mini partícula de XP) */
@@ -127,13 +127,14 @@ input[type="number"]::-webkit-inner-spin-button { display: none; }
   height: 14px;
   background: white;
   border-radius: 50%;
-  box-shadow: 0 0 10px var(--accent);
+  border: 3px solid var(--accent);
+  box-shadow: 0 1px 6px rgba(25,42,35,0.18);
 }
 
 /* ============================================================
    MOBILE REDESIGN — TELA INICIAL (max-width: 767px)
-   Remove elementos típicos de "AI dashboard" no mobile.
-   O header já exibe streak + nível, evitando redundância.
+   Tema claro estilo fintech: cards brancos flutuando sobre fundo
+   cinza-esverdeado, separação por sombra suave em vez de borda.
    !important é necessário para sobrescrever os inline styles do React.
    ============================================================ */
 @media (max-width: 767px) {
@@ -159,7 +160,7 @@ input[type="number"]::-webkit-inner-spin-button { display: none; }
     display: none !important;
   }
 
-  /* HeroCard: label "Progresso da meta" — sem uppercase robótico */
+  /* HeroCard: label "Saldo/Progresso" — sem uppercase robótico */
   .hero-progress-label {
     text-transform: none !important;
     letter-spacing: 0.2px !important;
@@ -171,7 +172,7 @@ input[type="number"]::-webkit-inner-spin-button { display: none; }
     display: none !important;
   }
 
-  /* StatsCard: ícone sem caixa colorida — mais clean, menos "dashboard de AI" */
+  /* StatsCard: ícone sem caixa colorida — mais clean */
   .stat-icon-box {
     background: transparent !important;
     border-radius: 0 !important;
@@ -191,13 +192,14 @@ input[type="number"]::-webkit-inner-spin-button { display: none; }
      HEROCARD: container + tipografia de display
      ============================ */
 
-  /* Container do HeroCard: fundo mais escuro, sem borda visível */
+  /* Container do HeroCard: card branco flutuante, sem borda */
   .hero-card-wrapper {
     background: var(--surface) !important;
     border-color: transparent !important;
     border-radius: 20px !important;
     padding: 20px !important;
     margin-bottom: 16px !important;
+    box-shadow: var(--card-shadow) !important;
   }
 
   /* Valor principal: display size agressivo estilo fintech — número domina */
@@ -239,12 +241,13 @@ input[type="number"]::-webkit-inner-spin-button { display: none; }
      STATS CARDS: grid compacto
      ============================ */
 
-  /* Card individual: sem borda visível — separação por espaçamento */
+  /* Card individual: branco, sem borda — separação por sombra */
   .stat-card {
     border-color: transparent !important;
     background: var(--surface) !important;
     border-radius: 14px !important;
     padding: 14px 12px !important;
+    box-shadow: var(--card-shadow) !important;
   }
 
   /* Valor do stat: levemente maior */
@@ -256,10 +259,10 @@ input[type="number"]::-webkit-inner-spin-button { display: none; }
      PROJECTION CARD: destaque máximo
      ============================ */
 
-  /* Container: borda verde mais marcada para hierarquia visual */
+  /* Container: fundo verde-claro com borda verde para hierarquia visual */
   .projection-card-wrapper {
-    background: rgba(200,240,96,0.06) !important;
-    border-color: rgba(200,240,96,0.5) !important;
+    background: rgba(34,197,94,0.08) !important;
+    border-color: rgba(34,197,94,0.4) !important;
     border-width: 1px !important;
   }
 
@@ -293,7 +296,7 @@ input[type="number"]::-webkit-inner-spin-button { display: none; }
   .entry-row {
     background: transparent !important;
     border: none !important;
-    border-bottom: 1px solid rgba(255,255,255,0.05) !important;
+    border-bottom: 1px solid rgba(0,0,0,0.06) !important;
     border-radius: 0 !important;
     padding: 12px 0 !important;
     margin-bottom: 0 !important;
@@ -312,16 +315,17 @@ input[type="number"]::-webkit-inner-spin-button { display: none; }
      CHALLENGE CARD: estilo fintech
      ============================ */
 
-  /* Container: borda verde sutil, fundo surface */
+  /* Container: card branco com borda verde sutil */
   .challenge-card-section {
     background: var(--surface) !important;
-    border: 1px solid rgba(200,240,96,0.2) !important;
+    border: 1px solid rgba(34,197,94,0.25) !important;
     border-radius: 16px !important;
     padding: 16px !important;
     margin-bottom: 12px !important;
+    box-shadow: var(--card-shadow) !important;
   }
 
-  /* Título "Desafios": sem emoji? Manter, mas ajustar tamanho */
+  /* Título "Desafios" */
   .challenge-card-title {
     font-size: 12px !important;
     margin-bottom: 10px !important;
@@ -331,60 +335,62 @@ input[type="number"]::-webkit-inner-spin-button { display: none; }
     font-weight: 600 !important;
   }
 
-  /* Item de desafio: fundo ainda mais escuro, sem borda */
+  /* Item de desafio: flat com separador sutil */
   .challenge-item {
     background: transparent !important;
     border: none !important;
-    border-bottom: 1px solid rgba(255,255,255,0.05) !important;
+    border-bottom: 1px solid rgba(0,0,0,0.06) !important;
     border-radius: 0 !important;
     padding: 10px 0 !important;
   }
 
   /* Tipo de desafio (Semanal/Mensal): sempre verde no mobile */
   .challenge-type-badge {
-    color: var(--accent) !important;
+    color: var(--accent-dark) !important;
   }
 
   /* ============================
      LINK "DESAFIE UM AMIGO": flat
      ============================ */
 
-  /* Remove gradiente rosa — fundo surface, borda sutil */
+  /* Card branco, borda sutil */
   .social-challenge-link {
     background: var(--surface) !important;
-    border: 1px solid rgba(255,255,255,0.07) !important;
+    border: 1px solid var(--border) !important;
     border-radius: 14px !important;
     padding: 14px 16px !important;
     margin-bottom: 12px !important;
+    box-shadow: var(--card-shadow) !important;
   }
 
-  /* Título interno "Desafie um Amigo": branco em vez de rosa */
-  .social-challenge-link div[style*="color: #f060a0"],
-  .social-challenge-link div[style*="color:#f060a0"] {
+  /* Título interno "Desafie um Amigo": cor de texto padrão em vez de roxo */
+  .social-challenge-link div[style*="color: #7c3aed"],
+  .social-challenge-link div[style*="color:#7c3aed"] {
     color: var(--text) !important;
   }
 
-  /* Ícone ⚔️: remover glow pink */
+  /* Ícone ⚔️: remover glow */
   .social-challenge-link div[style*="drop-shadow"] {
     filter: none !important;
   }
 
   /* Chevron: cor neutra */
   .social-challenge-link svg {
-    stroke: rgba(255,255,255,0.25) !important;
+    stroke: rgba(0,0,0,0.25) !important;
   }
 
   /* ============================
      PERFIL: card de progresso
      ============================ */
 
-  /* Card de progresso: surface + borda verde, sem gradiente azul */
+  /* Card de progresso: branco + borda verde */
   .perfil-progress-card {
     background: var(--surface) !important;
-    border-color: rgba(200,240,96,0.3) !important;
+    border-color: rgba(34,197,94,0.3) !important;
+    box-shadow: var(--card-shadow) !important;
   }
 
-  /* Barra de progresso no card: verde sólido, sem glow azul */
+  /* Barra de progresso no card: verde sólido, sem glow */
   .perfil-progress-card div[style*="gradient(90deg"] {
     background: var(--accent) !important;
     box-shadow: none !important;
@@ -396,12 +402,13 @@ input[type="number"]::-webkit-inner-spin-button { display: none; }
     margin-bottom: 14px !important;
   }
 
-  /* Cada stat card: surface, sem borda colorida */
+  /* Cada stat card: branco, sem borda colorida */
   .perfil-stat-card {
     background: var(--surface) !important;
-    border-color: rgba(255,255,255,0.06) !important;
+    border-color: var(--border) !important;
     border-radius: 14px !important;
     padding: 12px 8px !important;
+    box-shadow: var(--card-shadow) !important;
   }
 
   /* Ícone de emoji nos stats: sem glow excessivo */
@@ -411,24 +418,26 @@ input[type="number"]::-webkit-inner-spin-button { display: none; }
     margin-bottom: 2px !important;
   }
 
-  /* Nav card: surface, borda sutil */
+  /* Nav card: branco, borda sutil */
   .perfil-nav-card {
     background: var(--surface) !important;
-    border-color: rgba(255,255,255,0.06) !important;
+    border-color: var(--border) !important;
     border-radius: 14px !important;
     margin-bottom: 12px !important;
+    box-shadow: var(--card-shadow) !important;
   }
 
   /* ============================
      COFRE DO DIABO: limpeza
      ============================ */
 
-  /* Header: sem gradiente roxo */
+  /* Header: card branco com borda roxa sutil */
   .cofre-header {
     background: var(--surface) !important;
-    border-color: rgba(180,60,240,0.2) !important;
+    border-color: rgba(124,58,237,0.25) !important;
     padding: 18px 16px !important;
     margin-bottom: 14px !important;
+    box-shadow: var(--card-shadow) !important;
   }
 
   /* Emoji 😈 do header: sem glow gigante */
@@ -438,10 +447,11 @@ input[type="number"]::-webkit-inner-spin-button { display: none; }
     margin-bottom: 4px !important;
   }
 
-  /* Stats: sem bordas roxas */
+  /* Stats: cards brancos neutros */
   .cofre-stat-card {
     background: var(--surface) !important;
-    border-color: rgba(255,255,255,0.06) !important;
+    border-color: var(--border) !important;
+    box-shadow: var(--card-shadow) !important;
   }
 
   /* Labels uppercase dos stats: texto natural */
@@ -458,11 +468,11 @@ input[type="number"]::-webkit-inner-spin-button { display: none; }
     margin-bottom: 6px !important;
   }
 
-  /* Item da lista: flat, sem borda roxa */
+  /* Item da lista: flat, com separador sutil */
   .cofre-list-item {
     background: transparent !important;
     border: none !important;
-    border-bottom: 1px solid rgba(255,255,255,0.05) !important;
+    border-bottom: 1px solid rgba(0,0,0,0.06) !important;
     border-radius: 0 !important;
     padding: 11px 0 !important;
   }
@@ -471,13 +481,14 @@ input[type="number"]::-webkit-inner-spin-button { display: none; }
      TELA LANÇAR: formulários fintech
      ============================ */
 
-  /* Container unificado: todos os forms com o mesmo fundo, sem bordas coloridas */
+  /* Container unificado: cards brancos com sombra suave */
   .form-card {
     background: var(--surface) !important;
-    border-color: rgba(255,255,255,0.06) !important;
+    border-color: transparent !important;
     border-radius: 16px !important;
     padding: 18px !important;
     margin-bottom: 10px !important;
+    box-shadow: var(--card-shadow) !important;
   }
 
   /* Título do form: tamanho compacto */
@@ -488,7 +499,7 @@ input[type="number"]::-webkit-inner-spin-button { display: none; }
     font-weight: 600 !important;
   }
 
-  /* Subtítulo do TemptationForm: mantém cor mas sem espaçamento excessivo */
+  /* Subtítulo do TemptationForm */
   .temptation-form-card > div:nth-child(2) {
     margin-bottom: 12px !important;
     font-size: 12px !important;
@@ -503,39 +514,42 @@ input[type="number"]::-webkit-inner-spin-button { display: none; }
     color: var(--muted) !important;
   }
 
-  /* Inputs e selects: borda sutil, fundo bem escuro */
+  /* Inputs e selects: fundo cinza-claro, borda sutil */
   .form-card input,
   .form-card select {
-    background: rgba(255,255,255,0.04) !important;
-    border: 1px solid rgba(255,255,255,0.09) !important;
+    background: #f4f6f5 !important;
+    border: 1px solid rgba(0,0,0,0.08) !important;
     border-radius: 10px !important;
     padding: 11px 13px !important;
     font-size: 15px !important;
+    color: var(--text) !important;
   }
 
-  /* Botão de submit padrão: verde sólido — ação positiva */
+  /* Botão de submit padrão: verde sólido com texto branco — ação positiva */
   .form-card button[type="submit"] {
     border-radius: 12px !important;
     padding: 13px !important;
     font-size: 14px !important;
     background: var(--accent) !important;
-    color: #0a0a0f !important;
-    box-shadow: none !important;
+    color: #ffffff !important;
+    box-shadow: 0 4px 14px rgba(34,197,94,0.35) !important;
   }
 
-  /* Despesa: botão coral — semântica de saída de dinheiro preservada */
+  /* Despesa: botão vermelho — semântica de saída de dinheiro preservada */
   .expense-form-card button[type="submit"] {
     background: var(--danger) !important;
     color: white !important;
+    box-shadow: 0 4px 14px rgba(239,68,68,0.3) !important;
   }
 
-  /* Cofre do Diabo: botão roxo sólido sem gradiente */
+  /* Cofre do Diabo: botão roxo sólido */
   .temptation-form-card button[type="submit"] {
-    background: rgba(160,60,230,0.9) !important;
+    background: var(--accent3) !important;
     color: white !important;
+    box-shadow: 0 4px 14px rgba(124,58,237,0.3) !important;
   }
 
-  /* Mensagem motivacional (SavingsForm): borda esquerda verde, sem fundo laranja */
+  /* Mensagem motivacional (SavingsForm): borda esquerda verde */
   .motivation-hint {
     background: transparent !important;
     border: none !important;
@@ -624,6 +638,8 @@ input[type="number"]::-webkit-inner-spin-button { display: none; }
     /* bordas: remove superior (era do bottom bar), adiciona direita */
     border-top: none !important;
     border-right: 1px solid var(--border) !important;
+    background: var(--surface) !important;
+    box-shadow: none !important;
   }
 
   /* CORREÇÃO CRÍTICA: flex:1 inline fazia os 4 items se distribuírem

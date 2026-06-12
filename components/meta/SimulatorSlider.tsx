@@ -59,7 +59,7 @@ export default function SimulatorSlider({
       <div style={{ textAlign: 'center', marginTop: 4 }}>
         <span
           style={{
-            fontFamily: 'var(--font-syne), sans-serif',
+            fontFamily: 'var(--font-display), sans-serif',
             fontSize: 18,
             fontWeight: 800,
             color: value > min ? 'var(--accent)' : 'var(--muted)',

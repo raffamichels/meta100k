@@ -2,16 +2,18 @@
 
 import { useActionState } from "react";
 import { registerUser } from "@/lib/actions/auth";
+import { signIn } from "next-auth/react";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 
 const inputStyle: React.CSSProperties = {
   width: "100%",
-  background: "rgba(255,255,255,0.04)",
-  border: "1px solid var(--border)",
+  background: "#f4f6f5",
+  border: "1px solid rgba(0,0,0,0.08)",
   borderRadius: 12,
   padding: "12px 14px",
   color: "var(--text)",
-  fontFamily: "var(--font-dm-sans), sans-serif",
+  fontFamily: "var(--font-body), sans-serif",
   fontSize: 15,
   outline: "none",
   WebkitAppearance: "none",
@@ -28,7 +30,21 @@ const labelStyle: React.CSSProperties = {
 };
 
 export default function RegisterPage() {
-  const [state, action, pending] = useActionState(registerUser, undefined);
+  const router = useRouter();
+  const [state, formAction, pending] = useActionState(
+    async (_prev: { error: string } | undefined, formData: FormData) => {
+      const result = await registerUser(_prev, formData);
+      if (!result) {
+        const email = (formData.get("email") as string)?.trim().toLowerCase();
+        const password = formData.get("password") as string;
+        await signIn("credentials", { email, password, redirect: false });
+        router.push("/");
+        router.refresh();
+      }
+      return result;
+    },
+    undefined
+  );
 
   return (
     <div
@@ -37,11 +53,12 @@ export default function RegisterPage() {
         border: "1px solid var(--border)",
         borderRadius: 24,
         padding: 28,
+        boxShadow: "var(--card-shadow)",
       }}
     >
       <h1
         style={{
-          fontFamily: "var(--font-syne), sans-serif",
+          fontFamily: "var(--font-display), sans-serif",
           fontSize: 20,
           fontWeight: 700,
           marginBottom: 6,
@@ -56,8 +73,8 @@ export default function RegisterPage() {
       {state?.error && (
         <div
           style={{
-            background: "rgba(240,96,96,0.12)",
-            border: "1px solid rgba(240,96,96,0.3)",
+            background: "rgba(239,68,68,0.08)",
+            border: "1px solid rgba(239,68,68,0.3)",
             borderRadius: 10,
             padding: "10px 14px",
             color: "var(--danger)",
@@ -69,7 +86,7 @@ export default function RegisterPage() {
         </div>
       )}
 
-      <form action={action}>
+      <form action={formAction}>
         <div style={{ marginBottom: 14 }}>
           <label style={labelStyle}>Nome (opcional)</label>
           <input
@@ -112,14 +129,15 @@ export default function RegisterPage() {
             borderRadius: 14,
             border: "none",
             background: "var(--accent)",
-            color: "#0a0a0f",
-            fontFamily: "var(--font-syne), sans-serif",
+            color: "#ffffff",
+            fontFamily: "var(--font-display), sans-serif",
             fontSize: 15,
             fontWeight: 700,
             cursor: pending ? "not-allowed" : "pointer",
             opacity: pending ? 0.7 : 1,
             transition: "all 0.2s",
             letterSpacing: "0.3px",
+            boxShadow: "0 4px 14px rgba(34,197,94,0.35)",
           }}
         >
           {pending ? "Criando conta..." : "Criar conta"}
@@ -137,7 +155,7 @@ export default function RegisterPage() {
         Já tem conta?{" "}
         <Link
           href="/login"
-          style={{ color: "var(--accent)", fontWeight: 500 }}
+          style={{ color: "var(--accent-dark)", fontWeight: 500 }}
         >
           Entrar
         </Link>
